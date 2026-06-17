@@ -1,0 +1,41 @@
+# ── v1 (not tracked in this repo) ──
+ozu-planner-v1/
+
+# ── Dependencies ──
+node_modules/
+
+# ── Build / dist ──
+dist/
+dist-ssr/
+build/
+
+# ── Python ──
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+
+# ── Env / secrets ──
+.env
+.env.local
+*.env
+!.env.example
+
+# ── Scraper runtime artifacts ──
+scraper/**/pg_data/
+scraper/**/downloads/
+
+# ── Tooling / local ──
+.gstack/
+.claude/
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+
+# ── Logs ──
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*

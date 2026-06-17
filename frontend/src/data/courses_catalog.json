@@ -1,0 +1,1611 @@
+[
+  {
+    "code": "EE 201",
+    "name": "Sinyaller ve Sistemler",
+    "credits": 6,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "",
+    "coreq": "MATH 212",
+    "description": "Topics include basic continuous and discrete time signals and systems, linear time invariant systems, Fourier analysis for continuous and discrete time signals and systems, filtering and modulation, sampling and aliasing, and Laplace and z-transform.",
+    "required": [
+      "BSEE"
+    ],
+    "elective": [
+      "BAANTH",
+      "BABAF",
+      "BABUS",
+      "BAECON",
+      "BAENT",
+      "BAIB",
+      "BAIBUS",
+      "BAIR",
+      "BAMIS",
+      "BAPSYC",
+      "BLAW",
+      "BSAI",
+      "BSARCH (ENG)",
+      "BSARCH (TR)",
+      "BSATM",
+      "BSAVM",
+      "BSCE",
+      "BSCOD",
+      "BSCODE",
+      "BSCS",
+      "BSGARM",
+      "BSHOTM",
+      "BSIDE",
+      "BSIE",
+      "BSINTAR",
+      "BSIPD",
+      "BSME",
+      "BSPF",
+      "BSPLT"
+    ],
+    "sections": [
+      {
+        "name": "EE 201A",
+        "lecturer": "ÇİĞDEM EROĞLU ERDEM",
+        "times": [
+          {
+            "day": "Perşembe",
+            "start": "13:40",
+            "end": "16:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 202",
+    "name": "Devre Analizi",
+    "credits": 6,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "MATH 211 and PHYS102",
+    "coreq": "EE 202L",
+    "description": "Basic circuit concepts (Voltage, Current, Node, Mesh, Measurement Units), Basic circuit analysis methods (Node voltage analysis, Mesh current analysis), Circuit elements, Active sources and active circuits, operational amplifiers, time varying signals, capacitors, inductors, first and second order circuits, circuit analysis using Laplace transform.",
+    "required": [
+      "BSEE"
+    ],
+    "elective": [
+      "BAANTH",
+      "BABAF",
+      "BABUS",
+      "BAECON",
+      "BAENT",
+      "BAIB",
+      "BAIBUS",
+      "BAIR",
+      "BAMIS",
+      "BAPSYC",
+      "BLAW",
+      "BSAI",
+      "BSARCH (ENG)",
+      "BSARCH (TR)",
+      "BSATM",
+      "BSAVM",
+      "BSCE",
+      "BSCOD",
+      "BSCODE",
+      "BSCS",
+      "BSGARM",
+      "BSGCA",
+      "BSHMAN",
+      "BSHOTM",
+      "BSIDE",
+      "BSIE",
+      "BSINTAR",
+      "BSIPD",
+      "BSME",
+      "BSPF",
+      "BSPLT"
+    ],
+    "sections": [
+      {
+        "name": "EE 202A",
+        "lecturer": "TAYLAN AKDOĞAN",
+        "times": [
+          {
+            "day": "Pazartesi",
+            "start": "10:40",
+            "end": "12:30"
+          },
+          {
+            "day": "Salı",
+            "start": "16:40",
+            "end": "18:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 202L",
+    "name": "Devre Analizi - Lab.",
+    "credits": 0,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "",
+    "coreq": "EE 202",
+    "description": "",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 202LA",
+        "lecturer": "TAYLAN AKDOĞAN",
+        "times": [
+          {
+            "day": "Cuma",
+            "start": "09:40",
+            "end": "12:30"
+          }
+        ]
+      },
+      {
+        "name": "EE 202LB",
+        "lecturer": "TAYLAN AKDOĞAN",
+        "times": [
+          {
+            "day": "Çarşamba",
+            "start": "13:40",
+            "end": "16:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 203",
+    "name": "Sayısal Sistemler",
+    "credits": 6,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "",
+    "coreq": "EE 203L",
+    "description": "This course teaches the basics of digital logic design but yet emphasizes high-level aspects of \"digital systems design\" -- as the word \"systems\" in the course name implies. In that context, it is critical to understand analog versus digital, sensors, system I/O, waveforms, timing, area, power, and cost issues. As modern digital design problems are large, they can only be addressed with a scalable hence language based approach. In this course, we write digital designs in Verilog language (similar to C) for the most part and map them to FPGAs. In the lab, we also implement digital circuits with discrete components – the traditional way, in addition to Verilog on FPGAs.",
+    "required": [
+      "BSCS",
+      "BSEE"
+    ],
+    "elective": [
+      "BAANTH",
+      "BABAF",
+      "BABUS",
+      "BAECON",
+      "BAENT",
+      "BAIB",
+      "BAIBUS",
+      "BAIR",
+      "BAMIS",
+      "BAPSYC",
+      "BLAW",
+      "BSAI",
+      "BSARCH (ENG)",
+      "BSARCH (TR)",
+      "BSATM",
+      "BSAVM",
+      "BSCE",
+      "BSCOD",
+      "BSCODE",
+      "BSGARM",
+      "BSHOTM",
+      "BSIDE",
+      "BSIE",
+      "BSINTAR",
+      "BSIPD",
+      "BSME",
+      "BSPF",
+      "BSPLT"
+    ],
+    "sections": [
+      {
+        "name": "EE 203A",
+        "lecturer": "İLKER HAMZAOĞLU",
+        "times": [
+          {
+            "day": "Çarşamba",
+            "start": "13:40",
+            "end": "16:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 203L",
+    "name": "Sayısal Sistemler - Lab.",
+    "credits": 0,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "",
+    "coreq": "EE 203",
+    "description": "",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 203LA",
+        "lecturer": "İLKER HAMZAOĞLU",
+        "times": [
+          {
+            "day": "Cuma",
+            "start": "15:40",
+            "end": "18:30"
+          }
+        ]
+      },
+      {
+        "name": "EE 203LB",
+        "lecturer": "İLKER HAMZAOĞLU",
+        "times": [
+          {
+            "day": "Perşembe",
+            "start": "10:40",
+            "end": "13:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 204",
+    "name": "Elektromanyetik",
+    "credits": 6,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "PHYS 102 and MATH 104",
+    "coreq": "",
+    "description": "Konular arasında dönme hareketi, Newton yasası, manyetik alan üretimi, manyetik devreler, Faraday yasası, Lorentz Yasası, AC devrelerinde gerçek, reaktif ve görünen güç, transformatörler, birim başına ölçüm sistemi, elektromekanik enerji dönüşümü, AC makineler için temel bilgiler, senkron jeneratörler, senkron motorlar, asenkron motorlar, DC makinelerinin temelleri yer alır.",
+    "required": [
+      "BSEE"
+    ],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 204A",
+        "lecturer": "PARVIZ ELAHI",
+        "times": [
+          {
+            "day": "Salı",
+            "start": "14:40",
+            "end": "16:30"
+          },
+          {
+            "day": "Cuma",
+            "start": "14:40",
+            "end": "16:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 300",
+    "name": "Staj I",
+    "credits": 2,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "SEC 201",
+    "coreq": "",
+    "description": "This is the first of the practice course series. It consists of professional applications of electrical and electronics engineering.",
+    "required": [
+      "BSEE"
+    ],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 300A",
+        "lecturer": "GÖKTÜRK POYRAZOĞLU",
+        "times": []
+      }
+    ]
+  },
+  {
+    "code": "EE 301",
+    "name": "Elektronik I",
+    "credits": 6,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "EE 202",
+    "coreq": "EE 301L",
+    "description": "",
+    "required": [
+      "BSEE"
+    ],
+    "elective": [
+      "BAANTH",
+      "BABAF",
+      "BABUS",
+      "BAECON",
+      "BAENT",
+      "BAIB",
+      "BAIBUS",
+      "BAIR",
+      "BAMIS",
+      "BAPSYC",
+      "BLAW",
+      "BSAI",
+      "BSARCH (ENG)",
+      "BSARCH (TR)",
+      "BSATM",
+      "BSAVM",
+      "BSCE",
+      "BSCOD",
+      "BSCODE",
+      "BSCS",
+      "BSGARM",
+      "BSHOTM",
+      "BSIDE",
+      "BSIE",
+      "BSINTAR",
+      "BSIPD",
+      "BSME",
+      "BSPF",
+      "BSPLT"
+    ],
+    "sections": [
+      {
+        "name": "EE 301A",
+        "lecturer": "UMUT BAŞARAN",
+        "times": [
+          {
+            "day": "Pazartesi",
+            "start": "12:40",
+            "end": "15:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 301L",
+    "name": "Elektronik 1 - Lab.",
+    "credits": 0,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "",
+    "coreq": "EE 301",
+    "description": "",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 301LA",
+        "lecturer": "UMUT BAŞARAN",
+        "times": [
+          {
+            "day": "Çarşamba",
+            "start": "16:40",
+            "end": "19:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 302",
+    "name": "AI Tabanlı Sayısal Sinyal İşleme",
+    "credits": 6,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "EE 201 and MATH 104 and (CS 104 or CS 101)",
+    "coreq": "",
+    "description": "Konular, ayrık zamanlı Fourier dönüşümü, z dönüşümü, sinyal işlemedeki uygulamalarıyla birlikte lojistik regresyon, yoğun ağlar, evrişimsel ağlar ve geribeslemeli ağları içerir.",
+    "required": [],
+    "elective": [
+      "BSAI",
+      "BSCE",
+      "BSCS",
+      "BSEE",
+      "BSIE",
+      "BSME"
+    ],
+    "sections": [
+      {
+        "name": "EE 302A",
+        "lecturer": "CENK DEMİROĞLU",
+        "times": [
+          {
+            "day": "Çarşamba",
+            "start": "08:40",
+            "end": "10:30"
+          },
+          {
+            "day": "Perşembe",
+            "start": "11:40",
+            "end": "13:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 321",
+    "name": "Mikroişlemciler",
+    "credits": 6,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "(CS 100 or CS 101 or CS 103 or CS 104) ve EE 203",
+    "coreq": "EE 321L",
+    "description": "Bu ders mikrodenetleyicilerin/mikroişlemcilerin içyapısından çok onlarla neler yapılabileceği ile ilgilidir. Ders, muhtelif gömülü sistemlere bir bakışla başlayıp, mikroişlemciler ve mikrodenetleyicileri kıyaslamayı hedeflemektedir. Bu derste ayrıca assembly dili ile işlemcilerin nasıl çalıştığı gösterilecektir. Bazı çevre birimleri tanıtılacaktır. Lablarda bu çevre birimleri, PIC ve AVR mikrodenetleyicileri ve Arduino kartları ile kullanılacaktır. Programlamanın çoğu, C dili ile yapılacaktır. Bu ders bir proje içermektedir. Dersin sonlarına doğru, bazı gelişmiş bilgisayar sistem kavramları tanıtılacaktır – bellek hiyerarşisi ve boru hatları gibi.",
+    "required": [
+      "BSEE"
+    ],
+    "elective": [
+      "BAANTH",
+      "BABAF",
+      "BABUS",
+      "BAECON",
+      "BAENT",
+      "BAIB",
+      "BAIBUS",
+      "BAIR",
+      "BAMIS",
+      "BAPSYC",
+      "BLAW",
+      "BSAI",
+      "BSARCH (ENG)",
+      "BSARCH (TR)",
+      "BSATM",
+      "BSAVM",
+      "BSCE",
+      "BSCOD",
+      "BSCODE",
+      "BSCS",
+      "BSGARM",
+      "BSHOTM",
+      "BSIDE",
+      "BSIE",
+      "BSINTAR",
+      "BSIPD",
+      "BSME",
+      "BSPF",
+      "BSPLT"
+    ],
+    "sections": [
+      {
+        "name": "EE 321A",
+        "lecturer": "HASAN FATİH UĞURDAĞ",
+        "times": [
+          {
+            "day": "Pazartesi",
+            "start": "12:40",
+            "end": "15:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 321L",
+    "name": "Mikroişlemciler - Lab.",
+    "credits": 0,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "",
+    "coreq": "EE 321",
+    "description": "",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 321LA",
+        "lecturer": "HASAN FATİH UĞURDAĞ",
+        "times": [
+          {
+            "day": "Perşembe",
+            "start": "16:40",
+            "end": "19:30"
+          }
+        ]
+      },
+      {
+        "name": "EE 321LB",
+        "lecturer": "HASAN FATİH UĞURDAĞ",
+        "times": [
+          {
+            "day": "Çarşamba",
+            "start": "10:40",
+            "end": "13:30"
+          }
+        ]
+      },
+      {
+        "name": "EE 321LC",
+        "lecturer": "HASAN FATİH UĞURDAĞ",
+        "times": [
+          {
+            "day": "Salı",
+            "start": "08:40",
+            "end": "11:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 341",
+    "name": "Haberleşme Sistemlerinin Temelleri",
+    "credits": 6,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "MATH 217 ve MATH 211",
+    "coreq": "EE 201, EE 341L",
+    "description": "Analog ve sayısal haberleşme sistemlerinin matematiksel modellenmesi, modülasyon tekniklerinin sınıflandırılması, genlik modülasyonu, açı modülasyonu, genlik kaydırmalı anahtarlama (ASK), faz kaydırmalı anahtarlama (PSK), dörtlü genlik modülasyonu (QAM), frekans kaydırmalı anahtarlama (FSK), gürültü ortamında analog ve sayısal haberleşme sistemlerinin başarımı, analog-sayısal çevrim, temelbant ve bantgeçiren kanallarda sayısal iletim ve alış.",
+    "required": [
+      "BSEE"
+    ],
+    "elective": [
+      "BAANTH",
+      "BABAF",
+      "BABUS",
+      "BAECON",
+      "BAENT",
+      "BAIB",
+      "BAIBUS",
+      "BAIR",
+      "BAMIS",
+      "BAPSYC",
+      "BLAW",
+      "BSAI",
+      "BSARCH (ENG)",
+      "BSARCH (TR)",
+      "BSATM",
+      "BSAVM",
+      "BSCE",
+      "BSCOD",
+      "BSCODE",
+      "BSCS",
+      "BSGARM",
+      "BSHOTM",
+      "BSIDE",
+      "BSIE",
+      "BSINTAR",
+      "BSIPD",
+      "BSME",
+      "BSPF",
+      "BSPLT"
+    ],
+    "sections": [
+      {
+        "name": "EE 341A",
+        "lecturer": "MOHAMMED ELAMASSIE",
+        "times": [
+          {
+            "day": "Salı",
+            "start": "10:40",
+            "end": "13:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 341L",
+    "name": "Haberleşme Sistemlerinin Temelleri - Lab.",
+    "credits": 0,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "",
+    "coreq": "EE 341",
+    "description": "",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 341LA",
+        "lecturer": "MOHAMMED ELAMASSIE",
+        "times": [
+          {
+            "day": "Cuma",
+            "start": "08:40",
+            "end": "11:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 350",
+    "name": "Elektronik II",
+    "credits": 6,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "EE 301",
+    "coreq": "EE 350L",
+    "description": "This course starts with an introduction to transistor circuits.  Then, analysis of differential amplifiers will be discussed. The course will continue with detailed analysis of various transistor circuits. Detailed analysis of non-ideal response of op-amp circuits will be presented. Concepts of feedback and frequency response will be introduced. The course will continue with power amplifiers. Finally, analog filters will be taught.",
+    "required": [],
+    "elective": [
+      "BAANTH",
+      "BABAF",
+      "BABUS",
+      "BAECON",
+      "BAENT",
+      "BAIB",
+      "BAIBUS",
+      "BAIR",
+      "BAMIS",
+      "BAPSYC",
+      "BLAW",
+      "BSAI",
+      "BSARCH (ENG)",
+      "BSARCH (TR)",
+      "BSATM",
+      "BSAVM",
+      "BSCE",
+      "BSCOD",
+      "BSCODE",
+      "BSCS",
+      "BSEE",
+      "BSGARM",
+      "BSHOTM",
+      "BSIDE",
+      "BSIE",
+      "BSINTAR",
+      "BSIPD",
+      "BSME",
+      "BSPF",
+      "BSPLT"
+    ],
+    "sections": [
+      {
+        "name": "EE 350A",
+        "lecturer": "UMUT BAŞARAN",
+        "times": [
+          {
+            "day": "Perşembe",
+            "start": "13:40",
+            "end": "16:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 350L",
+    "name": "Elektronik II - Lab.",
+    "credits": 0,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "",
+    "coreq": "EE 350",
+    "description": "",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 350LA",
+        "lecturer": "UMUT BAŞARAN",
+        "times": [
+          {
+            "day": "Salı",
+            "start": "16:40",
+            "end": "19:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 372",
+    "name": "Elektrik Makineleri",
+    "credits": 6,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "EE 204 and EE 101",
+    "coreq": "",
+    "description": "Bu ders elektrik makinalarının temellerini tanıtmaktadır. Öğrenciler transformatörlerin, Alternatif Akım makinalarının, senkron motor ve üreteçlerin, indüksiyon motorların ve doğru akım makinalarının temellerini teknik detayları ile öğreneceklerdir.",
+    "required": [
+      "BSEE"
+    ],
+    "elective": [
+      "BAANTH",
+      "BABAF",
+      "BABUS",
+      "BAECON",
+      "BAENT",
+      "BAIB",
+      "BAIBUS",
+      "BAIR",
+      "BAMIS",
+      "BAPSYC",
+      "BLAW",
+      "BSAI",
+      "BSARCH (ENG)",
+      "BSARCH (TR)",
+      "BSATM",
+      "BSAVM",
+      "BSCE",
+      "BSCOD",
+      "BSCODE",
+      "BSCS",
+      "BSGARM",
+      "BSGCA",
+      "BSHMAN",
+      "BSHOTM",
+      "BSIDE",
+      "BSIE",
+      "BSINTAR",
+      "BSIPD",
+      "BSME",
+      "BSPF",
+      "BSPLT"
+    ],
+    "sections": [
+      {
+        "name": "EE 372A",
+        "lecturer": "GÖKTÜRK POYRAZOĞLU",
+        "times": [
+          {
+            "day": "Pazartesi",
+            "start": "15:40",
+            "end": "18:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 400",
+    "name": "Staj II",
+    "credits": 4,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "SEC 201",
+    "coreq": "",
+    "description": "This is the second of the practice course series. It consists of professional applications of electrical and electronics engineering.",
+    "required": [
+      "BSEE"
+    ],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 400A",
+        "lecturer": "GÖKTÜRK POYRAZOĞLU",
+        "times": []
+      }
+    ]
+  },
+  {
+    "code": "EE 401",
+    "name": "Elektrik-Elektronik Mühendisliği Bitirme Projesi I",
+    "credits": 4,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "(CS 101 or CS 103 or CS 104) and EE 201 and EE202 and EE 203 and EE204 and (EE 301, EE 321 or EE 341'den en az biri)",
+    "coreq": "",
+    "description": "This is the first phase of a series of courses that will provide the students an opportunity to acquire the ability to design a complex system, process, equipment or product. Students work under the supervision of a faculty advisor to propose the design of a system/process/equipment.",
+    "required": [
+      "BSEE"
+    ],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 401A",
+        "lecturer": "ÇAĞATAY EDEMEN",
+        "times": []
+      }
+    ]
+  },
+  {
+    "code": "EE 402",
+    "name": "Elektrik-Elektronik Mühendisliği Bitirme Projesi II",
+    "credits": 4,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "EE 401",
+    "coreq": "",
+    "description": "This is the second phase of senior project course that will gain students ability to design a complex system, process, device and product. Under the supervision of a faculty member, students demonstrate that they can implement the design to develop a system/process/device or product.",
+    "required": [
+      "BSEE"
+    ],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 402A",
+        "lecturer": "ÇAĞATAY EDEMEN",
+        "times": []
+      }
+    ]
+  },
+  {
+    "code": "EE 432",
+    "name": "Sinyal işleme için ileri MATLAB",
+    "credits": 6,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "(CS 101 veya CS 104) ve EE 101 ve EE 201",
+    "coreq": "",
+    "description": "İşlenecek konular arasında sayısal analiz, sinyal işleme ve modelleme için MATLAB'in temel programlama kavramları, veri işleme ve görselleştirme yer almaktadır. Uygulamalı alıştırmalar ve bir proje aracılığıyla öğrenciler, gerçek dünyadaki sinyal işleme problemlerini çözmek için MATLAB'i uygulama konusunda pratik deneyim kazanır.",
+    "required": [],
+    "elective": [
+      "BSCE",
+      "BSCS",
+      "BSEE",
+      "BSIE",
+      "BSME"
+    ],
+    "sections": [
+      {
+        "name": "EE 432A",
+        "lecturer": "MOHAMMED ELAMASSIE",
+        "times": [
+          {
+            "day": "Cuma",
+            "start": "14:40",
+            "end": "17:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 442",
+    "name": "Sayısal Haberleşmeye Giriş",
+    "credits": 6,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "",
+    "coreq": "EE 341",
+    "description": "Konular arasında dijital iletişim sistemlerinin matematiksel modellemesi, dijital modülasyon tekniklerinin sınıflandırılması, genlik kaydırmalı anahtarlama (ASK), faz kaydırmalı anahtarlama (PSK), karesel genlik modülasyonu (QAM), frekans kaydırmalı anahtarlama (FSK), eklemeli beyaz Gauss gürültüsü (AWGN) kanalları için optimum alıcı tasarımı, AWGN kanalları üzerinden modülasyon tekniklerinin hata oranı performansı, semboller arası girişimin (ISI) etkisi, ISI kanalları için alıcı tasarımı yer almaktadır.",
+    "required": [],
+    "elective": [
+      "BAANTH",
+      "BABAF",
+      "BABUS",
+      "BAECON",
+      "BAENT",
+      "BAIB",
+      "BAIBUS",
+      "BAIR",
+      "BAMIS",
+      "BAPSYC",
+      "BLAW",
+      "BSAI",
+      "BSARCH (ENG)",
+      "BSARCH (TR)",
+      "BSATM",
+      "BSAVM",
+      "BSCE",
+      "BSCOD",
+      "BSCODE",
+      "BSCS",
+      "BSEE",
+      "BSGARM",
+      "BSHOTM",
+      "BSIDE",
+      "BSIE",
+      "BSINTAR",
+      "BSIPD",
+      "BSME",
+      "BSPF",
+      "BSPLT"
+    ],
+    "sections": [
+      {
+        "name": "EE 442A",
+        "lecturer": "MOHAMMED ELAMASSIE",
+        "times": [
+          {
+            "day": "Perşembe",
+            "start": "13:40",
+            "end": "16:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 452",
+    "name": "Nesnelerin Internetine Giriş",
+    "credits": 6,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "150 AKTS tamamlamış olmak",
+    "coreq": "",
+    "description": "",
+    "required": [],
+    "elective": [
+      "BSAI",
+      "BSCE",
+      "BSCS",
+      "BSEE",
+      "BSIE",
+      "BSME"
+    ],
+    "sections": [
+      {
+        "name": "EE 452A",
+        "lecturer": "EVŞEN YANMAZ ADAM",
+        "times": [
+          {
+            "day": "Salı",
+            "start": "13:40",
+            "end": "16:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 468",
+    "name": "Donanım Tasarım Desenleri",
+    "credits": 6,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "EE 203",
+    "coreq": "",
+    "description": "Konular arasında yazılım geliştirmede tasarım kalıplarının uygulanması, donanım tasarımında bu tür sistematik yaklaşımların bulunmaması ve donanım tasarımlarının belli temel yapı taşlarıyla gerçeklenmesi süreci yer almaktadır.",
+    "required": [],
+    "elective": [
+      "BSCS",
+      "BSEE"
+    ],
+    "sections": [
+      {
+        "name": "EE 468A",
+        "lecturer": "HASAN FATİH UĞURDAĞ",
+        "times": [
+          {
+            "day": "Çarşamba",
+            "start": "15:40",
+            "end": "18:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 473",
+    "name": "Enerji Sistemleri",
+    "credits": 6,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "EE 202",
+    "coreq": "",
+    "description": "Bu ders elektrik enerjisi sistemleri üzerine yoğunlaşacaktır. Öğrenciler elektrik endüstrisinin tarihçesini, farklı türde dağınık enerji üreteçlerini, rüzgar ve güneş enerji sistemleri ile güç sistemleri ekonomisini öğreneceklerdir. Özyeğin Üniversitesi’nin kendi kendine yeten bir mikro şebekeye dönüştürülmesi konusunda bir projenin en baştan tasarlanması, simule edilmesi ve analiz edilmesi ile ilgili bir final projesi verilecektir.",
+    "required": [],
+    "elective": [
+      "BAANTH",
+      "BABAF",
+      "BABUS",
+      "BAECON",
+      "BAENT",
+      "BAIB",
+      "BAIBUS",
+      "BAIR",
+      "BAMIS",
+      "BAPSYC",
+      "BLAW",
+      "BSAI",
+      "BSARCH (ENG)",
+      "BSARCH (TR)",
+      "BSATM",
+      "BSAVM",
+      "BSCE",
+      "BSCOD",
+      "BSCODE",
+      "BSCS",
+      "BSEE",
+      "BSGARM",
+      "BSGCA",
+      "BSHMAN",
+      "BSHOTM",
+      "BSIDE",
+      "BSIE",
+      "BSINTAR",
+      "BSIPD",
+      "BSME",
+      "BSPF",
+      "BSPLT"
+    ],
+    "sections": [
+      {
+        "name": "EE 473A",
+        "lecturer": "GÖKTÜRK POYRAZOĞLU",
+        "times": [
+          {
+            "day": "Pazartesi",
+            "start": "08:40",
+            "end": "11:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 474",
+    "name": "Mühendisler için Optimizasyon",
+    "credits": 6,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "MATH 211 or MATH 214",
+    "coreq": "",
+    "description": "Bu ders mühendislik uygulamalarında sıkça karşılaşılan konveks optimizasyon problemlerinin tanınması ve çözülmesi üzerine yoğunlaşacaktır. İşlenecek konular : Konveks kümeler, fonksiyonlar ve optimizasyon problemleri, konveks analizin temelleri, doğrusal ve karesel programlama, optimal olma şartları, ikililik teoremi, ve iç nokta yöntemi.",
+    "required": [],
+    "elective": [
+      "BAANTH",
+      "BABAF",
+      "BABUS",
+      "BAECON",
+      "BAENT",
+      "BAIB",
+      "BAIBUS",
+      "BAIR",
+      "BAMIS",
+      "BAPSYC",
+      "BLAW",
+      "BSAI",
+      "BSARCH (ENG)",
+      "BSARCH (TR)",
+      "BSATM",
+      "BSAVM",
+      "BSCE",
+      "BSCOD",
+      "BSCODE",
+      "BSCS",
+      "BSEE",
+      "BSGARM",
+      "BSGCA",
+      "BSHMAN",
+      "BSHOTM",
+      "BSIDE",
+      "BSIE",
+      "BSINTAR",
+      "BSIPD",
+      "BSME",
+      "BSPF",
+      "BSPLT"
+    ],
+    "sections": [
+      {
+        "name": "EE 474A",
+        "lecturer": "AHMET SEYYİD",
+        "times": [
+          {
+            "day": "Perşembe",
+            "start": "08:40",
+            "end": "11:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 486",
+    "name": "Kuantum Bilişim Teknolojileri",
+    "credits": 6,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "EE 202",
+    "coreq": "",
+    "description": "Bu ders atom/iyon/kuantum nokta/süperiletken kübitlerin ve fotonların bilişim bilimi uygulamalarında kullanılması hakkındadır. Konular sabit ve uçan kübitler, kübitlere farklı bilgi kodlama teknikleri (örneğin polarizasyon, zaman, enerji, uzaysal mod kodlamsı), kuantum kapılarına giriş, temel kuantum hesaplama algoritmaları ve kuantum anahtar dağıtımı protokollerini kapsar. Ayrıca kuantum bilgisayarı yardımıyla daha hızlı çözülebilecek problemler anlatılır.",
+    "required": [],
+    "elective": [
+      "BAANTH",
+      "BABAF",
+      "BABUS",
+      "BAECON",
+      "BAENT",
+      "BAIB",
+      "BAIBUS",
+      "BAIR",
+      "BAMIS",
+      "BAPSYC",
+      "BLAW",
+      "BSAI",
+      "BSARCH (ENG)",
+      "BSARCH (TR)",
+      "BSATM",
+      "BSAVM",
+      "BSCE",
+      "BSCOD",
+      "BSCODE",
+      "BSCS",
+      "BSEE",
+      "BSGARM",
+      "BSGCA",
+      "BSHMAN",
+      "BSHOTM",
+      "BSIDE",
+      "BSIE",
+      "BSINTAR",
+      "BSIPD",
+      "BSME",
+      "BSPF",
+      "BSPLT"
+    ],
+    "sections": [
+      {
+        "name": "EE 486A",
+        "lecturer": "KADİR DURAK",
+        "times": [
+          {
+            "day": "Cuma",
+            "start": "08:40",
+            "end": "11:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 493",
+    "name": "Güç Elektroniği",
+    "credits": 6,
+    "faculty": "Mühendislik Fakültesi",
+    "prereq": "EE 301",
+    "coreq": "",
+    "description": "Konular arasında anahtarlama kavramları, güç yarı iletkenleri, anahtarlama devreleri, güç hesaplamaları, bileşen kavramları, izole edilmemiş DC-DC dönüştürücüler ve düzenleyiciler, tek fazlı ve üç fazlı diyot doğrultucular, kontrollü ve kontrolsüz AC-DC dönüştürücüler, tek fazlı ve üç -faz inverterleri ve darbe genişliği modülasyon kontrol teknikleri.",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 493A",
+        "lecturer": "UMUT BAŞARAN",
+        "times": [
+          {
+            "day": "Salı",
+            "start": "09:40",
+            "end": "12:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 501",
+    "name": "Doğrusal Sistemler",
+    "credits": 7.5,
+    "faculty": "Fen Bilimleri Enstitüsü",
+    "prereq": "",
+    "coreq": "",
+    "description": "Ders, devre, sinyal işleme, haberleşme ve kontrol sistemi uygulamalı doğrusal cebir ve lineer dinamik sistemler gibi konuları içerir. Ders durum-uzay gösterimlerini, doğrusal operatörleri, özdeğerleri ve özvektörleri, kararlılığı, kontrol edilebilirliği, gözlenebilirliği, gerçekleştirme teorisini, geri beslemeyi ve gözlemcileri kapsar.",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 501A",
+        "lecturer": "EVŞEN YANMAZ ADAM",
+        "times": [
+          {
+            "day": "Perşembe",
+            "start": "10:40",
+            "end": "13:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 529",
+    "name": "Biyomedikal Görüntüleme",
+    "credits": 7.5,
+    "faculty": "Fen Bilimleri Enstitüsü",
+    "prereq": "",
+    "coreq": "",
+    "description": "Bu ders, sinyal ve sistemler bakış açısına ve enstrümantasyonun güncel tanımlamalarına odaklanarak tıbbi görüntülemenin temellerini sunar. Projeksiyon radyografisi, x-ışınlı bilgisayarlı tomografi, nükleer tıp sintigrafisi ve emisyon tomografisi, ultrasonografi ve manyetik rezonans görüntüleme gibi önemli görüntüleme yöntemleri tanımlanır. İki boyutlu sinyal işleme ve görüntü kalitesinin gözden geçirilmesi ile temel görüntüleme ilkeleri tanıtılır. Örnekleme ve uygulama tartışmaları, sürekli ve ayrık sinyallere dayalı tıbbi görüntüleme sistemleri teorisi dahil edilir. Çözünürlük, gürültü, kontrast, geometrik bozulma ve artifakt içeren görüntü kalitesi konusu açıklanmaktadır. Radyografinin fiziği, iyonize radyasyonun oluşumu ve tespiti ve insan vücudundaki etkileri tartışılmaktadır. Göğüs röntgeni, floroskopi ve mamografi sistemleri de dahil olmak üzere projeksiyon radyografi sistemleri de projeksiyon görüntüleme matematiği dahil edilerek tanıtılır. Tıbbi görüntülemede röntgen bilgisayarlı tomografi ve görüntü yeniden yapılandırılması incelenir. Daha sonra nükleer tıp fiziği, radyoaktivite ve sintigrafi ve emisyon bilgisayarlı tomografisi de dahil olmak üzere nükleer tıp görüntülemedeki temel yöntemler üzerinde durulur. Buna ek olarak, ultrason ve manyetik rezonans görüntüleme teknikleri fiziği anlatılır. Ayrıca modern nano-teknoloji yöntemlerini kullanan hücresel, mikrobiyolojik ve mikro akışkan görüntüleme yöntemleri tartışılır.",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 529A",
+        "lecturer": "MEHMET BURÇİN ÜNLÜ",
+        "times": [
+          {
+            "day": "Pazartesi",
+            "start": "12:40",
+            "end": "15:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 530",
+    "name": "Derin Öğrenme ile Sinyal İşleme",
+    "credits": 7.5,
+    "faculty": "Fen Bilimleri Enstitüsü",
+    "prereq": "",
+    "coreq": "",
+    "description": "Bu ders sinir ağlarının arkasındaki matematiğin ve bu matematiğin Python ile gerçeklenmesi, Pytorch yazılım çerçevesi kullanılarak gerçek-yaşam problemleri, modern sinir ağı mimarileri, hiper parametrelerin ayarlanması ve verimli gerçekleme teknikleri konularını içerir.",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 530V",
+        "lecturer": "CENK DEMİROĞLU",
+        "times": []
+      }
+    ]
+  },
+  {
+    "code": "EE 532",
+    "name": "Sinyal İşleme İçin İleri MATLAB",
+    "credits": 7.5,
+    "faculty": "Fen Bilimleri Enstitüsü",
+    "prereq": "",
+    "coreq": "",
+    "description": "İşlenecek konular arasında sayısal analiz, sinyal işleme ve modelleme için MATLAB'in temel programlama kavramları, veri işleme ve görselleştirme yer almaktadır. Uygulamalı alıştırmalar ve bir proje aracılığıyla öğrenciler, gerçek dünyadaki sinyal işleme problemlerini çözmek için MATLAB'i uygulama konusunda pratik deneyim kazanır.",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 532A",
+        "lecturer": "MOHAMMED ELAMASSIE",
+        "times": [
+          {
+            "day": "Cuma",
+            "start": "14:40",
+            "end": "17:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 552",
+    "name": "IoT Kablosuz Algılama ve Ağ İletişimi",
+    "credits": 7.5,
+    "faculty": "Fen Bilimleri Enstitüsü",
+    "prereq": "",
+    "coreq": "",
+    "description": "Dersin içerdiği konular şu şekilde sıralanabilir: katmanlı ağ oluşturma modellerinin ilkeleri, IoT uygulamaları için gerekli temel kavramları ve ağ protokolleri, kaynak kısıtlı cihazlarla IoT uygulama alanları, kaynak kısıtlı cihazlardan bulut sistemlerine sensör verilerini toplama amaçlı ağ protokolleri, IoT sistemlerinde çözülmesi gereken açık araştırma konuları.",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 552V",
+        "lecturer": "EVŞEN YANMAZ ADAM",
+        "times": []
+      }
+    ]
+  },
+  {
+    "code": "EE 566",
+    "name": "Yonga Üzeri Sistem Tasarımı",
+    "credits": 7.5,
+    "faculty": "Fen Bilimleri Enstitüsü",
+    "prereq": "",
+    "coreq": "",
+    "description": "Öğrencilerin Verilog kullanarak tepeden-aşağıya ve aşağıdan-tepeye olacak şekilde yonga üstü sistem tasarlama ve bunu FPGA üzerinde gerçekleme kabiliyeti kazanmalarını sağlamak.",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 566A",
+        "lecturer": "İLKER HAMZAOĞLU",
+        "times": [
+          {
+            "day": "Pazartesi",
+            "start": "12:40",
+            "end": "15:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 568",
+    "name": "Donanım Tasarım Desenleri",
+    "credits": 7.5,
+    "faculty": "Fen Bilimleri Enstitüsü",
+    "prereq": "",
+    "coreq": "",
+    "description": "“Tasarım Desenleri”, yazılım sektöründe ve akademik dünyada son yıllarda popüler olmuş bir konudur. Buradaki amaç, yazılımcıların her gün yaptıkları işe bir adım geri çekilerek bakmaları, sık sık yazdıkları türdeki nesneleri daha soyut bir hale getirip temiz, uygulama detaylarından bağımsız “ders kitabı” kıvamında kodlara dönüştürmeleridir. Bunun aynısı, bir-iki yayın ve ders dışında donanım alanında denenmemiştir. Öteki taraftan, bu konuda donanım alanında da ihtiyaç vardır. Bahsettiğimiz türde tasarım şablonları deneyimli donanım tasarımcıları arasında dolaşmakta ve genç tasarımcılardan iş mülakatlarında istenmektedir. Bu derste, biz de bir adım geriye çekilip yazılım dünyasındakine benzer bir şekilde çeşitli donanım tasarım şablonlarını soyutlaştırmaya ve ders kitabı tasarımlarına dönüştürmeye çalışıyoruz.",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 568A",
+        "lecturer": "HASAN FATİH UĞURDAĞ",
+        "times": [
+          {
+            "day": "Çarşamba",
+            "start": "15:40",
+            "end": "18:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 573",
+    "name": "Enerji Sistemleri",
+    "credits": 7.5,
+    "faculty": "Fen Bilimleri Enstitüsü",
+    "prereq": "",
+    "coreq": "",
+    "description": "Bu ders elektrik enerjisi sistemleri üzerine yoğunlaşacaktır. Öğrenciler elektrik endüstrisinin tarihçesini, farklı türde dağınık enerji üreteçlerini, rüzgar ve güneş enerji sistemleri ile güç sistemleri ekonomisini öğreneceklerdir. Özyeğin Üniversitesi’nin kendi kendine yeten bir mikro şebekeye dönüştürülmesi konusunda bir projenin en baştan tasarlanması, simule edilmesi ve analiz edilmesi ile ilgili bir final projesi verilecektir.",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 573A",
+        "lecturer": "GÖKTÜRK POYRAZOĞLU",
+        "times": [
+          {
+            "day": "Pazartesi",
+            "start": "08:40",
+            "end": "11:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 579",
+    "name": "Elektrik Elektronik Mühendisliğinde Seçme Konular: Deneysel Kuantum Haberleşme Sistemleri",
+    "credits": 7.5,
+    "faculty": "Fen Bilimleri Enstitüsü",
+    "prereq": "",
+    "coreq": "",
+    "description": "Bu ders, kuantum optiği ve optoelektronik alanlarında deneysel uygulamalar ve araştırma çalışmalarına odaklanır. Öğrenciler kuantum anahtar dağıtımı (QKD), tek foton algılama ve kuantum rastgele sayı üreteci (QRNG) gibi sistemleri inceleyip uygularlar. Ders, deneysel tasarım, veri analizi ve sonuç yorumlamaya vurgu yaparak öğrencilerin bireysel veya ortak projeler yoluyla yayınlanabilir araştırma sonuçları üretmelerini hedefler.",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 579A",
+        "lecturer": "KADİR DURAK",
+        "times": [
+          {
+            "day": "Pazartesi",
+            "start": "08:40",
+            "end": "11:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 586",
+    "name": "Kuantum Bilişim Teknolojileri",
+    "credits": 7.5,
+    "faculty": "Fen Bilimleri Enstitüsü",
+    "prereq": "",
+    "coreq": "",
+    "description": "Kuantum bilişim atom/iyon/kuantum nokta/süperiletken kübitlerin ve fotonların bilişim bilimi uygulamalarında kullanılmasıdır. Kuantum bilişim teknolojileri dersi sabit ve uçan kübitler, kübitlere farklı bilgi kodlama teknikleri (örneğin polarizasyon, zaman, enerji, uzaysal mod kodlamsı), kuantum faz kapılarına giriş, temel kuantum hesaplama algoritmaları, kuantum anahtar dağıtımı protokolleri ve kuantum bilgisayarı yardımıyla daha hızlı çözülebilecek problemler anlatılır.",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 586A",
+        "lecturer": "KADİR DURAK",
+        "times": [
+          {
+            "day": "Cuma",
+            "start": "08:40",
+            "end": "11:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 593",
+    "name": "Güç Elektroniği",
+    "credits": 7.5,
+    "faculty": "Fen Bilimleri Enstitüsü",
+    "prereq": "",
+    "coreq": "",
+    "description": "Bu ders milivat seviyelerinden megavat seviyelerine kadar olan pek çok elektriksel güç dönüştürücü tekniklerini ele alır. Dersin ele aldığı DC-DC, AC-DC, DC-AC güç çeviricilerine ilişkin detaylı konular arasında çevirici dinamiği ve kontrol, rezonant çeviriciler, denge halinde çevirici analizi, güç sistemi harmonikleri ve düşük çarpıtmalı düzelticiler yer alır.",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 593A",
+        "lecturer": "UMUT BAŞARAN",
+        "times": [
+          {
+            "day": "Salı",
+            "start": "09:40",
+            "end": "12:30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "EE 675",
+    "name": "Elektrik Elektronik Mühendisliğinde Yüksek Lisans Dönem Projesi",
+    "credits": 15,
+    "faculty": "Fen Bilimleri Enstitüsü",
+    "prereq": "30 ECTS",
+    "coreq": "",
+    "description": "Tezsiz yüksek lisans programının son aşaması olan bu ders bir dönem projesi içermektedir.",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 675VT1",
+        "lecturer": "CENK DEMİROĞLU",
+        "times": []
+      },
+      {
+        "name": "EE 675VT2",
+        "lecturer": "GÖKTÜRK POYRAZOĞLU",
+        "times": []
+      },
+      {
+        "name": "EE 675VT3",
+        "lecturer": "CENK DEMİROĞLU",
+        "times": []
+      },
+      {
+        "name": "EE 675VT4",
+        "lecturer": "EVŞEN YANMAZ ADAM",
+        "times": []
+      }
+    ]
+  },
+  {
+    "code": "EE 693",
+    "name": "Elektrik Elektronik Mühendisliğinde Yüksek Lisans Tez Çalışması",
+    "credits": 7.5,
+    "faculty": "Fen Bilimleri Enstitüsü",
+    "prereq": "",
+    "coreq": "",
+    "description": "Yüksek lisans tezinin ilk aşaması olan bu derste öğrenci tez danışmanıyla birlikte bir araştırma problemini tez konusu olarak belirler.",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 693A",
+        "lecturer": "ALİ EKİCİ",
+        "times": []
+      }
+    ]
+  },
+  {
+    "code": "EE 694",
+    "name": "Elektrik Elektronik Mühendisliğinde Yüksek Lisans Tez Çalışması II",
+    "credits": 22.5,
+    "faculty": "Fen Bilimleri Enstitüsü",
+    "prereq": "",
+    "coreq": "",
+    "description": "Yüksek lisans tezinin ikinci aşaması olan bu derste öğrenci bir araştırma yürütür ve tezinin ilk aşamasında belirlediği problemle ilgili bir çözüm üretir.",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 694A",
+        "lecturer": "ALİ EKİCİ",
+        "times": []
+      }
+    ]
+  },
+  {
+    "code": "EE 695",
+    "name": "Elektrik Elektronik Mühendisliğinde Yüksek Lisans Tez Çalışması III",
+    "credits": 30,
+    "faculty": "Fen Bilimleri Enstitüsü",
+    "prereq": "",
+    "coreq": "",
+    "description": "Yüksek lisans tezinin üçüncü ve son aşaması olan bu derste öğrenci tezini yazar, tez çalışmasını yayınlar ve sunar.",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 695A",
+        "lecturer": "ALİ EKİCİ",
+        "times": []
+      }
+    ]
+  },
+  {
+    "code": "EE 696",
+    "name": "Elektrik Elektronik Mühendisliğinde Yüksek Lisans Tez Savunması",
+    "credits": 26,
+    "faculty": "Fen Bilimleri Enstitüsü",
+    "prereq": "",
+    "coreq": "",
+    "description": "Yüksek lisans tezinin üçüncü ve son aşaması olan bu derste öğrenci tezini yazar, tez çalışmasını yayınlar ve sunar.",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 696A",
+        "lecturer": "ALİ EKİCİ",
+        "times": []
+      }
+    ]
+  },
+  {
+    "code": "EE 900",
+    "name": "Elektrik Elektronik Mühendisliğinde Doktora Yeterlik Sınavı",
+    "credits": 30,
+    "faculty": "Fen Bilimleri Enstitüsü",
+    "prereq": "",
+    "coreq": "",
+    "description": "Doktora yeterlilik sınavı yazılı ve sözlü olmak üzere iki bölümden oluşur. Yazılı sınav öğrencinin Elektrik Elektronik Mühendisliği alanındaki genel bilgisini, sözlü kısım ise Elektrik Elektronik Mühendisliğinin spesifik alanlarındaki bilgisini ölçer.",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 900A",
+        "lecturer": "EVŞEN YANMAZ ADAM",
+        "times": []
+      },
+      {
+        "name": "EE 900VT",
+        "lecturer": "EVŞEN YANMAZ ADAM",
+        "times": []
+      }
+    ]
+  },
+  {
+    "code": "EE 970",
+    "name": "Elektrik Elektronik Mühendisliğinde Doktora Tez Önerisi",
+    "credits": 30,
+    "faculty": "Fen Bilimleri Enstitüsü",
+    "prereq": "EE 900",
+    "coreq": "",
+    "description": "Doktora tezinin öneri aşaması olan bu derste öğrenci, tez danışmanıyla birlikte ileri bir araştırma problemini ve bununla ilgili çözüm yöntemini tanımlar.",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 970A",
+        "lecturer": "ALİ EKİCİ",
+        "times": []
+      }
+    ]
+  },
+  {
+    "code": "EE 977",
+    "name": "Elektrik Elektronik Mühendisliğinde Doktora Tez Çalışması I",
+    "credits": 30,
+    "faculty": "Fen Bilimleri Enstitüsü",
+    "prereq": "EE 970",
+    "coreq": "",
+    "description": "Doktora tezinin araştırma aşaması olan bu derste öğrenci, öneri aşamasında belirlediği ileri araştırma probleminin çözümü ile ilgili çalışmasının ilk aşamasını yürütür.",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 977A",
+        "lecturer": "ALİ EKİCİ",
+        "times": []
+      }
+    ]
+  },
+  {
+    "code": "EE 978",
+    "name": "Elektrik Elektronik Mühendisliğinde Doktora Tez Çalışması II",
+    "credits": 30,
+    "faculty": "Fen Bilimleri Enstitüsü",
+    "prereq": "",
+    "coreq": "EE 977",
+    "description": "Doktora tezinin araştırma aşaması olan bu derste öğrenci, öneri aşamasında belirlediği ileri araştırma probleminin çözümü ile ilgili çalışmasının ara aşamasını yürütür.",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 978A",
+        "lecturer": "ALİ EKİCİ",
+        "times": []
+      }
+    ]
+  },
+  {
+    "code": "EE 979",
+    "name": "Elektrik Elektronik Mühendisliğinde Doktora Tez Çalışması III",
+    "credits": 30,
+    "faculty": "Fen Bilimleri Enstitüsü",
+    "prereq": "",
+    "coreq": "EE 978 or EE 990",
+    "description": "Doktora tezinin son aşaması olan bu derste öğrenci, öneri aşamasında belirlediği ileri araştırma probleminin çözümü ile ilgili çalışmasını yürütür ve araştırma sonuçlarını bilimsel bir dergide yayınlar.",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 979A",
+        "lecturer": "ALİ EKİCİ",
+        "times": []
+      }
+    ]
+  },
+  {
+    "code": "EE 980",
+    "name": "Elektrik Elektronik Mühendisliğinde Doktora Tez Savunması",
+    "credits": 30,
+    "faculty": "Fen Bilimleri Enstitüsü",
+    "prereq": "",
+    "coreq": "EE 979",
+    "description": "Doktora tezinin son aşaması olan bu derste öğrenci tezini yazar ve sunar.",
+    "required": [],
+    "elective": [],
+    "sections": [
+      {
+        "name": "EE 980A",
+        "lecturer": "ALİ EKİCİ",
+        "times": []
+      },
+      {
+        "name": "EE 980B",
+        "lecturer": "ALİ EKİCİ",
+        "times": []
+      },
+      {
+        "name": "EE 980C",
+        "lecturer": "ALİ EKİCİ",
+        "times": []
+      }
+    ]
+  }
+]
