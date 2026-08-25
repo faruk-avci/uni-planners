@@ -1278,7 +1278,7 @@ function App() {
       </main>
       )}
 
-      {activePage === 'planner' && (
+      {activePage !== 'shared' && (
         <>
           <button
             type="button"
@@ -1340,6 +1340,7 @@ function App() {
                   <button
                     className="btn btn-primary btn-generate"
                     onClick={() => {
+                      if (activePage !== 'planner') navigate('planner')
                       handleGenerate()
                       setMobileBasketOpen(false)
                     }}
@@ -1358,7 +1359,7 @@ function App() {
         </>
       )}
 
-      <footer className={`footer ${activePage === 'planner' ? 'footer-planner' : ''}`}>
+      <footer className={`footer ${activePage !== 'shared' ? 'footer-mobile-basket' : ''}`}>
         <div className="container footer-content">
           <p className="footer-credit">
             UniPlanners · Designed and coded with <span>❤️</span> by{' '}
