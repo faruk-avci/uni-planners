@@ -1,0 +1,30 @@
+[Unit]
+Description=UniPlanner API
+After=network-online.target postgresql.service
+Wants=network-online.target
+Requires=postgresql.service
+
+[Service]
+Type=simple
+User=uniplanner
+Group=uniplanner
+WorkingDirectory=/opt/uniplanner/app/backend
+EnvironmentFile=/etc/uniplanner/backend.env
+ExecStart=/usr/local/bin/node server.js
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=30
+KillSignal=SIGTERM
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadOnlyPaths=/opt/uniplanner/app
+ReadWritePaths=/var/lib/uniplanner
+LimitNOFILE=65535
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=uniplanner-api
+
+[Install]
+WantedBy=multi-user.target

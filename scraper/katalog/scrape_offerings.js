@@ -1,32 +1,44 @@
 #!/usr/bin/env node
 /**
- * OZU Offered Courses Excel Scraper
- * Downloads the offered courses Excel sheet for each subject code
- * 
- * Usage: node scrape_offerings.js [--headless true|false]
+ * Download offered-course Excel files from the OZU SIS.
+ *
+ * Examples:
+ *   node scrape_offerings.js --term "2025 - 2026 Bahar"
+ *   node scrape_offerings.js --term "2025 - 2026 Bahar" --subjects "EE,ANTH"
+ *   node scrape_offerings.js --term "2025 - 2026 Bahar" --start 1 --end 33
  */
 
 import { chromium } from 'playwright';
+import XLSX from 'xlsx';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const OFFERINGS_URL = 'https://sis.ozyegin.edu.tr/OZU_GWT/WEB/CourseCatalogOfferUI?locale=tr';
 
 function parseArgs() {
   const args = process.argv.slice(2);
-  // term: full picklist label, e.g. "2025 - 2026 Yaz" (Summer). Empty = page default.
-  const config = { headless: true, term: '', max: 0 };
+  const config = { headless: true, term: '', max: 0, start: 1, end: 0, subjects: [] };
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--headless') {
-      config.headless = args[i + 1] === 'false' ? false : true;
+      config.headless = args[i + 1] !== 'false';
       i++;
     } else if (args[i] === '--term') {
       config.term = args[i + 1] || '';
       i++;
     } else if (args[i] === '--max') {
-      config.max = parseInt(args[i + 1], 10) || 0; // 0 = all
+      config.max = parseInt(args[i + 1], 10) || 0;
+      i++;
+    } else if (args[i] === '--start') {
+      config.start = Math.max(1, parseInt(args[i + 1], 10) || 1);
+      i++;
+    } else if (args[i] === '--end') {
+      config.end = Math.max(0, parseInt(args[i + 1], 10) || 0);
+      i++;
+    } else if (args[i] === '--subjects') {
+      config.subjects = String(args[i + 1] || '').split(',').map(value => value.trim()).filter(Boolean);
       i++;
     }
   }
@@ -37,289 +49,297 @@ function termSlug(term) {
   return term.trim().replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_|_$/g, '').toLowerCase();
 }
 
-/**
- * Select a term in the "Dönem Kodu" autocomplete (SmartGWT combobox).
- * Same technique as the "Konu" field: type to filter, then mouse-click the
- * exact picklist option. Returns true on success.
- */
-async function selectTerm(page, term) {
-  if (!term) return true; // keep page default
+function normalizeSubject(value) {
+  return String(value || '').trim().replaceAll('\u00c4\u00b0', '\u0130');
+}
 
-  // Locate the "Dönem Kodu" input via its label cell.
-  const inputHandle = await page.evaluateHandle(() => {
-    const tds = Array.from(document.querySelectorAll('td'));
-    const labelTd = tds.find(td => td.textContent.trim().startsWith('Dönem Kodu'));
-    return labelTd?.nextElementSibling?.querySelector('input') || null;
-  });
-  const input = inputHandle.asElement();
-  if (!input) {
-    console.error('   ❌ Could not find the "Dönem Kodu" (term) input.');
+function validateOfferingFile(filePath, expectedSubject) {
+  try {
+    const workbook = XLSX.readFile(filePath);
+    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(worksheet);
+    return rows.length > 0 && rows.every(row => (
+      String(row.SUBJECT || '').trim().toUpperCase() === expectedSubject.toUpperCase()
+    ));
+  } catch {
     return false;
   }
+}
 
-  // Already on the desired term?
-  const current = await input.evaluate(el => el.value);
-  if (current && current.trim() === term.trim()) return true;
+async function selectTerm(page, term) {
+  const input = page.locator('input[name="TERMCODE"]');
+  await input.waitFor({ state: 'visible', timeout: 30000 });
+  await page.waitForFunction(() => {
+    const value = document.querySelector('input[name="TERMCODE"]')?.value?.trim();
+    return value && value !== 'Loading...';
+  }, { timeout: 30000 });
+
+  if (!term || (await input.inputValue()).trim() === term.trim()) return true;
 
   await input.click();
-  await page.keyboard.press('Control+A');
-  await page.keyboard.press('Backspace');
-  await page.waitForTimeout(200);
+  await input.press('Control+A');
+  await input.press('Backspace');
+  await input.type(term.trim().split(/\s+/).pop(), { delay: 80 });
+  await page.waitForTimeout(1500);
 
-  // Typing the last word ("Yaz"/"Güz"/"Bahar") filters the list reliably.
-  const filterText = term.trim().split(/\s+/).pop();
-  await input.type(filterText, { delay: 60 });
-  await page.waitForTimeout(1200);
-
-  // Find the exact-matching visible option and click its center with a real mouse event.
-  const optionBox = await page.evaluate((label) => {
-    const el = Array.from(document.querySelectorAll('*')).find(e =>
-      e.children.length === 0 &&
-      e.textContent.trim() === label &&
-      e.getBoundingClientRect().width > 0
-    );
-    if (!el) return null;
-    const r = el.getBoundingClientRect();
-    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
-  }, term.trim());
-
-  if (!optionBox) {
-    console.error(`   ❌ Term option "${term}" not found in the dropdown.`);
-    return false;
+  let optionHandle;
+  try {
+    optionHandle = await page.waitForFunction(expected => {
+      const option = Array.from(document.querySelectorAll('*')).find(element => (
+        element.children.length === 0
+        && element.textContent.trim() === expected
+        && element.getBoundingClientRect().width > 0
+      ));
+      if (!option) return null;
+      const rect = option.getBoundingClientRect();
+      return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+    }, term.trim(), { timeout: 15000 });
+  } catch {
+    throw new Error(`Term option "${term}" did not load.`);
   }
-  await page.mouse.click(optionBox.x, optionBox.y);
-  await page.waitForTimeout(1000);
 
-  const after = await input.evaluate(el => el.value);
-  const ok = after && after.trim() === term.trim();
-  console.log(ok ? `   📅 Term set to "${after.trim()}".` : `   ⚠️ Term value is "${after}" (expected "${term}").`);
-  return ok;
+  const optionBox = await optionHandle.jsonValue();
+  await page.mouse.click(optionBox.x, optionBox.y);
+  await page.waitForFunction(expected => (
+    document.querySelector('input[name="TERMCODE"]')?.value?.trim() === expected
+  ), term.trim(), { timeout: 10000 });
+  return true;
+}
+
+async function preparePage(page, term) {
+  await page.goto(OFFERINGS_URL, { waitUntil: 'load', timeout: 60000 });
+  await selectTerm(page, term);
+
+  // SmartGWT reloads its subject datasource after a term change. If typing
+  // starts too early, the text appears in the input but no subject is selected.
+  await page.waitForTimeout(5000);
+}
+
+async function selectSubject(page, subject) {
+  const input = page.locator('input[name="COURSESUBJECT"]');
+  await input.waitFor({ state: 'visible', timeout: 15000 });
+  await input.click();
+  await input.press('Control+A');
+  await input.press('Backspace');
+  await input.type(subject, { delay: 80 });
+
+  let optionBox = null;
+  for (let attempt = 0; attempt < 30 && !optionBox; attempt++) {
+    optionBox = await page.evaluate(expected => {
+      const option = Array.from(document.querySelectorAll('tr[role="listitem"]')).find(row => {
+        const rect = row.getBoundingClientRect();
+        // textContent concatenates SmartGWT cells ("EEElektrik-...").
+        // innerText preserves the cell boundary so the code can be exact.
+        const code = row.innerText.trim().split(/\s+/)[0];
+        return rect.width > 0 && rect.height > 0 && code === expected;
+      });
+      if (!option) return null;
+      const rect = option.getBoundingClientRect();
+      return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+    }, subject);
+    if (!optionBox) await page.waitForTimeout(500);
+  }
+  if (!optionBox) {
+    const visibleOptions = await page.locator('tr[role="listitem"]:visible').allInnerTexts().catch(() => []);
+    throw new Error(`Subject option "${subject}" did not load. Visible options: ${visibleOptions.join(' | ') || '(none)'}`);
+  }
+
+  await page.mouse.click(optionBox.x, optionBox.y);
+  await page.waitForFunction(expected => (
+    document.querySelector('input[name="COURSESUBJECT"]')?.value?.trim() === expected
+  ), subject, { timeout: 10000 });
+}
+
+async function searchSubject(page) {
+  await page.getByText('Arama', { exact: true }).last().click();
+  await page.waitForTimeout(750);
+  const outcomeHandle = await page.waitForFunction(() => {
+    const excel = Array.from(document.querySelectorAll('img[src*="excel_export"]'))
+      .some(image => image.getBoundingClientRect().width > 0);
+    if (excel) return 'results';
+
+    const bodyText = document.body.innerText || '';
+    if (bodyText.includes('Kay\u0131t bulunamad\u0131') || bodyText.includes('0 Kay\u0131t Bulundu')) {
+      return 'empty';
+    }
+    return false;
+  }, { timeout: 30000 });
+  return outcomeHandle.jsonValue();
+}
+
+async function closeExtraPages(context) {
+  const pages = context.pages();
+  for (let i = 1; i < pages.length; i++) {
+    try { await pages[i].close(); } catch { /* already closed */ }
+  }
 }
 
 async function run() {
   const config = parseArgs();
-  console.log(`🚀 Starting OZU Offered Courses Scraper...`);
-  console.log(`   Headless mode:  ${config.headless}`);
-  console.log(`   Term:           ${config.term || '(page default)'}`);
+  console.log('Starting OZU Offered Courses Scraper...');
+  console.log(`   Headless mode: ${config.headless}`);
+  console.log(`   Term:          ${config.term || '(page default)'}`);
 
   const codesPath = path.join(__dirname, 'codes.json');
   if (!fs.existsSync(codesPath)) {
-    console.error(`❌ Cannot find codes.json at ${codesPath}`);
+    console.error(`Cannot find codes.json at ${codesPath}`);
     process.exit(1);
   }
 
   const codes = JSON.parse(fs.readFileSync(codesPath, 'utf8'));
-  let activeSubjects = codes.DATA.rows
-    .filter(r => r.SUBJECTTYPE === '1')
-    .map(r => r.NAME)
+  const allActiveSubjects = codes.DATA.rows
+    .filter(row => row.SUBJECTTYPE === '1')
+    .map(row => normalizeSubject(row.NAME))
     .sort();
+  const endIndex = config.end > 0 ? Math.min(config.end, allActiveSubjects.length) : allActiveSubjects.length;
+  let activeSubjects = config.subjects.length
+    ? config.subjects.map(normalizeSubject)
+    : allActiveSubjects.slice(config.start - 1, endIndex);
   if (config.max > 0) activeSubjects = activeSubjects.slice(0, config.max);
 
-  console.log(`📊 Found ${activeSubjects.length} active subjects to scrape.`);
+  console.log(config.subjects.length
+    ? `   Requested subjects: ${activeSubjects.join(', ')}`
+    : `   Subject range: ${config.start}-${endIndex} (${activeSubjects.length}/${allActiveSubjects.length})`);
 
+  const baseOutputDir = config.term
+    ? path.join(__dirname, 'downloads', termSlug(config.term))
+    : path.join(__dirname, 'downloads');
   const browser = await chromium.launch({
     headless: config.headless,
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
-  const context = await browser.newContext();
+  const context = await browser.newContext({ acceptDownloads: true });
   const page = await context.newPage();
-
   page.on('dialog', async dialog => {
-    console.log(`   💬 Dialog popped up: [${dialog.type()}] ${dialog.message()}`);
+    console.log(`   Dialog: [${dialog.type()}] ${dialog.message()}`);
     await dialog.dismiss();
   });
 
-  let capturedDownload = null;
-  context.on('download', download => {
-    capturedDownload = download;
-  });
+  const failures = [];
+  const emptySubjects = [];
 
   try {
-    console.log('🌐 Navigating to OZU Offered Courses page...');
-    await page.goto('https://sis.ozyegin.edu.tr/OZU_GWT/WEB/CourseCatalogOfferUI?locale=tr', {
-      waitUntil: 'load',
-      timeout: 60000
-    });
-    await page.waitForTimeout(4000);
-
-    if (config.term) {
-      const ok = await selectTerm(page, config.term);
-      if (!ok) {
-        console.error('❌ Could not select the requested term. Aborting.');
-        await browser.close();
-        process.exit(1);
-      }
-    }
-
-    const baseOutputDir = config.term
-      ? path.join(__dirname, 'downloads', termSlug(config.term))
-      : path.join(__dirname, 'downloads');
-
     for (let index = 0; index < activeSubjects.length; index++) {
       const subject = activeSubjects[index];
       const subjectDir = path.join(baseOutputDir, subject);
-      fs.mkdirSync(subjectDir, { recursive: true });
       const destPath = path.join(subjectDir, `${subject}_offered.xls`);
+      const emptyMarkerPath = path.join(subjectDir, `${subject}_offered.empty.json`);
+      fs.mkdirSync(subjectDir, { recursive: true });
+      console.log(`\n[${index + 1}/${activeSubjects.length}] Subject: ${subject}`);
 
-      console.log(`\n[${index + 1}/${activeSubjects.length}] Processing Subject: ${subject}`);
-
-      // Resumable check
       if (fs.existsSync(destPath)) {
-        console.log(`   ⏭️ Already downloaded. Skipping.`);
-        continue;
-      }
-
-      // Safe element polling loop
-      let input = null;
-      for (let attempt = 0; attempt < 20; attempt++) {
-        const inputHandle = await page.evaluateHandle(() => {
-          const tds = Array.from(document.querySelectorAll('td'));
-          const labelTd = tds.find(td => td.textContent.trim().startsWith('Konu'));
-          return labelTd?.nextElementSibling?.querySelector('input') || null;
-        });
-        input = inputHandle.asElement();
-        if (input) break;
-        await page.waitForTimeout(200);
-      }
-
-      if (!input) {
-        console.error(`   ❌ Could not locate the "Konu" input field after polling. Reloading page...`);
-        await page.reload();
-        await page.waitForTimeout(4000);
-        await selectTerm(page, config.term); // reload resets the term
-        index--; // Retry same subject
-        continue;
-      }
-
-      // Attempt input interaction with a short timeout.
-      // If a modal error dialog is covering the page, this will fail and trigger a reload.
-      try {
-        await input.click({ timeout: 2000 });
-      } catch (clickErr) {
-        console.error(`   ⚠️ Input click blocked (modal popup on screen?). Reloading page...`);
-        await page.reload();
-        await page.waitForTimeout(4000);
-        await selectTerm(page, config.term); // reload resets the term
-        index--; // Retry same subject
-        continue;
-      }
-
-      // Clear the Konu text field
-      await page.keyboard.press('Control+A');
-      await page.keyboard.press('Backspace');
-      await page.waitForTimeout(200);
-
-      // Type the subject code
-      await input.type(subject, { delay: 50 });
-      await page.waitForTimeout(1000);
-
-      // Select option
-      const optionBox = await page.evaluate((val) => {
-        const rows = Array.from(document.querySelectorAll('tr[role="listitem"]'));
-        const matching = rows.find(r => {
-          const rect = r.getBoundingClientRect();
-          const isVisible = rect.width > 0 && rect.height > 0;
-          const text = r.textContent.trim();
-          return isVisible && (text === val || text.startsWith(val));
-        });
-        if (matching) {
-          const rect = matching.getBoundingClientRect();
-          return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+        if (validateOfferingFile(destPath, subject)) {
+          if (fs.existsSync(emptyMarkerPath)) fs.unlinkSync(emptyMarkerPath);
+          console.log('   Existing Excel validated; skipping.');
+          continue;
         }
-        return null;
-      }, subject);
-
-      if (optionBox) {
-        await page.mouse.click(optionBox.x, optionBox.y);
-      } else {
-        await input.press('ArrowDown');
-        await page.waitForTimeout(200);
-        await input.press('Enter');
-      }
-      await page.waitForTimeout(800);
-
-      // Click Search (Arama) button
-      const searchBtnBox = await page.evaluate(() => {
-        const elements = Array.from(document.querySelectorAll('div, td, button, table'));
-        const btn = elements.find(el => el.textContent.trim() === 'Arama' && (el.className.includes('Button') || el.role === 'button' || el.tagName === 'TD'));
-        if (btn) {
-          const rect = btn.getBoundingClientRect();
-          return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
-        }
-        return null;
-      });
-
-      if (searchBtnBox) {
-        await page.mouse.click(searchBtnBox.x, searchBtnBox.y);
-      } else {
-        await page.locator('text="Arama"').first().click();
+        console.error('   Existing Excel failed validation; downloading again.');
+        fs.unlinkSync(destPath);
       }
 
-      // Wait for table to load results
-      let hasResults = false;
-      try {
-        await page.waitForFunction(() => {
-          const excelBtn = document.querySelector('img[src*="excel_export"]');
-          const excelVisible = excelBtn && excelBtn.getBoundingClientRect().width > 0;
-          
-          const bodyText = document.body.textContent || '';
-          const noResults = bodyText.includes('0 Kayıt Bulundu') || bodyText.includes('Kayıt bulunamadı');
-          
-          return excelVisible || noResults;
-        }, { timeout: 6000 });
-
-        hasResults = await page.evaluate(() => {
-          const excelBtn = document.querySelector('img[src*="excel_export"]');
-          return !!(excelBtn && excelBtn.getBoundingClientRect().width > 0);
-        });
-      } catch (e) {
-        console.log('   ⚠️ Timeout waiting for search results.');
-      }
-
-      if (hasResults) {
-        console.log('   🎉 Results found! Triggering Excel export...');
-        capturedDownload = null;
-        
-        await page.locator('img[src*="excel_export"]').first().click();
-
-        let download = null;
-        for (let i = 0; i < 100; i++) {
-          if (capturedDownload) {
-            download = capturedDownload;
-            capturedDownload = null;
-            break;
-          }
-          await page.waitForTimeout(100);
-        }
-
-        if (download) {
-          await download.saveAs(destPath);
-          console.log(`   ✅ Excel saved: ${path.basename(destPath)} (${fs.statSync(destPath).size} bytes)`);
-        } else {
-          console.log(`   ❌ Failed to capture download for ${subject}`);
-        }
-      } else {
-        console.log('   ℹ️ No courses offered for this subject.');
-      }
-
-      // Close popup tabs
-      const pages = context.pages();
-      for (let i = 1; i < pages.length; i++) {
+      if (fs.existsSync(emptyMarkerPath)) {
         try {
-          await pages[i].close();
-        } catch (e) {}
+          const marker = JSON.parse(fs.readFileSync(emptyMarkerPath, 'utf8'));
+          if (marker.term === config.term && marker.subject === subject && marker.empty === true) {
+            console.log('   Existing explicit-empty result validated; skipping.');
+            emptySubjects.push(subject);
+            continue;
+          }
+        } catch {
+          // Invalid/stale markers are ignored and replaced by a fresh SIS result.
+        }
+        fs.unlinkSync(emptyMarkerPath);
       }
 
-      await page.waitForTimeout(800);
+      // The independent document bot also writes [] only after SIS explicitly
+      // reports an empty subject. Reuse that term-scoped confirmation when a
+      // legacy run predates the offered-empty marker.
+      const documentMetadataPath = path.join(subjectDir, 'courses.json');
+      if (fs.existsSync(documentMetadataPath)) {
+        try {
+          const documentCourses = JSON.parse(fs.readFileSync(documentMetadataPath, 'utf8'));
+          if (Array.isArray(documentCourses) && documentCourses.length === 0) {
+            fs.writeFileSync(emptyMarkerPath, `${JSON.stringify({
+              term: config.term,
+              subject,
+              empty: true,
+              confirmedAt: new Date().toISOString(),
+              source: 'document-catalog'
+            }, null, 2)}\n`);
+            console.log('   Existing document-catalog empty result validated; skipping.');
+            emptySubjects.push(subject);
+            continue;
+          }
+        } catch {
+          // Invalid document metadata cannot establish an empty offering.
+        }
+      }
+
+      let completed = false;
+      for (let attempt = 1; attempt <= 3 && !completed; attempt++) {
+        try {
+          console.log(`   Attempt ${attempt}/3: loading a fresh SIS form...`);
+          await preparePage(page, config.term);
+          await selectSubject(page, subject);
+          const selectedTerm = await page.locator('input[name="TERMCODE"]').inputValue();
+          const selectedSubject = await page.locator('input[name="COURSESUBJECT"]').inputValue();
+          if (selectedTerm.trim() !== config.term.trim() || selectedSubject.trim() !== subject) {
+            throw new Error(`Selection mismatch: "${selectedTerm}" / "${selectedSubject}".`);
+          }
+          console.log(`   Verified selection: ${selectedTerm} / ${selectedSubject}`);
+
+          const outcome = await searchSubject(page);
+          if (outcome === 'empty') {
+            console.log('   SIS explicitly reported no courses.');
+            fs.writeFileSync(emptyMarkerPath, `${JSON.stringify({
+              term: config.term,
+              subject,
+              empty: true,
+              confirmedAt: new Date().toISOString()
+            }, null, 2)}\n`);
+            emptySubjects.push(subject);
+            completed = true;
+            continue;
+          }
+
+          // SmartGWT dispatches this download from the browser context rather
+          // than from the visible page.
+          const downloadPromise = context.waitForEvent('download', { timeout: 20000 });
+          await page.locator('img[src*="excel_export"]:visible').first().click();
+          const download = await downloadPromise;
+          await download.saveAs(destPath);
+          if (!validateOfferingFile(destPath, subject)) {
+            fs.unlinkSync(destPath);
+            throw new Error(`Downloaded Excel did not contain ${subject} rows.`);
+          }
+          if (fs.existsSync(emptyMarkerPath)) fs.unlinkSync(emptyMarkerPath);
+          console.log(`   Excel saved and validated (${fs.statSync(destPath).size} bytes).`);
+          completed = true;
+        } catch (error) {
+          console.error(`   Attempt ${attempt} failed: ${error.message}`);
+        } finally {
+          await closeExtraPages(context);
+        }
+      }
+
+      if (!completed) {
+        failures.push(subject);
+        console.error(`   ${subject} was neither downloaded nor explicitly confirmed empty.`);
+      }
     }
 
-    console.log(`\n🎉 Scraping finished! All Excel files saved to ${baseOutputDir}`);
-
-  } catch (err) {
-    console.error('❌ Scraper crashed:', err);
+    console.log(`\nFinished. Output: ${baseOutputDir}`);
+    console.log(`   Explicitly empty subjects: ${emptySubjects.length}`);
+    if (failures.length > 0) {
+      console.error(`   Failed subjects: ${failures.join(', ')}`);
+      process.exitCode = 1;
+    }
   } finally {
     await browser.close();
   }
 }
 
-run();
+run().catch(error => {
+  console.error('Scraper crashed:', error);
+  process.exitCode = 1;
+});

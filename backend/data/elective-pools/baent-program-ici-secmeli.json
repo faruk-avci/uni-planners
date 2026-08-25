@@ -1,0 +1,206 @@
+{
+  "key": "baent-program-ici-secmeli",
+  "label": "BAENT Program-İçi Seçmeli",
+  "sourceFile": "ent_programiçi.xls",
+  "courses": [
+    {
+      "code": "BUS 201",
+      "title_tr": "İş Kararı Modelleme",
+      "title_en": "İş Kararı Modelleme",
+      "credits": 6,
+      "prereq": "MATH 102 and BUS 100 and BUS 190",
+      "coreq": "MATH 201",
+      "practical": false
+    },
+    {
+      "code": "BUS 301",
+      "title_tr": "İş Analitiği",
+      "title_en": "İş Analitiği",
+      "credits": 6,
+      "prereq": "BUS 100 and BUS 199 and MATH 202",
+      "coreq": "BUS 201",
+      "practical": false
+    },
+    {
+      "code": "BUS 302",
+      "title_tr": "İşletme Hukuku",
+      "title_en": "İşletme Hukuku",
+      "credits": 4,
+      "prereq": "BUS 100 and having completed at least 120 ECTS",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "ENTR 405",
+      "title_tr": "Bağımsız Araştırma - ENTR",
+      "title_en": "Bağımsız Araştırma - ENTR",
+      "credits": 6,
+      "prereq": "MGMT 202 and To complete at least 150 ECTS credits",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "ENTR 407",
+      "title_tr": "Aile Şirketlerinde Girişimci Yönetim",
+      "title_en": "Aile Şirketlerinde Girişimci Yönetim",
+      "credits": 6,
+      "prereq": "BUS 102",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "ENTR 410",
+      "title_tr": "Sürdürülebilir Kalkınma için Değer Yaratma",
+      "title_en": "Sürdürülebilir Kalkınma için Değer Yaratma",
+      "credits": 6,
+      "prereq": "BUS102",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "ENTR 422",
+      "title_tr": "Kişisel İş Modeli",
+      "title_en": "Kişisel İş Modeli",
+      "credits": 6,
+      "prereq": "(BUS 102 or ENTR 201) and having completed at least 165 ECTS",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "FIN 419",
+      "title_tr": "Şirket Değerleme",
+      "title_en": "Şirket Değerleme",
+      "credits": 6,
+      "prereq": "FIN 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MGMT 311",
+      "title_tr": "Proje Yönetimi",
+      "title_en": "Proje Yönetimi",
+      "credits": 6,
+      "prereq": "BUS 102 ve (SEC 201 veya SEC 203)",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MGMT 313",
+      "title_tr": "Müzakere Becerileri",
+      "title_en": "Müzakere Becerileri",
+      "credits": 6,
+      "prereq": "Having completed at least 105 credits",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MGMT 321",
+      "title_tr": "Yapay Zeka Ürün Stratejisi ve Yönetimi",
+      "title_en": "Yapay Zeka Ürün Stratejisi ve Yönetimi",
+      "credits": 6,
+      "prereq": "To complete at least 105 ECTS",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MGMT 401",
+      "title_tr": "Teknoloji ve İnovasyon Yönetimi",
+      "title_en": "Teknoloji ve İnovasyon Yönetimi",
+      "credits": 6,
+      "prereq": "SEC 302",
+      "coreq": "",
+      "practical": true
+    },
+    {
+      "code": "MIS 305",
+      "title_tr": "İşletmelerde Dijital Dönüşüm",
+      "title_en": "İşletmelerde Dijital Dönüşüm",
+      "credits": 6,
+      "prereq": "MIS 206 or MIS 311",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MIS 306",
+      "title_tr": "E-İş'in Temelleri",
+      "title_en": "E-İş'in Temelleri",
+      "credits": 6,
+      "prereq": "BUS 102  and (MIS 301 or MIS311) and MKTG 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MKTG 322",
+      "title_tr": "Marka Yönetimi",
+      "title_en": "Marka Yönetimi",
+      "credits": 6,
+      "prereq": "MKTG 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MKTG 324",
+      "title_tr": "Inovasyon ve Yeni Ürün Geliştirme",
+      "title_en": "Inovasyon ve Yeni Ürün Geliştirme",
+      "credits": 6,
+      "prereq": "MKTG 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MKTG 325",
+      "title_tr": "Dijital Çağda Tüketici Davranışları",
+      "title_en": "Dijital Çağda Tüketici Davranışları",
+      "credits": 6,
+      "prereq": "MKTG 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MKTG 412",
+      "title_tr": "Satış Yönetimi",
+      "title_en": "Satış Yönetimi",
+      "credits": 6,
+      "prereq": "MKTG 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MKTG 414",
+      "title_tr": "İş Modeli İnovasyonu",
+      "title_en": "İş Modeli İnovasyonu",
+      "credits": 6,
+      "prereq": "MKTG 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MKTG 416",
+      "title_tr": "Kişisel Satış ve Satış Yönetimi",
+      "title_en": "Kişisel Satış ve Satış Yönetimi",
+      "credits": 6,
+      "prereq": "MKTG 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "SEC 450",
+      "title_tr": "İnovasyon, Değer ve Etki için Transdisipliner Düşünme",
+      "title_en": "İnovasyon, Değer ve Etki için Transdisipliner Düşünme",
+      "credits": 4,
+      "prereq": "SEC 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "SEC 499",
+      "title_tr": "Yeni İş Geliştirme",
+      "title_en": "Yeni İş Geliştirme",
+      "credits": 6,
+      "prereq": "(SEC 201 or SEC 203) and (SEC 202 or SEC 204)",
+      "coreq": "",
+      "practical": true
+    }
+  ],
+  "updatedAt": "2026-08-24T16:06:48.524Z"
+}

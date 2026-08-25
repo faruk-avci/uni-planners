@@ -443,6 +443,7 @@ async function run() {
 
   } catch (error) {
     console.error(`💥 Fatal Scraper Error:`, error);
+    process.exitCode = 1;
   } finally {
     await browser.close();
   }

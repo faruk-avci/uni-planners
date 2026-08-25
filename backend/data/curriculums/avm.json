@@ -1,0 +1,471 @@
+{
+  "id": "avm",
+  "title_tr": "Havacılık Yönetimi",
+  "title_en": "Aviation Management",
+  "faculty": "aviation",
+  "programCodes": [
+    "BSAVM",
+    "BSATM"
+  ],
+  "sourceFile": "havacılık.xls",
+  "importedAt": "2026-08-24T16:00:01.061Z",
+  "semesters": {
+    "1": {
+      "fall": [
+        {
+          "code": "AVM 100",
+          "title_tr": "Sivil Havacılığa Giriş",
+          "title_en": "Sivil Havacılığa Giriş",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "ECON 101",
+          "title_tr": "Mikroekonomi",
+          "title_en": "Mikroekonomi",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "ENG 101",
+          "title_tr": "İngilizce I",
+          "title_en": "İngilizce I",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "MATH 101",
+          "title_tr": "Sosyal Bilimler için Matematik I",
+          "title_en": "Sosyal Bilimler için Matematik I",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "MATH 101R",
+          "practical": false
+        },
+        {
+          "code": "TLL 100",
+          "title_tr": "Türk Dili ve Edebiyatı",
+          "title_en": "Türk Dili ve Edebiyatı",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "TRL 100",
+          "title_tr": "Dönüştürücü Öğrenme",
+          "title_en": "Dönüştürücü Öğrenme",
+          "credits": 2,
+          "prereq": "",
+          "coreq": "",
+          "practical": true
+        }
+      ],
+      "spring": [
+        {
+          "code": "AVM 102",
+          "title_tr": "Havaalanı ve Faaliyetleri",
+          "title_en": "Havaalanı ve Faaliyetleri",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "AVM 106",
+          "title_tr": "Uçuş Prensipleri",
+          "title_en": "Uçuş Prensipleri",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "BUS 101",
+          "title_tr": "İşletmeye Giriş I (Karar Verme)",
+          "title_en": "İşletmeye Giriş I (Karar Verme)",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "BUS 101L",
+          "practical": false
+        },
+        {
+          "code": "ECON 102",
+          "title_tr": "Makroekonomi",
+          "title_en": "Makroekonomi",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "ENG 102",
+          "title_tr": "İngilizce II",
+          "title_en": "İngilizce II",
+          "credits": 4,
+          "prereq": "ENG 101",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "MATH 102",
+          "title_tr": "Sosyal Bilimler için Matematik II",
+          "title_en": "Sosyal Bilimler için Matematik II",
+          "credits": 6,
+          "prereq": "MATH 101",
+          "coreq": "MATH 102R",
+          "practical": false
+        }
+      ]
+    },
+    "2": {
+      "fall": [
+        {
+          "code": "ACCT 201",
+          "title_tr": "Finansal Muhasebe",
+          "title_en": "Finansal Muhasebe",
+          "credits": 6,
+          "prereq": "(BUS 101 or (BUS 100 and BUS 190)) and (MATH 101 or MATH 103)",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "BUS 102",
+          "title_tr": "İşletmeye Giriş II (Girişimcilik)",
+          "title_en": "İşletmeye Giriş II (Girişimcilik)",
+          "credits": 4,
+          "prereq": "BUS 101 or BUS 100",
+          "coreq": "BUS 102L",
+          "practical": false
+        },
+        {
+          "code": "HIST 200",
+          "title_tr": "Atatürk İlkeleri ve İnkılap Tarihi",
+          "title_en": "Atatürk İlkeleri ve İnkılap Tarihi",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "MKTG 201",
+          "title_tr": "Pazarlama",
+          "title_en": "Pazarlama",
+          "credits": 6,
+          "prereq": "(BUS101 or (BUS100 and BUS190)) and (ENG102 or ENG 104)",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "SEC 201",
+          "title_tr": "Sektörel Hazırlık",
+          "title_en": "Sektörel Hazırlık",
+          "credits": 2,
+          "prereq": "",
+          "coreq": "SEC201L",
+          "practical": false
+        },
+        {
+          "code": "",
+          "title_tr": "BSAVM Fakülte-İçi Seçmeli",
+          "title_en": "BSAVM Fakülte-İçi Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "bsavm-fakulte-ici-secmeli"
+        }
+      ],
+      "spring": [
+        {
+          "code": "AVM 202",
+          "title_tr": "Havacılık Yönetiminde Veri Analizi",
+          "title_en": "Havacılık Yönetiminde Veri Analizi",
+          "credits": 6,
+          "prereq": "BUS 102 / BUS 101",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "AVM 204",
+          "title_tr": "Havaalanı Stratejik Planlaması ve Tasarımı",
+          "title_en": "Havaalanı Stratejik Planlaması ve Tasarımı",
+          "credits": 6,
+          "prereq": "AVM 102",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "FIN 202",
+          "title_tr": "Finans",
+          "title_en": "Finans",
+          "credits": 6,
+          "prereq": "(ACCT 201 and (ECON 101 or ECON 102 or ECON 210)",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "MGMT 202",
+          "title_tr": "Örgütler",
+          "title_en": "Örgütler",
+          "credits": 6,
+          "prereq": "ENG102 and (BUS100 or BUS101)",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "",
+          "title_tr": "BSAVM Serbest Seçmeli",
+          "title_en": "BSAVM Serbest Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "bsavm-serbest-secmeli"
+        }
+      ]
+    },
+    "3": {
+      "fall": [
+        {
+          "code": "ACCT 301",
+          "title_tr": "Yönetim Muhasebesi",
+          "title_en": "Yönetim Muhasebesi",
+          "credits": 6,
+          "prereq": "ACCT 201",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "AVM 301",
+          "title_tr": "Havayolu Yönetimi",
+          "title_en": "Havayolu Yönetimi",
+          "credits": 6,
+          "prereq": "90 ECTS & MATH 102/MATH 103",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "AVM 303",
+          "title_tr": "Hava Trafik ve Meteoroloji",
+          "title_en": "Hava Trafik ve Meteoroloji",
+          "credits": 4,
+          "prereq": "En az 90 AKTS tamamlamış olmak",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "",
+          "title_tr": "BSAVM Fakülte-İçi Seçmeli",
+          "title_en": "BSAVM Fakülte-İçi Seçmeli",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "bsavm-fakulte-ici-secmeli"
+        },
+        {
+          "code": "",
+          "title_tr": "BSAVM Serbest Seçmeli",
+          "title_en": "BSAVM Serbest Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "bsavm-serbest-secmeli"
+        },
+        {
+          "code": "",
+          "title_tr": "BSAVM Serbest Seçmeli",
+          "title_en": "BSAVM Serbest Seçmeli",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "bsavm-serbest-secmeli"
+        }
+      ],
+      "spring": [
+        {
+          "code": "AVM 300",
+          "title_tr": "Staj",
+          "title_en": "Staj",
+          "credits": 6,
+          "prereq": "Having completed at least 150 ECTS and SEC 201",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "AVM 304",
+          "title_tr": "Havayolu Pazarlaması",
+          "title_en": "Havayolu Pazarlaması",
+          "credits": 6,
+          "prereq": "MKTG 201",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "AVM 306",
+          "title_tr": "Havacılıkta Operasyon Yönetimi",
+          "title_en": "Havacılıkta Operasyon Yönetimi",
+          "credits": 6,
+          "prereq": "OPER 202 / AVM 202",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "AVM 309",
+          "title_tr": "Hava Ulaştırma Ekonomisi",
+          "title_en": "Hava Ulaştırma Ekonomisi",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "",
+          "title_tr": "BSAVM Serbest Seçmeli",
+          "title_en": "BSAVM Serbest Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "bsavm-serbest-secmeli"
+        }
+      ]
+    },
+    "4": {
+      "fall": [
+        {
+          "code": "AVM 401",
+          "title_tr": "Havayolu Filo Planlaması Ve Uçuş Ağı Yönetimi",
+          "title_en": "Havayolu Filo Planlaması Ve Uçuş Ağı Yönetimi",
+          "credits": 6,
+          "prereq": "AVM 301",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "AVM 405",
+          "title_tr": "Emniyet Yönetimi Sistemi",
+          "title_en": "Emniyet Yönetimi Sistemi",
+          "credits": 6,
+          "prereq": "En az 120 AKTS tamamlamış olmak",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "AVM 406",
+          "title_tr": "Hava Hukuku",
+          "title_en": "Hava Hukuku",
+          "credits": 4,
+          "prereq": "En az 120 AKTS tamamlamış olmak",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "AVM 408",
+          "title_tr": "Havacılık Yönetiminde Öngörü ve Optimizasyon",
+          "title_en": "Havacılık Yönetiminde Öngörü ve Optimizasyon",
+          "credits": 6,
+          "prereq": "AVM 202 veya OPER 202",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "",
+          "title_tr": "BSAVM Serbest Seçmeli",
+          "title_en": "BSAVM Serbest Seçmeli",
+          "credits": 2,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "bsavm-serbest-secmeli"
+        },
+        {
+          "code": "",
+          "title_tr": "BSAVM Serbest Seçmeli",
+          "title_en": "BSAVM Serbest Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "bsavm-serbest-secmeli"
+        }
+      ],
+      "spring": [
+        {
+          "code": "AVM 402",
+          "title_tr": "Havacılık İş Simülasyonu",
+          "title_en": "Havacılık İş Simülasyonu",
+          "credits": 6,
+          "prereq": "AVM 301",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "AVM 403",
+          "title_tr": "Havaalanı Yönetimi ve Pazarlaması",
+          "title_en": "Havaalanı Yönetimi ve Pazarlaması",
+          "credits": 4,
+          "prereq": "En az 150 AKTS tamamlamış olmak",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "AVM 404",
+          "title_tr": "Havacılık Güvenliği",
+          "title_en": "Havacılık Güvenliği",
+          "credits": 4,
+          "prereq": "En az 120 AKTS tamamlamış olmak",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "AVM 415",
+          "title_tr": "Havacılıkta Sürdürülebilirlik",
+          "title_en": "Havacılıkta Sürdürülebilirlik",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "",
+          "title_tr": "BSAVM Fakülte-İçi Seçmeli",
+          "title_en": "BSAVM Fakülte-İçi Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "bsavm-fakulte-ici-secmeli"
+        },
+        {
+          "code": "",
+          "title_tr": "BSAVM Serbest Seçmeli",
+          "title_en": "BSAVM Serbest Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "bsavm-serbest-secmeli"
+        }
+      ]
+    }
+  },
+  "electivePoolRefs": {
+    "bsavm-fakulte-ici-secmeli": "bsavm-fakulte-ici-secmeli",
+    "bsavm-serbest-secmeli": "bsavm-serbest-secmeli"
+  },
+  "electiveLabels": {
+    "bsavm-fakulte-ici-secmeli": "BSAVM Fakülte-İçi Seçmeli",
+    "bsavm-serbest-secmeli": "BSAVM Serbest Seçmeli"
+  },
+  "updatedAt": "2026-08-24T16:00:01.061Z"
+}

@@ -1,0 +1,340 @@
+.curriculum-page {
+  flex: 1;
+  width: calc(100% - 2 * var(--space-4));
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-6) 0 var(--space-12);
+}
+
+.curriculum-heading,
+.curriculum-content {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.curriculum-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  padding: var(--space-5) var(--space-6);
+  border-top: 3px solid var(--accent-primary);
+}
+
+.curriculum-heading h1 { margin-bottom: var(--space-1); color: var(--text-primary); font-size: var(--text-2xl); font-weight: var(--weight-bold); letter-spacing: -.025em; }
+.curriculum-heading-copy p { display: flex; flex-wrap: wrap; gap: var(--space-2); font-size: var(--text-sm); }
+.curriculum-heading-copy p strong { color: var(--text-primary); font-weight: var(--weight-semibold); }
+.curriculum-heading-copy p span { color: var(--text-secondary); font-weight: var(--weight-medium); }
+
+.curriculum-select-label {
+  min-width: min(360px, 100%);
+  display: grid;
+  gap: var(--space-2);
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+}
+
+.curriculum-select-label select,
+.curriculum-filters input[type="text"],
+.curriculum-filters > input {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-weight: var(--weight-medium);
+}
+
+.curriculum-state {
+  margin-top: var(--space-4);
+  padding: var(--space-8);
+  text-align: center;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-lg);
+}
+.curriculum-error { color: var(--error); background: var(--error-bg); }
+
+.curriculum-content { margin-top: var(--space-3); padding: var(--space-5); scroll-margin-top: 120px; }
+.curriculum-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-3); margin-bottom: var(--space-5); }
+.curriculum-tabs { display: flex; padding: var(--space-1); background: var(--bg-tertiary); border: 1px solid var(--border-secondary); border-radius: var(--radius-md); }
+.curriculum-tabs button { padding: var(--space-2) var(--space-4); border-radius: var(--radius-sm); color: var(--text-secondary); font-weight: var(--weight-semibold); }
+.curriculum-tabs button.active { color: var(--accent-primary); background: var(--bg-secondary); box-shadow: var(--shadow-sm); }
+.curriculum-filters { display: flex; align-items: center; gap: var(--space-4); margin-left: auto; }
+.curriculum-filters > input { min-width: 240px; }
+
+.elective-type-filter button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: var(--space-2) var(--space-3);
+  color: var(--text-secondary);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  transition: border-color var(--duration-fast), background var(--duration-fast), color var(--duration-fast);
+}
+.elective-type-filter button:hover { border-color: var(--border-accent); color: var(--text-primary); }
+.elective-type-filter button.active { color: var(--accent-primary); background: var(--accent-soft); border-color: var(--border-accent); font-weight: var(--weight-semibold); }
+
+.elective-type-filter {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-2);
+  overflow-x: auto;
+}
+.elective-type-filter button { flex: 0 0 auto; }
+
+.curriculum-years { display: grid; gap: var(--space-7); }
+.curriculum-year { padding-top: var(--space-3); }
+.curriculum-year > h3 { display: inline-flex; margin-bottom: var(--space-3); padding: 6px 10px; color: var(--accent-primary); background: var(--accent-soft); border: 1px solid var(--border-accent); border-radius: var(--radius-md); font-size: var(--text-sm); font-weight: var(--weight-bold); letter-spacing: .01em; }
+.curriculum-semesters { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
+.curriculum-semester,
+.curriculum-elective-group { overflow: hidden; background: var(--bg-secondary); border: 1px solid var(--border-primary); border-radius: var(--radius-lg); box-shadow: var(--shadow-xs); }
+.curriculum-semester > header,
+.curriculum-elective-group > header { display: flex; justify-content: space-between; align-items: center; padding: var(--space-3) var(--space-4); background: color-mix(in srgb, var(--accent-soft) 55%, var(--bg-secondary)); border-bottom: 1px solid var(--border-primary); }
+.curriculum-semester > header h4,
+.curriculum-elective-group > header h3 { color: var(--text-primary); font-weight: var(--weight-bold); }
+.curriculum-semester > header span,
+.curriculum-elective-group > header span { padding: 4px 8px; color: var(--text-secondary); background: var(--bg-secondary); border: 1px solid var(--border-secondary); border-radius: var(--radius-full); font-size: 11px; font-weight: var(--weight-semibold); }
+
+.curriculum-course { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--space-4); padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--border-secondary); transition: background var(--duration-fast), opacity var(--duration-fast); }
+.curriculum-course:last-child { border-bottom: 0; }
+.curriculum-course:hover { background: var(--bg-tertiary); }
+.curriculum-course-offered { background: var(--bg-secondary); }
+.curriculum-course-not-offered { opacity: .66; background: var(--bg-primary); }
+.curriculum-course-not-offered:hover { opacity: .82; }
+.curriculum-course-main { display: grid; grid-template-columns: 8px 82px minmax(0, 1fr); align-items: baseline; gap: var(--space-3); }
+.curriculum-code { flex: 0 0 82px; color: var(--text-primary); font-family: var(--font-mono); font-size: var(--text-sm); font-weight: var(--weight-bold); }
+.curriculum-title { min-width: 0; color: var(--text-primary); font-weight: var(--weight-medium); line-height: 1.35; }
+.curriculum-course-not-offered .curriculum-title { color: var(--text-secondary); }
+.curriculum-course-meta { display: flex; min-width: 150px; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: var(--space-2); color: var(--text-secondary); font-size: var(--text-xs); font-weight: var(--weight-medium); }
+.curriculum-add-btn {
+  min-height: 30px;
+  padding: 0 var(--space-3);
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  transition: background var(--duration-fast), border-color var(--duration-fast), color var(--duration-fast);
+}
+.curriculum-add-btn:not(:disabled) { color: var(--accent-primary); background: var(--accent-soft); border-color: var(--border-accent); }
+.curriculum-add-btn:hover:not(:disabled) { background: var(--accent-primary); border-color: var(--accent-primary); color: var(--text-inverse); }
+.curriculum-add-btn:disabled { cursor: not-allowed; color: var(--text-tertiary); background: transparent; border-color: var(--border-secondary); }
+.course-status-dot { width: 8px; height: 8px; align-self: center; border-radius: 50%; background: var(--gray-300); }
+.course-status-open { background: var(--success); box-shadow: 0 0 0 3px color-mix(in srgb, var(--success) 14%, transparent); }
+.course-status-closed { background: var(--gray-300); }
+.curriculum-requisites { display: grid; grid-column: 1 / -1; gap: 2px; margin-top: var(--space-2); padding-left: 114px; color: var(--text-tertiary); font-size: var(--text-xs); }
+.curriculum-empty { padding: var(--space-6); text-align: center; font-size: var(--text-sm); }
+.curriculum-electives { display: grid; gap: var(--space-4); }
+
+.elective-list-controls {
+  display: flex;
+  align-items: end;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: calc(-1 * var(--space-2)) 0 var(--space-4);
+}
+.elective-control-set { display: flex; align-items: end; justify-content: flex-end; flex-wrap: wrap; gap: var(--space-3); }
+.elective-credit-filter { display: grid; gap: 4px; min-width: 0; }
+.elective-control-label { color: var(--text-tertiary); font-size: 11px; font-weight: var(--weight-semibold); }
+.elective-credit-chips { display: flex; gap: var(--space-1); overflow-x: auto; scrollbar-width: thin; }
+.elective-credit-chips button {
+  min-width: 38px;
+  min-height: 36px;
+  flex: 0 0 auto;
+  padding: 0 var(--space-3);
+  color: var(--text-secondary);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+}
+.elective-credit-chips button:hover { color: var(--text-primary); border-color: var(--border-accent); }
+.elective-credit-chips button.active { color: var(--accent-primary); background: var(--accent-soft); border-color: var(--accent-primary); }
+.offered-first-toggle {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-3);
+  color: var(--text-secondary);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+}
+.offered-first-toggle.active { color: var(--text-primary); border-color: var(--border-accent); }
+.offered-first-switch { display: flex; width: 28px; height: 16px; align-items: center; padding: 2px; background: var(--gray-300); border-radius: var(--radius-full); transition: background var(--duration-fast); }
+.offered-first-switch > span { width: 12px; height: 12px; background: white; border-radius: 50%; box-shadow: var(--shadow-xs); transition: transform var(--duration-fast); }
+.offered-first-toggle.active .offered-first-switch { background: var(--success); }
+.offered-first-toggle.active .offered-first-switch > span { transform: translateX(12px); }
+
+.curriculum-elective-slot { display: block; padding: 0; background: color-mix(in srgb, var(--accent-soft) 28%, var(--bg-secondary)); }
+.elective-slot-button {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 8px 82px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+}
+.elective-slot-marker { width: 8px; height: 8px; border: 2px solid var(--accent-primary); border-radius: 50%; }
+.elective-slot-code { color: var(--accent-primary); font-size: 10px; font-weight: var(--weight-bold); letter-spacing: .03em; }
+.elective-slot-copy { display: grid; gap: 2px; min-width: 0; }
+.elective-slot-copy strong { color: var(--text-primary); font-size: var(--text-sm); font-weight: var(--weight-semibold); }
+.elective-slot-copy > span { color: var(--text-secondary); font-size: var(--text-xs); }
+.elective-slot-action { display: inline-flex; min-width: 150px; align-items: center; justify-content: flex-end; gap: var(--space-2); color: var(--text-tertiary); font-size: var(--text-xs); white-space: nowrap; }
+.elective-slot-credit { color: var(--text-secondary); }
+.elective-slot-show { min-height: 30px; padding: 6px var(--space-3); color: var(--accent-primary); background: var(--accent-soft); border: 1px solid var(--border-accent); border-radius: var(--radius-sm); font-size: var(--text-xs); font-weight: var(--weight-semibold); line-height: 1.2; }
+.elective-slot-show:hover { color: var(--text-inverse); background: var(--accent-primary); border-color: var(--accent-primary); }
+
+.elective-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: var(--space-5);
+  background: rgba(9, 9, 11, .55);
+  backdrop-filter: blur(5px);
+  animation: fadeIn var(--duration-fast) var(--ease-out);
+}
+
+.elective-modal {
+  display: flex;
+  width: min(760px, 100%);
+  max-height: min(78vh, 760px);
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  animation: slideUp var(--duration-normal) var(--ease-out);
+}
+
+.elective-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-5);
+  padding: var(--space-6);
+  border-bottom: 1px solid var(--border-secondary);
+}
+.elective-modal-eyebrow { display: block; margin-bottom: var(--space-1); color: var(--text-tertiary); font-size: var(--text-xs); font-weight: var(--weight-semibold); letter-spacing: .05em; text-transform: uppercase; }
+.elective-modal-header p { margin-top: var(--space-1); font-size: var(--text-sm); }
+.elective-modal-close {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  place-items: center;
+  color: var(--text-secondary);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xl);
+  line-height: 1;
+}
+.elective-modal-close:hover { color: var(--text-primary); background: var(--border-primary); }
+
+.elective-modal-tools {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-6);
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-secondary);
+}
+.elective-modal-tools .elective-control-set { width: 100%; justify-content: flex-start; }
+.elective-modal-body { min-height: 180px; overflow-y: auto; overscroll-behavior: contain; }
+.elective-modal-body .curriculum-course-offered { background: var(--bg-secondary); }
+.elective-modal-body .curriculum-course-not-offered {
+  opacity: .38;
+  background: var(--bg-secondary);
+}
+.elective-modal-body .curriculum-course-not-offered:hover { opacity: .58; }
+.elective-modal-body .curriculum-course-meta { padding-left: 0; }
+
+@media (max-width: 900px) {
+  .curriculum-toolbar { align-items: stretch; }
+  .curriculum-filters { flex-wrap: wrap; }
+}
+
+@media (max-width: 680px) {
+  .curriculum-page { width: calc(100% - 2 * var(--space-2)); padding-top: var(--space-3); }
+  .curriculum-heading { align-items: stretch; flex-direction: column; padding: var(--space-4); }
+  .curriculum-heading h1 { font-size: var(--text-xl); }
+  .curriculum-select-label { min-width: 0; }
+  .curriculum-select-label select,
+  .curriculum-filters input[type="text"] { min-height: 44px; font-size: 16px; }
+  .curriculum-content { padding: var(--space-3); }
+  .curriculum-semesters { grid-template-columns: 1fr; }
+  .curriculum-toolbar { flex-direction: column; align-items: stretch; gap: var(--space-2); margin-bottom: var(--space-4); }
+  .curriculum-tabs { width: 100%; }
+  .curriculum-tabs button { min-height: 42px; flex: 1; }
+  .curriculum-filters { width: 100%; margin-left: 0; }
+  .curriculum-filters > input { min-width: 100%; }
+  .elective-type-filter { margin: 0 calc(-1 * var(--space-3)) var(--space-4); padding: 0 var(--space-3) var(--space-2); }
+  .elective-type-filter button { min-height: 40px; }
+  .curriculum-years { gap: var(--space-5); }
+  .curriculum-year > h3 { font-size: var(--text-lg); }
+  .curriculum-semesters { gap: var(--space-3); }
+  .curriculum-course { grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--space-2); padding: var(--space-3); }
+  .curriculum-course-main { grid-template-columns: 8px minmax(0, 1fr); align-items: center; gap: var(--space-2); }
+  .curriculum-course-main .course-status-dot { grid-row: 1 / 3; }
+  .curriculum-course-main .curriculum-code,
+  .curriculum-course-main .curriculum-title { grid-column: 2; }
+  .curriculum-course-meta { align-self: start; justify-content: flex-end; margin-top: 0; white-space: nowrap; }
+  .curriculum-course-meta,
+  .elective-slot-action { min-width: 0; }
+  .curriculum-add-btn { min-height: 38px; padding-inline: var(--space-3); }
+  .curriculum-requisites { padding-left: 16px; }
+  .elective-slot-button { min-height: 56px; grid-template-columns: 8px minmax(0, 1fr) auto; gap: var(--space-2); padding: var(--space-3); }
+  .elective-slot-code { grid-column: 2; }
+  .elective-slot-copy { grid-column: 2; }
+  .elective-slot-action { grid-column: 3; grid-row: 1 / 3; }
+  .elective-modal-backdrop { align-items: end; padding: var(--space-2); }
+  .elective-modal { width: 100%; max-height: 90dvh; border-radius: var(--radius-xl) var(--radius-xl) var(--radius-md) var(--radius-md); }
+  .elective-modal-header { padding: var(--space-4); }
+  .elective-modal-close { width: 44px; height: 44px; flex-basis: 44px; }
+  .elective-modal-tools { align-items: stretch; padding: var(--space-3) var(--space-4); }
+  .elective-list-controls { display: block; margin-top: 0; }
+  .elective-control-set { display: flex; min-width: 0; flex-direction: column; align-items: stretch; }
+  .elective-credit-filter { width: 100%; }
+  .elective-credit-chips { width: 100%; max-width: 100%; padding-bottom: 2px; }
+  .elective-credit-chips button,
+  .offered-first-toggle { min-height: 42px; }
+  .offered-first-toggle { justify-content: flex-start; align-self: flex-start; }
+  .elective-modal-tools .elective-control-set { width: 100%; }
+  .elective-modal-body .curriculum-course-meta,
+  .elective-modal-body .curriculum-requisites { padding-left: 0; }
+}
+
+@media (max-width: 380px) {
+  .curriculum-heading,
+  .curriculum-content { padding: var(--space-3); }
+  .curriculum-heading { gap: var(--space-4); }
+  .curriculum-semester > header,
+  .curriculum-elective-group > header { padding-inline: var(--space-3); }
+  .curriculum-title { font-size: var(--text-sm); }
+  .curriculum-course-meta,
+  .elective-slot-action { font-size: 11px; }
+}

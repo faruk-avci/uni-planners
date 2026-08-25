@@ -29,6 +29,7 @@ body {
   transition: background-color var(--duration-slow) var(--ease-out),
               color var(--duration-slow) var(--ease-out);
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 #root {
@@ -42,6 +43,15 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: var(--weight-semibold);
   line-height: var(--leading-tight);
   color: var(--text-primary);
+}
+
+[data-palette="iris"] h1,
+[data-palette="iris"] h2,
+[data-palette="iris"] h3,
+[data-palette="iris"] h4,
+[data-palette="iris"] h5,
+[data-palette="iris"] h6 {
+  letter-spacing: -0.025em;
 }
 
 h1 { font-size: var(--text-3xl); }
@@ -94,6 +104,26 @@ ul, ol {
 img {
   max-width: 100%;
   display: block;
+}
+
+button,
+a,
+input,
+select {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+@media (max-width: 768px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+
+  .container {
+    padding-inline: var(--space-4);
+  }
 }
 
 /* ── Selection ── */

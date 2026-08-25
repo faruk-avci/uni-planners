@@ -69,6 +69,13 @@ async function main() {
         raw_text        TEXT
       )
     `);
+    // Older local databases created these fields as VARCHAR(100). Syllabus
+    // labels can legitimately be longer, so migrate without truncating data.
+    await client.query(`
+      ALTER TABLE course_assessments
+        ALTER COLUMN assessment_type TYPE TEXT,
+        ALTER COLUMN category TYPE TEXT
+    `);
 
     // Fetch list of valid course codes to ensure foreign key constraint is satisfied
     const res = await client.query('SELECT course_code FROM catalog_courses');
@@ -123,11 +130,15 @@ async function main() {
     console.log(`  Inserted/Updated rows: ${insertCount}`);
     console.log(`  Skipped courses (not in catalog): ${skipCount}`);
   } catch (error) {
-    await client.query('ROLLBACK');
+    try { await client.query('ROLLBACK'); } catch { /* transaction may not have started */ }
     console.error('❌ Error during import:', error);
+    process.exitCode = 1;
   } finally {
     await client.end();
   }
 }
 
-main().catch(console.error);
+main().catch(error => {
+  console.error(error);
+  process.exitCode = 1;
+});

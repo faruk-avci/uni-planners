@@ -1,0 +1,35 @@
+{
+  "key": "blaw-staj",
+  "label": "BLAW Staj",
+  "sourceFile": "huk_staj.xls",
+  "courses": [
+    {
+      "code": "HUK 300",
+      "title_tr": "Staj",
+      "title_en": "Staj",
+      "credits": 6,
+      "prereq": "60 AKTS'lik kredi yükünü tamamlamış olmak",
+      "coreq": "",
+      "practical": true
+    },
+    {
+      "code": "HUK 300-11",
+      "title_tr": "Staj",
+      "title_en": "Staj",
+      "credits": 3,
+      "prereq": "60 AKTS'lik kredi yükünü tamamlamış olmak",
+      "coreq": "",
+      "practical": true
+    },
+    {
+      "code": "HUK 300-12",
+      "title_tr": "Staj",
+      "title_en": "Staj",
+      "credits": 3,
+      "prereq": "60 AKTS'lik kredi yükünü tamamlamış olmak",
+      "coreq": "",
+      "practical": true
+    }
+  ],
+  "updatedAt": "2026-08-24T15:55:48.245Z"
+}

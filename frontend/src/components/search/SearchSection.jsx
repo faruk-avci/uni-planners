@@ -2,14 +2,11 @@ import { useState, useEffect } from 'react'
 import { courseService } from '../../services/courseService'
 import './SearchSection.css'
 
-function SearchSection({ language, onAddCourse }) {
+function SearchSection({ language, onAddCourse, catalogTerm }) {
   const [searchQuery, setSearchQuery] = useState('EE')
-  const [selectedMajor, setSelectedMajor] = useState('')
-  const [selectedProgramType, setSelectedProgramType] = useState('all')
   const [expandedCourse, setExpandedCourse] = useState(null)
 
   // Asynchronous API states
-  const [majorsList, setMajorsList] = useState([])
   const [searchResults, setSearchResults] = useState([])
   const [isLoading, setIsLoading] = useState(false)
 
@@ -17,35 +14,19 @@ function SearchSection({ language, onAddCourse }) {
     title: language === 'tr' ? 'Ders Ara' : 'Search Courses',
     placeholder: language === 'tr' ? 'Ders kodu veya adı yazın... (örn. EE 201, Sinyaller)' : 'Type course code or name... (e.g. EE 201, Signals)',
     search: language === 'tr' ? 'Ara' : 'Search',
-    term: '2025-2026 Yaz',
+    term: catalogTerm || '2025-2026 Yaz',
     addAll: language === 'tr' ? 'Tümünü Ekle' : 'Add All',
     showSections: language === 'tr' ? 'Şubeleri Göster' : 'Show Sections',
     addSection: language === 'tr' ? 'Şube Ekle' : 'Add Section',
     hideSections: language === 'tr' ? 'Şubeleri Gizle' : 'Hide Sections',
-    majorFilter: language === 'tr' ? 'Program / Bölüm Filtresi' : 'Filter by Major/Program',
-    typeFilter: language === 'tr' ? 'Ders Türü' : 'Course Type',
-    allTypes: language === 'tr' ? 'Tümü (Zorunlu + Seçmeli)' : 'All (Required + Elective)',
-    requiredOnly: language === 'tr' ? 'Sadece Zorunlu' : 'Required Only',
-    electiveOnly: language === 'tr' ? 'Sadece Seçmeli' : 'Elective Only',
     noResults: language === 'tr' ? 'Aramanıza uygun ders bulunamadı.' : 'No courses found matching your search.',
-    selectMajor: language === 'tr' ? '-- Bölüm Seçin --' : '-- Select Major --',
     loading: language === 'tr' ? 'Veritabanı aranıyor...' : 'Querying database...',
   }
-
-  // Fetch majors on mount
-  useEffect(() => {
-    courseService.getMajors().then(list => {
-      setMajorsList(list || [])
-    })
-  }, [])
 
   // Search function — only called on button click or Enter
   const doSearch = () => {
     setIsLoading(true)
-    courseService.searchCourses(searchQuery, {
-      major: selectedMajor,
-      programType: selectedProgramType
-    }).then(results => {
+    courseService.searchCourses(searchQuery).then(results => {
       setSearchResults(results || [])
       setIsLoading(false)
     })
@@ -75,33 +56,26 @@ function SearchSection({ language, onAddCourse }) {
 
   const handleClear = () => {
     setSearchQuery('');
-    setSelectedMajor('');
-    setSelectedProgramType('all');
     setSearchResults([]);
   }
 
-  // Helper to serialize time slots for grouping comparison
-  const getTimeKey = (times) => {
-    if (!times || times.length === 0) return 'TBA';
-    return times.map(t => `${t.day}|${t.start}-${t.end}`).sort().join(';');
-  };
+  const groupSectionsByTime = sections => {
+    const groups = new Map()
 
-  // Helper to group sections by schedule time
-  const groupSectionsByTime = (sections) => {
-    const groups = {};
-    for (const sec of sections) {
-      const key = getTimeKey(sec.times);
-      if (!groups[key]) {
-        groups[key] = {
-          key,
-          times: sec.times,
-          sections: []
-        };
-      }
-      groups[key].sections.push(sec);
-    }
-    return Object.values(groups);
-  };
+    sections.forEach(section => {
+      const key = section.times?.length
+        ? section.times
+          .map(time => `${time.day}|${time.start}-${time.end}`)
+          .sort()
+          .join(';')
+        : `TBA-${section.name}`
+
+      if (!groups.has(key)) groups.set(key, [])
+      groups.get(key).push(section)
+    })
+
+    return [...groups.values()]
+  }
 
   return (
     <section className="section search-section">
@@ -110,7 +84,7 @@ function SearchSection({ language, onAddCourse }) {
         <span className="badge badge-purple">{t.term}</span>
       </div>
 
-      {/* Search Bar + Filters */}
+      {/* Search Bar */}
       <form onSubmit={handleSearchSubmit} className="search-form">
         <div className="search-bar">
           <div className="search-input-wrapper">
@@ -128,38 +102,6 @@ function SearchSection({ language, onAddCourse }) {
           </div>
           <button type="submit" className="search-btn">{t.search}</button>
           <button type="button" className="clear-btn" onClick={handleClear}>{language === 'tr' ? 'Temizle' : 'Clear'}</button>
-        </div>
-
-        {/* Filter Dropdowns */}
-        <div className="search-filters">
-          <div className="filter-group">
-            <label className="filter-label">{t.majorFilter}</label>
-            <select 
-              className="filter-select" 
-              value={selectedMajor} 
-              onChange={(e) => setSelectedMajor(e.target.value)}
-            >
-              <option value="">{t.selectMajor}</option>
-              {majorsList.map(major => (
-                <option key={major} value={major}>{major}</option>
-              ))}
-            </select>
-          </div>
-
-          {selectedMajor && (
-            <div className="filter-group animate-fade-in">
-              <label className="filter-label">{t.typeFilter}</label>
-              <select 
-                className="filter-select"
-                value={selectedProgramType}
-                onChange={(e) => setSelectedProgramType(e.target.value)}
-              >
-                <option value="all">{t.allTypes}</option>
-                <option value="required">{t.requiredOnly}</option>
-                <option value="elective">{t.electiveOnly}</option>
-              </select>
-            </div>
-          )}
         </div>
       </form>
 
@@ -182,23 +124,13 @@ function SearchSection({ language, onAddCourse }) {
                     <div className="course-code-row">
                       <span className="course-code">{course.code}</span>
                       <span className="course-credits">{course.credits} ECTS</span>
-                      <span className="course-sections-badge">
-                        {course.sections.length} {language === 'tr'
-                          ? 'Şube'
-                          : course.sections.length === 1 ? 'Section' : 'Sections'}
-                      </span>
-                      {selectedMajor && (
-                        <span className={`badge ${course.required.includes(selectedMajor) ? 'badge-required' : 'badge-elective'}`}>
-                          {course.required.includes(selectedMajor) 
-                            ? (language === 'tr' ? 'Zorunlu' : 'Required')
-                            : (language === 'tr' ? 'Seçmeli' : 'Elective')
-                          }
-                        </span>
-                      )}
                     </div>
                     <h3 className="course-name">{course.name}</h3>
                     <p className="course-prereq">
                       <span className="prereq-label">{language === 'tr' ? 'Ön koşul:' : 'Prereq:'}</span> {course.prereq || '-'}
+                    </p>
+                    <p className="course-prereq">
+                      <span className="prereq-label">{language === 'tr' ? 'Yan koşul:' : 'Coreq:'}</span> {course.coreq || '-'}
                     </p>
                   </div>
                   <div className="course-actions">
@@ -213,6 +145,12 @@ function SearchSection({ language, onAddCourse }) {
                       onClick={(e) => { e.stopPropagation(); toggleSections(course.code) }}
                     >
                       {isExpanded ? t.hideSections : t.showSections}
+                      <span
+                        className="sections-toggle-count"
+                        title={`${course.sections.length} ${language === 'tr' ? 'şube' : 'sections'}`}
+                      >
+                        {course.sections.length}
+                      </span>
                       <svg
                         className={`toggle-chevron ${isExpanded ? 'toggle-chevron-open' : ''}`}
                         width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -226,98 +164,78 @@ function SearchSection({ language, onAddCourse }) {
 
                 {isExpanded && (
                   <div className="course-expanded-content animate-slide-down">
-                    {/* Sections Title */}
                     <div className="sections-header-bar">
                       <h4 className="expanded-section-title">
-                        {language === 'tr' ? 'Şubeler ve Ders Programı' : 'Sections and Class Schedule'}
+                        {language === 'tr' ? 'Şubeler' : 'Sections'}
                       </h4>
                     </div>
 
                     <div className="sections-list">
                       {groupSectionsByTime(course.sections).map(group => {
-                        const isGrouped = group.sections.length > 1;
-                        const shortNames = group.sections.map(s => s.name.replace(course.code, '').trim());
-
-                        return (
-                          <div key={group.key} className="section-group-container">
-                            {isGrouped ? (
-                              <>
-                                <div className="section-group-header">
-                                  <div className="section-group-label-wrapper">
-                                    <span className="section-group-label-text">
-                                      {language === 'tr' ? 'Aynı saatli farklı şubeler:' : 'Same hours different sections:'}
-                                    </span>
-                                    <span className="section-group-badge">
-                                      {shortNames.join('/')}
-                                    </span>
-                                  </div>
-                                  <div className="section-times">
-                                    {group.times.length === 0 ? (
-                                      <span className="time-pill">{language === 'tr' ? 'Açıklanmadı' : 'TBA'}</span>
-                                    ) : (
-                                      group.times.map((time, i) => (
-                                        <span key={i} className="time-pill">
-                                          {dayAbbr[time.day] || time.day} {time.start}-{time.end}
-                                        </span>
-                                      ))
-                                    )}
-                                  </div>
-                                  <button
-                                    className="btn btn-xs btn-ghost group-add-btn"
-                                    onClick={() => onAddCourse(course, group.sections.map(s => s.name))}
-                                    title={language === 'tr' ? 'Grup Olarak Ekle' : 'Add as Group'}
-                                  >
-                                    {language === 'tr' ? 'Grup Olarak Ekle' : 'Add as Group'}
-                                  </button>
+                        if (group.length > 1) {
+                          return (
+                            <div key={group.map(section => section.name).join('-')} className="same-time-group">
+                              <div className="same-time-summary">
+                                <div className="same-time-heading">
+                                  <span>{language === 'tr' ? 'Aynı saatli şubeler' : 'Same-time sections'}</span>
+                                  <strong>{group.map(section => section.name.replace(course.code, '').trim()).join(' / ')}</strong>
                                 </div>
-                                <div className="section-group-members">
-                                  {group.sections.map(section => (
-                                    <div key={section.name} className="section-row">
-                                      <div className="section-info">
-                                        <span className="section-name">{section.name}</span>
-                                        <span className="section-lecturer">{section.lecturer}</span>
-                                      </div>
-                                      <button
-                                        className="btn btn-sm btn-secondary section-add-btn"
-                                        onClick={() => onAddCourse(course, [section.name])}
-                                      >
-                                        {t.addSection}
-                                      </button>
-                                    </div>
+                                <div className="section-times">
+                                  {group[0].times.map((time, index) => (
+                                    <span key={`${time.day}-${time.start}-${index}`}>
+                                      {dayAbbr[time.day] || time.day} · {time.start}-{time.end}
+                                    </span>
                                   ))}
                                 </div>
-                              </>
-                            ) : (
-                              // Render single section normally in a flat row
-                              (() => {
-                                const section = group.sections[0];
-                                return (
-                                  <div key={section.name} className="section-row normal-section-row">
+                                <button
+                                  className="btn btn-sm btn-secondary same-time-add"
+                                  onClick={() => onAddCourse(course, group.map(section => section.name))}
+                                >
+                                  {language === 'tr' ? 'Grup Olarak Ekle' : 'Add as Group'}
+                                </button>
+                              </div>
+                              <div className="same-time-options">
+                                {group.map(section => (
+                                  <div key={section.name} className="same-time-option">
                                     <div className="section-info">
                                       <span className="section-name">{section.name}</span>
                                       <span className="section-lecturer">{section.lecturer}</span>
                                     </div>
-                                    <div className="section-times">
-                                      {section.times.length === 0 ? (
-                                        <span className="time-pill">{language === 'tr' ? 'Açıklanmadı' : 'TBA'}</span>
-                                      ) : (
-                                        section.times.map((time, i) => (
-                                          <span key={i} className="time-pill">
-                                            {dayAbbr[time.day] || time.day} {time.start}-{time.end}
-                                          </span>
-                                        ))
-                                      )}
-                                    </div>
                                     <button
-                                      className="btn btn-sm btn-secondary section-add-btn"
+                                      className="btn btn-sm btn-ghost section-add-btn"
                                       onClick={() => onAddCourse(course, [section.name])}
                                     >
-                                      {t.addSection}
+                                      {language === 'tr' ? 'Ekle' : 'Add'}
                                     </button>
                                   </div>
-                                );
-                              })()
-                            )}
+                                ))}
+                              </div>
+                            </div>
+                          )
+                        }
+
+                        const section = group[0]
+                        return (
+                          <div key={section.name} className="section-row section-row-simple">
+                            <div className="section-info">
+                              <span className="section-name">{section.name}</span>
+                              <span className="section-lecturer">{section.lecturer}</span>
+                            </div>
+                            <div className="section-times">
+                              {section.times.length === 0 ? (
+                                <span>{language === 'tr' ? 'Açıklanmadı' : 'TBA'}</span>
+                              ) : section.times.map((time, index) => (
+                                <span key={`${time.day}-${time.start}-${index}`}>
+                                  {dayAbbr[time.day] || time.day} · {time.start}-{time.end}
+                                </span>
+                              ))}
+                            </div>
+                            <button
+                              className="btn btn-sm btn-ghost section-add-btn"
+                              onClick={() => onAddCourse(course, [section.name])}
+                            >
+                              {language === 'tr' ? 'Ekle' : 'Add'}
+                            </button>
                           </div>
                         )
                       })}

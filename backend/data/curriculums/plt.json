@@ -1,0 +1,492 @@
+{
+  "id": "plt",
+  "title_tr": "Pilotaj",
+  "title_en": "Pilotage",
+  "faculty": "aviation",
+  "programCodes": [
+    "BSPLT",
+    "BSPF"
+  ],
+  "sourceFile": "pilotaj.xls",
+  "importedAt": "2026-08-24T16:02:29.522Z",
+  "semesters": {
+    "1": {
+      "fall": [
+        {
+          "code": "ENG 105",
+          "title_tr": "İngilizce Konuşma Becerileri I",
+          "title_en": "İngilizce Konuşma Becerileri I",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "MATH 103",
+          "title_tr": "Mühendislik için Yüksek Matematik I",
+          "title_en": "Mühendislik için Yüksek Matematik I",
+          "credits": 8,
+          "prereq": "",
+          "coreq": "MATH 103R",
+          "practical": false
+        },
+        {
+          "code": "PHYS 101",
+          "title_tr": "Fizik I",
+          "title_en": "Fizik I",
+          "credits": 8,
+          "prereq": "",
+          "coreq": "PHYS 101L",
+          "practical": true
+        },
+        {
+          "code": "PLT 111",
+          "title_tr": "Havacılığa Giriş",
+          "title_en": "Havacılığa Giriş",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "TLL 100",
+          "title_tr": "Türk Dili ve Edebiyatı",
+          "title_en": "Türk Dili ve Edebiyatı",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        }
+      ],
+      "spring": [
+        {
+          "code": "ENG 106",
+          "title_tr": "İngilizce Konuşma Becerileri II",
+          "title_en": "İngilizce Konuşma Becerileri II",
+          "credits": 4,
+          "prereq": "ENG 105",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HIST 200",
+          "title_tr": "Atatürk İlkeleri ve İnkılap Tarihi",
+          "title_en": "Atatürk İlkeleri ve İnkılap Tarihi",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "PLT 104",
+          "title_tr": "Aerodinamik",
+          "title_en": "Aerodinamik",
+          "credits": 6,
+          "prereq": "PHYS 101",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "TRL 100",
+          "title_tr": "Dönüştürücü Öğrenme",
+          "title_en": "Dönüştürücü Öğrenme",
+          "credits": 2,
+          "prereq": "",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "",
+          "title_tr": "BSPLT Serbest Seçmeli",
+          "title_en": "BSPLT Serbest Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "bsplt-serbest-secmeli"
+        },
+        {
+          "code": "",
+          "title_tr": "BSPLT Serbest Seçmeli",
+          "title_en": "BSPLT Serbest Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "bsplt-serbest-secmeli"
+        }
+      ]
+    },
+    "2": {
+      "fall": [
+        {
+          "code": "PLT 201",
+          "title_tr": "Hava Hukukuna Giriş",
+          "title_en": "Hava Hukukuna Giriş",
+          "credits": 2,
+          "prereq": "MATH 101, PHYS 103 ve PLT 104",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 203",
+          "title_tr": "Genel Uçak Bilgisi (PPL)",
+          "title_en": "Genel Uçak Bilgisi (PPL)",
+          "credits": 3,
+          "prereq": "MATH 101, PHYS 103 ve PLT 104",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 205",
+          "title_tr": "Meteoroloji (PPL)",
+          "title_en": "Meteoroloji (PPL)",
+          "credits": 3,
+          "prereq": "MATH 101, PHYS 103 ve PLT 104",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 207",
+          "title_tr": "Uçuş Performans ve Planlama (PPL)",
+          "title_en": "Uçuş Performans ve Planlama (PPL)",
+          "credits": 2,
+          "prereq": "MATH 101, PHYS 103 ve PLT 104",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 209",
+          "title_tr": "Seyrüsefer (PPL)",
+          "title_en": "Seyrüsefer (PPL)",
+          "credits": 6,
+          "prereq": "MATH 101, PHYS 103 ve PLT 104",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 211",
+          "title_tr": "İşletme Prosedürleri (PPL)",
+          "title_en": "İşletme Prosedürleri (PPL)",
+          "credits": 2,
+          "prereq": "MATH 101, PHYS 103 ve PLT 104",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 213",
+          "title_tr": "İnsan Performansı ve Limitleri (PPL)",
+          "title_en": "İnsan Performansı ve Limitleri (PPL)",
+          "credits": 2,
+          "prereq": "MATH 101, PHYS 103 ve PLT 104",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 215",
+          "title_tr": "Haberleşme (PPL)",
+          "title_en": "Haberleşme (PPL)",
+          "credits": 2,
+          "prereq": "MATH 101, PHYS 103 ve PLT 104",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 217",
+          "title_tr": "Uçuş Prensipleri (PPL)",
+          "title_en": "Uçuş Prensipleri (PPL)",
+          "credits": 2,
+          "prereq": "MATH 101, PHYS 103 ve PLT 104",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 221",
+          "title_tr": "Emniyet Yönetim Sistemi",
+          "title_en": "Emniyet Yönetim Sistemi",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": true
+        }
+      ],
+      "spring": [
+        {
+          "code": "PLT 202",
+          "title_tr": "Uçak Teknik Eğitimi",
+          "title_en": "Uçak Teknik Eğitimi",
+          "credits": 6,
+          "prereq": "PLT 201 ve PLT 203 ve PLT 205 ve PLT207 ve PLT209 ve PLT211 ve PLT213 ve PLT215 ve PLT217",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 204",
+          "title_tr": "PPL Uçuş Uygulaması",
+          "title_en": "PPL Uçuş Uygulaması",
+          "credits": 10,
+          "prereq": "PLT 201 ve PLT 203 ve PLT 205 ve PLT207 ve PLT209 ve PLT211 ve PLT213 ve PLT215 ve PLT217",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 206",
+          "title_tr": "Uçuş Simülatör Eğitimi",
+          "title_en": "Uçuş Simülatör Eğitimi",
+          "credits": 8,
+          "prereq": "PLT 201 ve PLT 203 ve PLT 205 ve PLT207 ve PLT209 ve PLT211 ve PLT213 ve PLT215 ve PLT217",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 208",
+          "title_tr": "Gece Uçuş Uygulaması",
+          "title_en": "Gece Uçuş Uygulaması",
+          "credits": 4,
+          "prereq": "PLT 201 ve PLT 203 ve PLT 205 ve PLT207 ve PLT209 ve PLT211 ve PLT213 ve PLT215 ve PLT217",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 210",
+          "title_tr": "PIC Uçuş Uygulaması I",
+          "title_en": "PIC Uçuş Uygulaması I",
+          "credits": 2,
+          "prereq": "PLT 201 ve PLT 203 ve PLT 205 ve PLT207 ve PLT209 ve PLT211 ve PLT213 ve PLT215 ve PLT217",
+          "coreq": "",
+          "practical": true
+        }
+      ]
+    },
+    "3": {
+      "fall": [
+        {
+          "code": "PLT 301",
+          "title_tr": "Hava Hukuku (ATPL)",
+          "title_en": "Hava Hukuku (ATPL)",
+          "credits": 3,
+          "prereq": "PLT 202, PLT 204 ve PLT 206",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 303",
+          "title_tr": "Genel Uçak Bilgisi (ATPL)",
+          "title_en": "Genel Uçak Bilgisi (ATPL)",
+          "credits": 6,
+          "prereq": "PLT 202, PLT 204 ve PLT 206",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 305",
+          "title_tr": "Haberleşme (ATPL)",
+          "title_en": "Haberleşme (ATPL)",
+          "credits": 3,
+          "prereq": "PLT 202, PLT 204 ve PLT 206",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 307",
+          "title_tr": "Uçuş İşletme Usulleri (ATPL)",
+          "title_en": "Uçuş İşletme Usulleri (ATPL)",
+          "credits": 2,
+          "prereq": "PLT 202, PLT 204 ve PLT 206",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 309",
+          "title_tr": "İnsan Performansı ve Limitleri (ATPL)",
+          "title_en": "İnsan Performansı ve Limitleri (ATPL)",
+          "credits": 4,
+          "prereq": "PLT 202, PLT 204 ve PLT 206",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 311",
+          "title_tr": "Meteoroloji (ATPL)",
+          "title_en": "Meteoroloji (ATPL)",
+          "credits": 6,
+          "prereq": "PLT 202, PLT 204 ve PLT 206",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 313",
+          "title_tr": "Havacılık İngilizcesi",
+          "title_en": "Havacılık İngilizcesi",
+          "credits": 6,
+          "prereq": "PLT 202, PLT 204,PLT 206, ENG 106",
+          "coreq": "",
+          "practical": true
+        }
+      ],
+      "spring": [
+        {
+          "code": "PLT 302",
+          "title_tr": "Yük ve Denge (ATPL)",
+          "title_en": "Yük ve Denge (ATPL)",
+          "credits": 3,
+          "prereq": "PLT 202, PLT 204 ve PLT 206",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 304",
+          "title_tr": "Performans (ATPL)",
+          "title_en": "Performans (ATPL)",
+          "credits": 4,
+          "prereq": "PLT 202, PLT 204 ve PLT 206",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 306",
+          "title_tr": "Uçuş Planlama ve İzleme (ATPL)",
+          "title_en": "Uçuş Planlama ve İzleme (ATPL)",
+          "credits": 3,
+          "prereq": "PLT 202, PLT 204 ve PLT 206",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 308",
+          "title_tr": "Seyrüsefer (ATPL)",
+          "title_en": "Seyrüsefer (ATPL)",
+          "credits": 6,
+          "prereq": "PLT 202, PLT 204 ve PLT 206",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 310",
+          "title_tr": "Radyo Seyrüsefer (ATPL)",
+          "title_en": "Radyo Seyrüsefer (ATPL)",
+          "credits": 6,
+          "prereq": "PLT 202, PLT 204 ve PLT 206",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 312",
+          "title_tr": "Uçuş Aletleri (ATPL)",
+          "title_en": "Uçuş Aletleri (ATPL)",
+          "credits": 3,
+          "prereq": "PLT 202, PLT 204 ve PLT 206",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 314",
+          "title_tr": "Uçuş Prensipleri (ATPL)",
+          "title_en": "Uçuş Prensipleri (ATPL)",
+          "credits": 3,
+          "prereq": "PLT 202, PLT 204 ve PLT 206",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 318",
+          "title_tr": "PIC Uçuş Uygulaması II",
+          "title_en": "PIC Uçuş Uygulaması II",
+          "credits": 2,
+          "prereq": "PLT 202, PLT 204, PLT 206",
+          "coreq": "",
+          "practical": true
+        }
+      ]
+    },
+    "4": {
+      "fall": [
+        {
+          "code": "PLT 401",
+          "title_tr": "IR Teorik Eğitimi",
+          "title_en": "IR Teorik Eğitimi",
+          "credits": 6,
+          "prereq": "PLT208 ve PLT210 ve PLT301 ve PLT302 ve PLT303 ve PLT304 ve PLT305 ve PLT306 ve PLT307 ve PLT308 ve PLT309 ve PLT310 ve PLT311 ve PLT312 ve PLT314",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 403",
+          "title_tr": "IR Simülator Uçuş Eğitimi",
+          "title_en": "IR Simülator Uçuş Eğitimi",
+          "credits": 8,
+          "prereq": "PLT208 ve PLT210 ve PLT301 ve PLT302 ve PLT303 ve PLT304 ve PLT305 ve PLT306 ve PLT307 ve PLT308 ve PLT309 ve PLT310 ve PLT311 ve PLT312 ve PLT314",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 405",
+          "title_tr": "IR Uçuş Uygulaması",
+          "title_en": "IR Uçuş Uygulaması",
+          "credits": 10,
+          "prereq": "PLT208 ve PLT210 ve PLT301 ve PLT302 ve PLT303 ve PLT304 ve PLT305 ve PLT306 ve PLT307 ve PLT308 ve PLT309 ve PLT310 ve PLT311 ve PLT312 ve PLT314",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "",
+          "title_tr": "BSPLT Fakülte-İçi Seçmeli",
+          "title_en": "BSPLT Fakülte-İçi Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "bsplt-fakulte-ici-secmeli"
+        }
+      ],
+      "spring": [
+        {
+          "code": "PLT 402",
+          "title_tr": "CPL Uçuş Uygulaması",
+          "title_en": "CPL Uçuş Uygulaması",
+          "credits": 10,
+          "prereq": "PLT401 ve PLT403 ve PLT 405",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 404",
+          "title_tr": "ME/IR (Çift Motor Uçuş Eğitimi)",
+          "title_en": "ME/IR (Çift Motor Uçuş Eğitimi)",
+          "credits": 8,
+          "prereq": "PLT401 ve PLT403 ve PLT 405",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "PLT 406",
+          "title_tr": "Ekip Kaynak Yönetimi",
+          "title_en": "Ekip Kaynak Yönetimi",
+          "credits": 6,
+          "prereq": "PLT202 ve PLT204 ve PLT206",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "",
+          "title_tr": "BSPLT Fakülte-İçi Seçmeli",
+          "title_en": "BSPLT Fakülte-İçi Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "bsplt-fakulte-ici-secmeli"
+        }
+      ]
+    }
+  },
+  "electivePoolRefs": {
+    "bsplt-serbest-secmeli": "bsplt-serbest-secmeli",
+    "bsplt-fakulte-ici-secmeli": "bsplt-fakulte-ici-secmeli"
+  },
+  "electiveLabels": {
+    "bsplt-serbest-secmeli": "BSPLT Serbest Seçmeli",
+    "bsplt-fakulte-ici-secmeli": "BSPLT Fakülte-İçi Seçmeli"
+  },
+  "updatedAt": "2026-08-24T16:02:29.522Z"
+}

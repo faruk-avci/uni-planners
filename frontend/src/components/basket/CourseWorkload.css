@@ -147,3 +147,20 @@
   line-height: 1.2;
 }
 
+@media (max-width: 768px) {
+  .workload-table-wrapper {
+    margin-inline: calc(-1 * var(--space-1));
+    overscroll-behavior-inline: contain;
+    scrollbar-width: thin;
+  }
+
+  .workload-table {
+    min-width: 680px;
+  }
+
+  .workload-table th,
+  .workload-table td {
+    padding: var(--space-2) var(--space-3);
+  }
+}
+

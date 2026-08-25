@@ -1,0 +1,125 @@
+{
+  "key": "bsavm-fakulte-ici-secmeli",
+  "label": "BSAVM Fakülte-İçi Seçmeli",
+  "sourceFile": "hav_fakülteiçi.xls",
+  "courses": [
+    {
+      "code": "AVM 305",
+      "title_tr": "Havacılıkta İş Hukukuna Giriş",
+      "title_en": "Havacılıkta İş Hukukuna Giriş",
+      "credits": 4,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "AVM 307",
+      "title_tr": "İnsansız Hava Aracı Sistemlerine Giriş",
+      "title_en": "İnsansız Hava Aracı Sistemlerine Giriş",
+      "credits": 6,
+      "prereq": "60 ECTS & 30 ECTS",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "AVM 308",
+      "title_tr": "Genel Havacılık Faaliyetleri ve Yönetimi",
+      "title_en": "Genel Havacılık Faaliyetleri ve Yönetimi",
+      "credits": 4,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "AVM 311",
+      "title_tr": "Havaaracı ve Uçuş İşletme Prosedürleri",
+      "title_en": "Havaaracı ve Uçuş İşletme Prosedürleri",
+      "credits": 4,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "AVM 312",
+      "title_tr": "Havacılıkta Modern İnsan Kaynakları Yönetimi",
+      "title_en": "Havacılıkta Modern İnsan Kaynakları Yönetimi",
+      "credits": 4,
+      "prereq": "90 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "AVM 314",
+      "title_tr": "Havacılıkta İnovasyon",
+      "title_en": "Havacılıkta İnovasyon",
+      "credits": 6,
+      "prereq": "90 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "AVM 315",
+      "title_tr": "Havacılıkta Çeşitlilik, Eşitlik ve Kapsayıcılık",
+      "title_en": "Havacılıkta Çeşitlilik, Eşitlik ve Kapsayıcılık",
+      "credits": 4,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "AVM 407",
+      "title_tr": "Havayolu İş Modelleri ve Stratejileri",
+      "title_en": "Havayolu İş Modelleri ve Stratejileri",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "AVM 409",
+      "title_tr": "Yer Hizmetleri Yönetimi",
+      "title_en": "Yer Hizmetleri Yönetimi",
+      "credits": 6,
+      "prereq": "En az 120 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "AVM 410",
+      "title_tr": "Havayolu Rezervasyon ve Yönetim Sistemleri",
+      "title_en": "Havayolu Rezervasyon ve Yönetim Sistemleri",
+      "credits": 6,
+      "prereq": "En az 120 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": true
+    },
+    {
+      "code": "AVM 414",
+      "title_tr": "Hava Kargo Yönetimi",
+      "title_en": "Hava Kargo Yönetimi",
+      "credits": 6,
+      "prereq": "En az 120 AKTS tamamlamış olmak.",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "PLT 109",
+      "title_tr": "Evrenin Keşfi",
+      "title_en": "Evrenin Keşfi",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "PLT 110",
+      "title_tr": "Uzay Yolculuklarının Fiziği",
+      "title_en": "Uzay Yolculuklarının Fiziği",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    }
+  ],
+  "updatedAt": "2026-08-24T15:59:49.628Z"
+}

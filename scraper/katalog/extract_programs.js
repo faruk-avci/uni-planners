@@ -10,14 +10,17 @@
  */
 
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
-import { execSync } from 'child_process';
+import { execFile } from 'child_process';
+import { promisify } from 'util';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const DOWNLOADS_DIR = path.join(__dirname, 'downloads');
+const execFileAsync = promisify(execFile);
 
 function extractProgramCode(line) {
   // Lines look like: "BABUS-İşletme Lisans" or "BSCS-Bilgisayar Mühendisliği Lisans"
@@ -120,11 +123,19 @@ function parsePdfText(text) {
 function parseArgs() {
   const args = process.argv.slice(2);
   const config = {
-    term: ''
+    term: '',
+    output: 'course_programs.json',
+    concurrency: 6
   };
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--term') {
       config.term = args[i + 1] || '';
+      i++;
+    } else if (args[i] === '--output') {
+      config.output = args[i + 1] || config.output;
+      i++;
+    } else if (args[i] === '--concurrency') {
+      config.concurrency = Math.max(1, Number.parseInt(args[i + 1], 10) || config.concurrency);
       i++;
     }
   }
@@ -163,55 +174,90 @@ async function run() {
 
   console.log(`📋 Found ${allPdfs.length} ECTS PDFs across ${majorDirs.length} major directories.`);
 
-  const results = {};
-  let processed = 0;
-  let errors = 0;
+  allPdfs.sort();
+  const parsedPdfs = new Array(allPdfs.length);
+  const errorDetails = [];
+  let cursor = 0;
 
-  for (const pdfPath of allPdfs) {
-    try {
-      const text = execSync(`pdftotext -layout "${pdfPath}" -`, {
-        encoding: 'utf8',
-        timeout: 10000
-      });
-
-      const parsed = parsePdfText(text);
-
-      if (!parsed.code) {
-        console.warn(`   ⚠️ Could not extract course code from: ${path.basename(pdfPath)}`);
-        errors++;
-        continue;
+  async function worker() {
+    while (cursor < allPdfs.length) {
+      const index = cursor++;
+      const pdfPath = allPdfs[index];
+      const processingPath = /[^\x00-\x7f]/.test(pdfPath)
+        ? path.join(os.tmpdir(), `ozu-ects-${process.pid}-${index}.pdf`)
+        : pdfPath;
+      try {
+        // Some Windows pdftotext distributions cannot open paths containing
+        // a dotted capital İ. Use an ASCII temporary path when necessary.
+        if (processingPath !== pdfPath) fs.copyFileSync(pdfPath, processingPath);
+        let text = '';
+        let lastError = null;
+        for (let attempt = 1; attempt <= 2 && !text; attempt++) {
+          try {
+            const result = await execFileAsync('pdftotext', ['-layout', processingPath, '-'], {
+              encoding: 'utf8',
+              timeout: 20000,
+              maxBuffer: 10 * 1024 * 1024,
+              windowsHide: true
+            });
+            text = result.stdout;
+          } catch (error) {
+            lastError = error;
+          }
+        }
+        if (!text) throw lastError || new Error('pdftotext returned no content.');
+        const parsed = parsePdfText(text);
+        if (!parsed.code) throw new Error('Course code could not be extracted.');
+        parsedPdfs[index] = parsed;
+      } catch (error) {
+        errorDetails.push({ file: pdfPath, error: error.message });
+      } finally {
+        if (processingPath !== pdfPath && fs.existsSync(processingPath)) {
+          fs.unlinkSync(processingPath);
+        }
       }
-
-      // Deduplicate: multiple sections (e.g. CS_101.A, CS_101.B) have the same ECTS content
-      // Use the base course code (without section letter) as key
-      if (!results[parsed.code]) {
-        results[parsed.code] = {
-          code: parsed.code,
-          codeFormatted: parsed.codeFormatted,
-          required: parsed.required,
-          elective: parsed.elective
-        };
-      }
-
-      processed++;
-    } catch (err) {
-      console.error(`   ❌ Error processing ${path.basename(pdfPath)}: ${err.message}`);
-      errors++;
     }
   }
+
+  await Promise.all(Array.from(
+    { length: Math.min(config.concurrency, allPdfs.length) },
+    () => worker()
+  ));
+
+  const results = {};
+  let processed = 0;
+  for (const parsed of parsedPdfs) {
+    if (!parsed) continue;
+    if (!results[parsed.code]) {
+      results[parsed.code] = {
+        code: parsed.code,
+        codeFormatted: parsed.codeFormatted,
+        required: parsed.required,
+        elective: parsed.elective
+      };
+    }
+    processed++;
+  }
+  const errors = errorDetails.length;
 
   // Sort by course code
   const sortedKeys = Object.keys(results).sort();
   const sortedResults = sortedKeys.map(k => results[k]);
 
-  const outputPath = path.join(baseDir, 'course_programs.json');
+  const outputPath = path.join(baseDir, path.basename(config.output));
   fs.writeFileSync(outputPath, JSON.stringify(sortedResults, null, 2));
+  const errorPath = path.join(baseDir, `${path.parse(config.output).name}_errors.json`);
+  fs.writeFileSync(errorPath, `${JSON.stringify(errorDetails, null, 2)}\n`);
 
   console.log(`\n🎉 Done!`);
   console.log(`   Processed: ${processed} PDFs`);
   console.log(`   Unique courses: ${sortedResults.length}`);
   console.log(`   Errors: ${errors}`);
   console.log(`   Output: ${outputPath}`);
+  if (allPdfs.length === 0 || sortedResults.length === 0 || errors > 0) {
+    console.error('ECTS extraction did not pass validation; refusing to continue the term pipeline.');
+    process.exitCode = 1;
+  }
 }
 
 run();

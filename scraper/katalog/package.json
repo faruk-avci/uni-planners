@@ -4,6 +4,9 @@
   "description": "Scrapes course details and downloads PDFs from Ozyegin Course Catalog UI",
   "main": "scraper.js",
   "type": "module",
+  "scripts": {
+    "update-term": "node update_term.js"
+  },
   "dependencies": {
     "pg": "^8.21.0",
     "xlsx": "^0.18.5"

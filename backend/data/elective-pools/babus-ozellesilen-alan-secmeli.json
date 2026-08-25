@@ -1,0 +1,620 @@
+{
+  "key": "babus-ozellesilen-alan-secmeli",
+  "label": "BABUS Özelleşilen Alan Seçmeli",
+  "sourceFile": "bus_özelleşilen.xls",
+  "courses": [
+    {
+      "code": "ACCT 412",
+      "title_tr": "Bağımsız Denetim",
+      "title_en": "Bağımsız Denetim",
+      "credits": 6,
+      "prereq": "ACCT 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "ENTR 305",
+      "title_tr": "Girişimci Pazarlama",
+      "title_en": "Girişimci Pazarlama",
+      "credits": 6,
+      "prereq": "(BUS 102 or ENTR 201) and MKTG 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "ENTR 403",
+      "title_tr": "Sosyal Girişimcilik ve Yenilikçilik",
+      "title_en": "Sosyal Girişimcilik ve Yenilikçilik",
+      "credits": 6,
+      "prereq": "BUS 102",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "ENTR 407",
+      "title_tr": "Aile Şirketlerinde Girişimci Yönetim",
+      "title_en": "Aile Şirketlerinde Girişimci Yönetim",
+      "credits": 6,
+      "prereq": "BUS 102",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "ENTR 408",
+      "title_tr": "Kurum İçi Girişimcilik",
+      "title_en": "Kurum İçi Girişimcilik",
+      "credits": 6,
+      "prereq": "BUS 102",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "ENTR 410",
+      "title_tr": "Sürdürülebilir Kalkınma için Değer Yaratma",
+      "title_en": "Sürdürülebilir Kalkınma için Değer Yaratma",
+      "credits": 6,
+      "prereq": "BUS102",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "FIN 204",
+      "title_tr": "Finansal Tablolar Analizi",
+      "title_en": "Finansal Tablolar Analizi",
+      "credits": 6,
+      "prereq": "ACCT 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "FIN 301",
+      "title_tr": "Yatırımlar",
+      "title_en": "Yatırımlar",
+      "credits": 6,
+      "prereq": "FIN 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "FIN 302",
+      "title_tr": "Kurumsal Finans",
+      "title_en": "Kurumsal Finans",
+      "credits": 6,
+      "prereq": "FIN 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "FIN 311",
+      "title_tr": "Banka Yönetimi ve Türk Bankacılık Sistemi",
+      "title_en": "Banka Yönetimi ve Türk Bankacılık Sistemi",
+      "credits": 6,
+      "prereq": "FIN 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "FIN 312",
+      "title_tr": "Bankacılık ve Finansal Aracılık",
+      "title_en": "Bankacılık ve Finansal Aracılık",
+      "credits": 6,
+      "prereq": "(MATH 202 or MATH 216) and FIN 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "FIN 314",
+      "title_tr": "Gayrimenkul Finansmanı",
+      "title_en": "Gayrimenkul Finansmanı",
+      "credits": 6,
+      "prereq": "FIN 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "FIN 341",
+      "title_tr": "Finansal Ekonometri",
+      "title_en": "Finansal Ekonometri",
+      "credits": 6,
+      "prereq": "ECON 301",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "FIN 403",
+      "title_tr": "Bağımsız Araştırma - FIN",
+      "title_en": "Bağımsız Araştırma - FIN",
+      "credits": 6,
+      "prereq": "FIN 301 and FIN 302 and FIN 312 and ECON 301 and to complete at least 120 ECTS credits",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "FIN 404",
+      "title_tr": "Sabit Getirili Menkul Kıymetler",
+      "title_en": "Sabit Getirili Menkul Kıymetler",
+      "credits": 6,
+      "prereq": "FIN 301 or ECON 309",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "FIN 411",
+      "title_tr": "Türev Enstrümanlar ve Risk Yönetimi",
+      "title_en": "Türev Enstrümanlar ve Risk Yönetimi",
+      "credits": 6,
+      "prereq": "FIN 301",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "FIN 412",
+      "title_tr": "İleri Düzey Yatırımlar",
+      "title_en": "İleri Düzey Yatırımlar",
+      "credits": 6,
+      "prereq": "FIN 301",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "FIN 416",
+      "title_tr": "Finansal Kurumlarda Risk Yönetimi",
+      "title_en": "Finansal Kurumlarda Risk Yönetimi",
+      "credits": 6,
+      "prereq": "FIN 312 or ECON 309",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "FIN 417",
+      "title_tr": "Para ve Finansal Sistemler",
+      "title_en": "Para ve Finansal Sistemler",
+      "credits": 6,
+      "prereq": "FIN 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "FIN 419",
+      "title_tr": "Şirket Değerleme",
+      "title_en": "Şirket Değerleme",
+      "credits": 6,
+      "prereq": "FIN 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "IBUS 303",
+      "title_tr": "Global Organizasyonlarda Farklılık ve Dahiliyet",
+      "title_en": "Global Organizasyonlarda Farklılık ve Dahiliyet",
+      "credits": 6,
+      "prereq": "SEC 202 and MGMT 202 and to complete at least 120 ECTS credits",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "IBUS 306",
+      "title_tr": "Çok Uluslu Şirketlerin Yönetimi",
+      "title_en": "Çok Uluslu Şirketlerin Yönetimi",
+      "credits": 6,
+      "prereq": "MGMT 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MGMT 306",
+      "title_tr": "İnsan Kaynakları Yönetimi",
+      "title_en": "İnsan Kaynakları Yönetimi",
+      "credits": 6,
+      "prereq": "(MGMT 202 or PSY 305) and (BUS 100 or BUS 101)",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MGMT 311",
+      "title_tr": "Proje Yönetimi",
+      "title_en": "Proje Yönetimi",
+      "credits": 6,
+      "prereq": "BUS 102 ve (SEC 201 veya SEC 203)",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MGMT 312",
+      "title_tr": "Örgüt Kuramı ve Tasarımı",
+      "title_en": "Örgüt Kuramı ve Tasarımı",
+      "credits": 6,
+      "prereq": "To complete at least 120 ECTS",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MGMT 313",
+      "title_tr": "Müzakere Becerileri",
+      "title_en": "Müzakere Becerileri",
+      "credits": 6,
+      "prereq": "Having completed at least 105 credits",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MGMT 314",
+      "title_tr": "Örgütlerde Liderlik ve İnsan Yönetimi",
+      "title_en": "Örgütlerde Liderlik ve İnsan Yönetimi",
+      "credits": 6,
+      "prereq": "To complete at least 105 ECTS",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MGMT 317",
+      "title_tr": "İş Etiği",
+      "title_en": "İş Etiği",
+      "credits": 6,
+      "prereq": "SEC 201 and SEC 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MGMT 319",
+      "title_tr": "Kültürlerarası Liderlik",
+      "title_en": "Kültürlerarası Liderlik",
+      "credits": 6,
+      "prereq": "Having completed at least 120 credits",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MGMT 321",
+      "title_tr": "Yapay Zeka Ürün Stratejisi ve Yönetimi",
+      "title_en": "Yapay Zeka Ürün Stratejisi ve Yönetimi",
+      "credits": 6,
+      "prereq": "To complete at least 105 ECTS",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MGMT 405",
+      "title_tr": "Bağımsız Araştırma - MGMT",
+      "title_en": "Bağımsız Araştırma - MGMT",
+      "credits": 6,
+      "prereq": "MGMT 202 and To complete at least 150 ECTS credits",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MGMT 408",
+      "title_tr": "Yönetim Düşüncesinin Evrimi",
+      "title_en": "Yönetim Düşüncesinin Evrimi",
+      "credits": 6,
+      "prereq": "MGMT 202 and to complete at least 180 ECTS",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MIS 103",
+      "title_tr": "Bilgisayar Programlamaya Giriş",
+      "title_en": "Bilgisayar Programlamaya Giriş",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MIS 104",
+      "title_tr": "Nesneye Dayalı Programlama Temelleri",
+      "title_en": "Nesneye Dayalı Programlama Temelleri",
+      "credits": 6,
+      "prereq": "MIS 103 or CS 101 or CS 103",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MIS 203",
+      "title_tr": "Veritabanı Yönetimi",
+      "title_en": "Veritabanı Yönetimi",
+      "credits": 6,
+      "prereq": "MIS 100 or MIS 311",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MIS 301",
+      "title_tr": "Kurumsal Bilgi Sistemleri",
+      "title_en": "Kurumsal Bilgi Sistemleri",
+      "credits": 6,
+      "prereq": "MIS 206",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MIS 303",
+      "title_tr": "İnternet Programlama",
+      "title_en": "İnternet Programlama",
+      "credits": 6,
+      "prereq": "MIS 103 and MIS 203",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MIS 304",
+      "title_tr": "Bilişim Güvenliği",
+      "title_en": "Bilişim Güvenliği",
+      "credits": 6,
+      "prereq": "To complete at least 90 ECTS",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MIS 305",
+      "title_tr": "İşletmelerde Dijital Dönüşüm",
+      "title_en": "İşletmelerde Dijital Dönüşüm",
+      "credits": 6,
+      "prereq": "MIS 206 or MIS 311",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MIS 306",
+      "title_tr": "E-İş'in Temelleri",
+      "title_en": "E-İş'in Temelleri",
+      "credits": 6,
+      "prereq": "BUS 102  and (MIS 301 or MIS311) and MKTG 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MIS 309",
+      "title_tr": "Sistem Analizi ve Tasarımı",
+      "title_en": "Sistem Analizi ve Tasarımı",
+      "credits": 6,
+      "prereq": "MIS 203 and MIS 206",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MIS 313",
+      "title_tr": "Kurumsal Veri ve Bilgi: Organizasyon ve Yönetimi",
+      "title_en": "Kurumsal Veri ve Bilgi: Organizasyon ve Yönetimi",
+      "credits": 6,
+      "prereq": "MIS 100 or MIS 311",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MIS 317",
+      "title_tr": "İşletmeler için Bulut Bilişim",
+      "title_en": "İşletmeler için Bulut Bilişim",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MIS 321",
+      "title_tr": "Veri Madenciliği",
+      "title_en": "Veri Madenciliği",
+      "credits": 6,
+      "prereq": "BUS 100 and BUS 190 and (MATH 202 or MATH 216)",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MIS 403",
+      "title_tr": "Bağımsız Araştırma - MIS",
+      "title_en": "Bağımsız Araştırma - MIS",
+      "credits": 6,
+      "prereq": "MATH 202 and To complete at least 130 ECTS credits",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MKTG 311",
+      "title_tr": "Pazarlama Araştırması",
+      "title_en": "Pazarlama Araştırması",
+      "credits": 6,
+      "prereq": "MKTG 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MKTG 312",
+      "title_tr": "Reklamcılık ve Bütünsel Pazarlama İletişimi",
+      "title_en": "Reklamcılık ve Bütünsel Pazarlama İletişimi",
+      "credits": 6,
+      "prereq": "MKTG 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MKTG 313",
+      "title_tr": "Pazarlama Stratejileri",
+      "title_en": "Pazarlama Stratejileri",
+      "credits": 6,
+      "prereq": "MKTG 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MKTG 314",
+      "title_tr": "Tüketici Davranışları",
+      "title_en": "Tüketici Davranışları",
+      "credits": 6,
+      "prereq": "MKTG 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MKTG 315",
+      "title_tr": "Uluslararası Pazarlama",
+      "title_en": "Uluslararası Pazarlama",
+      "credits": 6,
+      "prereq": "MKTG 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MKTG 316",
+      "title_tr": "Perakende ve Alışverişçi Pazarlaması",
+      "title_en": "Perakende ve Alışverişçi Pazarlaması",
+      "credits": 6,
+      "prereq": "MKTG 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MKTG 317",
+      "title_tr": "Pazarlama ve Toplumsal Hayat",
+      "title_en": "Pazarlama ve Toplumsal Hayat",
+      "credits": 6,
+      "prereq": "MKTG 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MKTG 320",
+      "title_tr": "Stratejik Pazarlama İletişimleri Yönetimi",
+      "title_en": "Stratejik Pazarlama İletişimleri Yönetimi",
+      "credits": 6,
+      "prereq": "MKTG 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MKTG 322",
+      "title_tr": "Marka Yönetimi",
+      "title_en": "Marka Yönetimi",
+      "credits": 6,
+      "prereq": "MKTG 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MKTG 324",
+      "title_tr": "Inovasyon ve Yeni Ürün Geliştirme",
+      "title_en": "Inovasyon ve Yeni Ürün Geliştirme",
+      "credits": 6,
+      "prereq": "MKTG 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MKTG 325",
+      "title_tr": "Dijital Çağda Tüketici Davranışları",
+      "title_en": "Dijital Çağda Tüketici Davranışları",
+      "credits": 6,
+      "prereq": "MKTG 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MKTG 403",
+      "title_tr": "Bağımsız Araştırma - MKTG",
+      "title_en": "Bağımsız Araştırma - MKTG",
+      "credits": 6,
+      "prereq": "MKTG 201 and To complete at least 120 ECTS credits",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MKTG 412",
+      "title_tr": "Satış Yönetimi",
+      "title_en": "Satış Yönetimi",
+      "credits": 6,
+      "prereq": "MKTG 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MKTG 414",
+      "title_tr": "İş Modeli İnovasyonu",
+      "title_en": "İş Modeli İnovasyonu",
+      "credits": 6,
+      "prereq": "MKTG 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MKTG 416",
+      "title_tr": "Kişisel Satış ve Satış Yönetimi",
+      "title_en": "Kişisel Satış ve Satış Yönetimi",
+      "credits": 6,
+      "prereq": "MKTG 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MKTG 417",
+      "title_tr": "İşletmeler Arası Pazarlama",
+      "title_en": "İşletmeler Arası Pazarlama",
+      "credits": 6,
+      "prereq": "SEC 201 and MKTG 201 and to complete at least 120 ECTS",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "OPER 311",
+      "title_tr": "Lojistik Yönetimi",
+      "title_en": "Lojistik Yönetimi",
+      "credits": 6,
+      "prereq": "OPER 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "OPER 312",
+      "title_tr": "Tedarik Zinciri Yönetimi",
+      "title_en": "Tedarik Zinciri Yönetimi",
+      "credits": 6,
+      "prereq": "OPER 202 or AVM 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "OPER 313",
+      "title_tr": "Gelir Yönetimi",
+      "title_en": "Gelir Yönetimi",
+      "credits": 6,
+      "prereq": "OPER 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "OPER 314",
+      "title_tr": "Hizmet Operasyonları Yönetimi",
+      "title_en": "Hizmet Operasyonları Yönetimi",
+      "credits": 6,
+      "prereq": "OPER 202 veya AVM 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "OPER 318",
+      "title_tr": "Perakende Operasyonları",
+      "title_en": "Perakende Operasyonları",
+      "credits": 6,
+      "prereq": "OPER 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "OPER 403",
+      "title_tr": "Bağımsız Araştırma - OPER",
+      "title_en": "Bağımsız Araştırma - OPER",
+      "credits": 6,
+      "prereq": "OPER 202 or BUS 101 and To complete at least 120 ECTS credits",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "OPER 404",
+      "title_tr": "Operasyonel Uygulamalar",
+      "title_en": "Operasyonel Uygulamalar",
+      "credits": 6,
+      "prereq": "(OPER 202 or IE 302) and (FIN 202 or IE 203) and to complete at least 150 ECTS",
+      "coreq": "",
+      "practical": false
+    }
+  ],
+  "updatedAt": "2026-08-24T16:12:26.816Z"
+}

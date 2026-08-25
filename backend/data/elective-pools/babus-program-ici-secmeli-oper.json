@@ -1,0 +1,35 @@
+{
+  "key": "babus-program-ici-secmeli-oper",
+  "label": "BABUS Program-İçi Seçmeli (OPER)",
+  "sourceFile": "bus_oper.xls",
+  "courses": [
+    {
+      "code": "OPER 312",
+      "title_tr": "Tedarik Zinciri Yönetimi",
+      "title_en": "Tedarik Zinciri Yönetimi",
+      "credits": 6,
+      "prereq": "OPER 202 or AVM 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "OPER 313",
+      "title_tr": "Gelir Yönetimi",
+      "title_en": "Gelir Yönetimi",
+      "credits": 6,
+      "prereq": "OPER 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "OPER 314",
+      "title_tr": "Hizmet Operasyonları Yönetimi",
+      "title_en": "Hizmet Operasyonları Yönetimi",
+      "credits": 6,
+      "prereq": "OPER 202 veya AVM 202",
+      "coreq": "",
+      "practical": false
+    }
+  ],
+  "updatedAt": "2026-08-24T16:12:08.560Z"
+}

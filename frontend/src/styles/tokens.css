@@ -189,3 +189,213 @@
   --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.5);
   --shadow-glow: 0 0 0 3px rgba(96, 165, 250, 0.2);
 }
+
+/* ── Unlockable color palettes ──
+   Palette and light/dark mode are independent: these values only replace the
+   chromatic layer while keeping the same spacing, typography, and contrast. */
+[data-palette="iris"] {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --bg-primary: #f5f6f8;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f7f8fa;
+  --bg-elevated: #ffffff;
+  --bg-accent: #eeecff;
+
+  --border-primary: #e4e7ec;
+  --border-secondary: #eff0f3;
+  --border-accent: #c9c5ed;
+
+  --text-primary: #172033;
+  --text-secondary: #6f7787;
+  --text-tertiary: #959baa;
+  --text-inverse: #ffffff;
+  --text-accent: #5144cc;
+
+  --accent-primary: #6658e8;
+  --accent-primary-hover: #5144cc;
+  --accent-secondary: #7b6ff0;
+  --accent-gradient: #6658e8;
+  --accent-soft: #eeecff;
+
+  --success: #21845a;
+  --success-bg: #eaf8f1;
+  --warning: #a7651c;
+  --warning-bg: #fff5df;
+  --error: #c74343;
+  --error-bg: #fff0f0;
+  --info: #6658e8;
+  --info-bg: #eeecff;
+
+  --shadow-xs: 0 1px 2px rgba(31, 37, 53, 0.035);
+  --shadow-sm: 0 3px 12px rgba(31, 37, 53, 0.045);
+  --shadow-md: 0 8px 22px rgba(31, 37, 53, 0.07);
+  --shadow-lg: 0 14px 40px rgba(52, 45, 110, 0.10);
+  --shadow-xl: 0 22px 55px rgba(52, 45, 110, 0.13);
+  --shadow-glow: 0 0 0 3px rgba(102, 88, 232, 0.16);
+}
+
+[data-palette="ozu"] {
+  --bg-primary: #f5f5f5;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f3f4f6;
+  --bg-elevated: #ffffff;
+  --bg-accent: #f5e6eb;
+  --border-accent: #c21d64;
+  --text-accent: #a50050;
+  --accent-primary: #a50050;
+  --accent-primary-hover: #82003f;
+  --accent-secondary: #003087;
+  --accent-gradient: linear-gradient(135deg, #003087, #a50050);
+  --accent-soft: #f5e6eb;
+  --shadow-glow: 0 0 0 3px rgba(165, 0, 80, 0.16);
+}
+
+[data-palette="ocean"] {
+  --bg-primary: #f5f8fc;
+  --bg-tertiary: #edf4fc;
+  --bg-accent: #e5effb;
+  --border-accent: #bfdbfe;
+  --text-accent: #1d4ed8;
+  --accent-primary: #2563eb;
+  --accent-primary-hover: #1d4ed8;
+  --accent-secondary: #0891b2;
+  --accent-gradient: linear-gradient(135deg, #2563eb, #0891b2);
+  --accent-soft: #eaf2ff;
+  --shadow-glow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+}
+
+[data-palette="forest"] {
+  --bg-primary: #f5f9f6;
+  --bg-tertiary: #edf6f0;
+  --bg-accent: #e3f1e8;
+  --border-accent: #bbdfc6;
+  --text-accent: #166534;
+  --accent-primary: #15803d;
+  --accent-primary-hover: #166534;
+  --accent-secondary: #0f766e;
+  --accent-gradient: linear-gradient(135deg, #15803d, #0f766e);
+  --accent-soft: #e9f7ed;
+  --shadow-glow: 0 0 0 3px rgba(21, 128, 61, 0.18);
+}
+
+[data-palette="violet"] {
+  --bg-primary: #f8f6fc;
+  --bg-tertiary: #f2edfb;
+  --bg-accent: #ebe3fa;
+  --border-accent: #d8c5f7;
+  --text-accent: #6d28d9;
+  --accent-primary: #7c3aed;
+  --accent-primary-hover: #6d28d9;
+  --accent-secondary: #c026d3;
+  --accent-gradient: linear-gradient(135deg, #7c3aed, #c026d3);
+  --accent-soft: #f1eafe;
+  --shadow-glow: 0 0 0 3px rgba(124, 58, 237, 0.18);
+}
+
+[data-palette="coral"] {
+  --bg-primary: #fcf7f5;
+  --bg-tertiary: #faefeb;
+  --bg-accent: #f7e6e0;
+  --border-accent: #f1c8bd;
+  --text-accent: #b93829;
+  --accent-primary: #d94f3d;
+  --accent-primary-hover: #bd3d2f;
+  --accent-secondary: #d97706;
+  --accent-gradient: linear-gradient(135deg, #d94f3d, #d97706);
+  --accent-soft: #fcece8;
+  --shadow-glow: 0 0 0 3px rgba(217, 79, 61, 0.18);
+}
+
+[data-theme="dark"][data-palette="ocean"] {
+  --bg-primary: #090d14;
+  --bg-secondary: #141a24;
+  --bg-tertiary: #1c2634;
+  --bg-elevated: #18202c;
+  --border-accent: rgba(96, 165, 250, 0.34);
+  --text-accent: #93c5fd;
+  --accent-primary: #60a5fa;
+  --accent-primary-hover: #93c5fd;
+  --accent-secondary: #22d3ee;
+  --accent-gradient: linear-gradient(135deg, #60a5fa, #22d3ee);
+  --accent-soft: rgba(96, 165, 250, 0.13);
+}
+
+[data-theme="dark"][data-palette="forest"] {
+  --bg-primary: #090e0b;
+  --bg-secondary: #141c17;
+  --bg-tertiary: #1c2920;
+  --bg-elevated: #18221b;
+  --border-accent: rgba(74, 222, 128, 0.3);
+  --text-accent: #86efac;
+  --accent-primary: #4ade80;
+  --accent-primary-hover: #86efac;
+  --accent-secondary: #2dd4bf;
+  --accent-gradient: linear-gradient(135deg, #4ade80, #2dd4bf);
+  --accent-soft: rgba(74, 222, 128, 0.12);
+}
+
+[data-theme="dark"][data-palette="violet"] {
+  --bg-primary: #0d0914;
+  --bg-secondary: #1b1525;
+  --bg-tertiary: #281e36;
+  --bg-elevated: #21182d;
+  --border-accent: rgba(167, 139, 250, 0.34);
+  --text-accent: #c4b5fd;
+  --accent-primary: #a78bfa;
+  --accent-primary-hover: #c4b5fd;
+  --accent-secondary: #e879f9;
+  --accent-gradient: linear-gradient(135deg, #a78bfa, #e879f9);
+  --accent-soft: rgba(167, 139, 250, 0.13);
+}
+
+[data-theme="dark"][data-palette="coral"] {
+  --bg-primary: #120a09;
+  --bg-secondary: #241715;
+  --bg-tertiary: #34201d;
+  --bg-elevated: #2c1b18;
+  --border-accent: rgba(251, 113, 133, 0.32);
+  --text-accent: #fda4af;
+  --accent-primary: #fb7185;
+  --accent-primary-hover: #fda4af;
+  --accent-secondary: #fbbf24;
+  --accent-gradient: linear-gradient(135deg, #fb7185, #fbbf24);
+  --accent-soft: rgba(251, 113, 133, 0.13);
+}
+
+[data-theme="dark"][data-palette="ozu"] {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --bg-tertiary: #3a3a3a;
+  --bg-elevated: #2d2d2d;
+  --bg-accent: rgba(165, 0, 80, 0.14);
+  --border-primary: #404040;
+  --border-secondary: rgba(255, 255, 255, 0.07);
+  --border-accent: #c21d64;
+  --text-primary: #e5e7eb;
+  --text-secondary: #9ca3af;
+  --text-accent: #e05a91;
+  --accent-primary: #c21d64;
+  --accent-primary-hover: #dd3a7d;
+  --accent-secondary: #4f83df;
+  --accent-gradient: linear-gradient(135deg, #003087, #a50050);
+  --accent-soft: rgba(165, 0, 80, 0.18);
+  --shadow-glow: 0 0 0 3px rgba(194, 29, 100, 0.22);
+}
+
+/* Site-wide typography is controlled from the admin panel and deliberately
+   independent from the selected color palette. */
+[data-site-font="system"] {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+[data-site-font="inter"] {
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+[data-site-font="arial"] {
+  --font-sans: Arial, Helvetica, sans-serif;
+}
+
+[data-site-font="rounded"] {
+  --font-sans: "Trebuchet MS", ui-rounded, system-ui, sans-serif;
+}

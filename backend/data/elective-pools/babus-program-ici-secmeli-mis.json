@@ -1,0 +1,35 @@
+{
+  "key": "babus-program-ici-secmeli-mis",
+  "label": "BABUS Program-İçi Seçmeli (MIS)",
+  "sourceFile": "bus_mis.xls",
+  "courses": [
+    {
+      "code": "MIS 203",
+      "title_tr": "Veritabanı Yönetimi",
+      "title_en": "Veritabanı Yönetimi",
+      "credits": 6,
+      "prereq": "MIS 100 or MIS 311",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MIS 305",
+      "title_tr": "İşletmelerde Dijital Dönüşüm",
+      "title_en": "İşletmelerde Dijital Dönüşüm",
+      "credits": 6,
+      "prereq": "MIS 206 or MIS 311",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MIS 306",
+      "title_tr": "E-İş'in Temelleri",
+      "title_en": "E-İş'in Temelleri",
+      "credits": 6,
+      "prereq": "BUS 102  and (MIS 301 or MIS311) and MKTG 201",
+      "coreq": "",
+      "practical": false
+    }
+  ],
+  "updatedAt": "2026-08-24T16:12:04.653Z"
+}

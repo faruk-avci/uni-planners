@@ -1,0 +1,206 @@
+{
+  "key": "baecon-program-ici-secmeli",
+  "label": "BAECON Program-İçi Seçmeli",
+  "sourceFile": "econ_programiçi.xls",
+  "courses": [
+    {
+      "code": "ECON 310",
+      "title_tr": "Sağlık Ekonomisi",
+      "title_en": "Sağlık Ekonomisi",
+      "credits": 6,
+      "prereq": "ECON 101 and having completed at least 120 ECTS",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "ECON 311",
+      "title_tr": "Deneysel İktisat",
+      "title_en": "Deneysel İktisat",
+      "credits": 6,
+      "prereq": "ECON 101",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "ECON 402",
+      "title_tr": "Türkiye Ekonomisi",
+      "title_en": "Türkiye Ekonomisi",
+      "credits": 6,
+      "prereq": "ECON 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "ECON 403",
+      "title_tr": "Bağımsız Araştırma - ECON",
+      "title_en": "Bağımsız Araştırma - ECON",
+      "credits": 6,
+      "prereq": "ECON201 and ECON202 and to complete at least 120 ECTS credits",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "ECON 406",
+      "title_tr": "Uygulamalı Mikroekonometri",
+      "title_en": "Uygulamalı Mikroekonometri",
+      "credits": 6,
+      "prereq": "ECON 201 and ECON 301",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "ECON 407",
+      "title_tr": "Çevre Ekonomisi ve Politikası",
+      "title_en": "Çevre Ekonomisi ve Politikası",
+      "credits": 6,
+      "prereq": "ECON 201 and ECON 301",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "ECON 420",
+      "title_tr": "Büyüme ve Gelişme",
+      "title_en": "Büyüme ve Gelişme",
+      "credits": 6,
+      "prereq": "ECON 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "ENTR 308",
+      "title_tr": "Girişimci Finans",
+      "title_en": "Girişimci Finans",
+      "credits": 6,
+      "prereq": "(BUS 102 or ENTR 201) and FIN 202 and MATH 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "FIN 204",
+      "title_tr": "Finansal Tablolar Analizi",
+      "title_en": "Finansal Tablolar Analizi",
+      "credits": 6,
+      "prereq": "ACCT 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "FIN 301",
+      "title_tr": "Yatırımlar",
+      "title_en": "Yatırımlar",
+      "credits": 6,
+      "prereq": "FIN 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "FIN 302",
+      "title_tr": "Kurumsal Finans",
+      "title_en": "Kurumsal Finans",
+      "credits": 6,
+      "prereq": "FIN 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "FIN 312",
+      "title_tr": "Bankacılık ve Finansal Aracılık",
+      "title_en": "Bankacılık ve Finansal Aracılık",
+      "credits": 6,
+      "prereq": "(MATH 202 or MATH 216) and FIN 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "FIN 341",
+      "title_tr": "Finansal Ekonometri",
+      "title_en": "Finansal Ekonometri",
+      "credits": 6,
+      "prereq": "ECON 301",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "FIN 401",
+      "title_tr": "Uluslararası Finans",
+      "title_en": "Uluslararası Finans",
+      "credits": 6,
+      "prereq": "FIN 202 and to complete 150 ECTS",
+      "coreq": "ECON309",
+      "practical": false
+    },
+    {
+      "code": "FIN 404",
+      "title_tr": "Sabit Getirili Menkul Kıymetler",
+      "title_en": "Sabit Getirili Menkul Kıymetler",
+      "credits": 6,
+      "prereq": "FIN 301 or ECON 309",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "FIN 411",
+      "title_tr": "Türev Enstrümanlar ve Risk Yönetimi",
+      "title_en": "Türev Enstrümanlar ve Risk Yönetimi",
+      "credits": 6,
+      "prereq": "FIN 301",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "FIN 412",
+      "title_tr": "İleri Düzey Yatırımlar",
+      "title_en": "İleri Düzey Yatırımlar",
+      "credits": 6,
+      "prereq": "FIN 301",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "FIN 419",
+      "title_tr": "Şirket Değerleme",
+      "title_en": "Şirket Değerleme",
+      "credits": 6,
+      "prereq": "FIN 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MIS 315",
+      "title_tr": "Veri Analizi ve Karar Modellemesi",
+      "title_en": "Veri Analizi ve Karar Modellemesi",
+      "credits": 6,
+      "prereq": "BUS 101 and (MATH 202 or MATH 216)",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MIS 321",
+      "title_tr": "Veri Madenciliği",
+      "title_en": "Veri Madenciliği",
+      "credits": 6,
+      "prereq": "BUS 100 and BUS 190 and (MATH 202 or MATH 216)",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "OPER 312",
+      "title_tr": "Tedarik Zinciri Yönetimi",
+      "title_en": "Tedarik Zinciri Yönetimi",
+      "credits": 6,
+      "prereq": "OPER 202 or AVM 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "OPER 313",
+      "title_tr": "Gelir Yönetimi",
+      "title_en": "Gelir Yönetimi",
+      "credits": 6,
+      "prereq": "OPER 202",
+      "coreq": "",
+      "practical": false
+    }
+  ],
+  "updatedAt": "2026-08-24T16:04:29.006Z"
+}

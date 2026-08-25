@@ -1,0 +1,305 @@
+{
+  "key": "fe-sosyal-bilimler-secmeli",
+  "label": "FE Sosyal Bilimler Seçmeli",
+  "sourceFile": "ee_sosyal.xls",
+  "courses": [
+    {
+      "code": "ANTH 101",
+      "title_tr": "Antropolojiye Giriş",
+      "title_en": "Antropolojiye Giriş",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "ANTH 212",
+      "title_tr": "Çevre ve Toplum",
+      "title_en": "Çevre ve Toplum",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "ANTH 303",
+      "title_tr": "Toplumsal Cinsiyet, Toplum, Siyaset",
+      "title_en": "Toplumsal Cinsiyet, Toplum, Siyaset",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "ANTH 319",
+      "title_tr": "Afetler ve Dayanıklı Kentler",
+      "title_en": "Afetler ve Dayanıklı Kentler",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HIST 103",
+      "title_tr": "Dünya Tarihi I",
+      "title_en": "Dünya Tarihi I",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HIST 104",
+      "title_tr": "Dünya Tarihi II",
+      "title_en": "Dünya Tarihi II",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HIST 309",
+      "title_tr": "Enine Boyuna Osmanlılar",
+      "title_en": "Enine Boyuna Osmanlılar",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HIST 310",
+      "title_tr": "Balkan Tarihi",
+      "title_en": "Balkan Tarihi",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HIST 311",
+      "title_tr": "Seyahat ve Acaibin Tarihi",
+      "title_en": "Seyahat ve Acaibin Tarihi",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUM 302",
+      "title_tr": "Medya ve Edebiyatta Dizisellik",
+      "title_en": "Medya ve Edebiyatta Dizisellik",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUM 315",
+      "title_tr": "Edebiyat ve Toplumsal Cinsiyet",
+      "title_en": "Edebiyat ve Toplumsal Cinsiyet",
+      "credits": 4,
+      "prereq": "TLL 101 and TLL 102",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUM 319",
+      "title_tr": "Filmlerle Felsefe: Felsefeye Giriş",
+      "title_en": "Filmlerle Felsefe: Felsefeye Giriş",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUM 353",
+      "title_tr": "Edebiyat ve Modernizm",
+      "title_en": "Edebiyat ve Modernizm",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "IR 101",
+      "title_tr": "Siyaset Bilimine Giriş",
+      "title_en": "Siyaset Bilimine Giriş",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "IR 301",
+      "title_tr": "Diplomasi Tarihi",
+      "title_en": "Diplomasi Tarihi",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "IR 311",
+      "title_tr": "Uluslararası Çatışma Analizi",
+      "title_en": "Uluslararası Çatışma Analizi",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "IR 312",
+      "title_tr": "Amerikan Politikası",
+      "title_en": "Amerikan Politikası",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "IR 313",
+      "title_tr": "Tartışmalı Fikirler: Politik ve Toplumsal Konular",
+      "title_en": "Tartışmalı Fikirler: Politik ve Toplumsal Konular",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "IR 318",
+      "title_tr": "Avrupa'yı Keşfetmek!",
+      "title_en": "Avrupa'yı Keşfetmek!",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "IR 323",
+      "title_tr": "Rusya Siyaseti",
+      "title_en": "Rusya Siyaseti",
+      "credits": 6,
+      "prereq": "IR 101",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "IR 325",
+      "title_tr": "Türk Dış Politikasında Güncel Konular",
+      "title_en": "Türk Dış Politikasında Güncel Konular",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "IR 326",
+      "title_tr": "Irk ve Etnisite Siyaseti",
+      "title_en": "Irk ve Etnisite Siyaseti",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "IR 329",
+      "title_tr": "Demokrasi ve Demokratikleşme",
+      "title_en": "Demokrasi ve Demokratikleşme",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MUSIC 103",
+      "title_tr": "Dünya Müzikleri",
+      "title_en": "Dünya Müzikleri",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "PHIL 104",
+      "title_tr": "Doğruluk, Bilgi ve Etik Karar Verme",
+      "title_en": "Doğruluk, Bilgi ve Etik Karar Verme",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "PSY 100",
+      "title_tr": "Genel Psikoloji",
+      "title_en": "Genel Psikoloji",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "PSY 314",
+      "title_tr": "İnsan Belleği",
+      "title_en": "İnsan Belleği",
+      "credits": 6,
+      "prereq": "(PSY 100 or PSY 101) and Having Completed 90 credits",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "PSY 317",
+      "title_tr": "Düşünme ve Akıl Yürütme",
+      "title_en": "Düşünme ve Akıl Yürütme",
+      "credits": 6,
+      "prereq": "PSY 100 veya PSY 101 ve 90 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "PSY 324",
+      "title_tr": "Duyum ve Algı",
+      "title_en": "Duyum ve Algı",
+      "credits": 6,
+      "prereq": "(PSY 100 or PSY 101) and having completed 90 credits",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "PSY 429",
+      "title_tr": "İş Hayatında Liderlik ve Motivasyon",
+      "title_en": "İş Hayatında Liderlik ve Motivasyon",
+      "credits": 6,
+      "prereq": "PSY 100 or PSY 101 and Having Completed 90 credits",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "SOC 201",
+      "title_tr": "Sosyal Bilimlere Giriş",
+      "title_en": "Sosyal Bilimlere Giriş",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "SOC 302",
+      "title_tr": "Din ve Sekülerlik Sosyolojisi ve Siyaseti",
+      "title_en": "Din ve Sekülerlik Sosyolojisi ve Siyaseti",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "SOC 304",
+      "title_tr": "Çalışma ve İstihdamın Sosyolojisi: Modern Çalışma Hayatına Giriş",
+      "title_en": "Çalışma ve İstihdamın Sosyolojisi: Modern Çalışma Hayatına Giriş",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    }
+  ],
+  "updatedAt": "2026-08-24T17:40:03.481Z"
+}

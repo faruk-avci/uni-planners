@@ -72,7 +72,14 @@ for (const subj of subjects) {
 console.log(`📊 Found ${files.length} Excel offering files.`);
 
 const courses = {};
-const sections = [];
+const sectionMap = new Map();
+
+function mergeDistinct(left, right, separator) {
+  const values = [...String(left || '').split(separator), ...String(right || '').split(separator)]
+    .map(value => value.trim())
+    .filter(Boolean);
+  return [...new Set(values)].join(separator);
+}
 
 for (const filePath of files) {
   try {
@@ -115,12 +122,20 @@ for (const filePath of files) {
         };
       }
 
-      sections.push({
+      const section = {
         course_code: courseCode,
         section_no: sectionNo,
         instructor,
         schedule
-      });
+      };
+      const sectionKey = `${courseCode}\u0000${sectionNo}`;
+      const existing = sectionMap.get(sectionKey);
+      if (existing) {
+        existing.instructor = mergeDistinct(existing.instructor, instructor, ', ');
+        existing.schedule = mergeDistinct(existing.schedule, schedule, '\n');
+      } else {
+        sectionMap.set(sectionKey, section);
+      }
     }
   } catch (err) {
     console.error(`⚠️ Failed to parse file ${path.basename(filePath)}:`, err.message);
@@ -128,7 +143,12 @@ for (const filePath of files) {
 }
 
 console.log(`📋 Total unique courses: ${Object.keys(courses).length}`);
+const sections = [...sectionMap.values()];
 console.log(`📋 Total class sections: ${sections.length}`);
+if (Object.keys(courses).length === 0 || sections.length === 0) {
+  console.error('❌ Refusing to replace the catalog with an empty import.');
+  process.exit(1);
+}
 
 // 3. PostgreSQL Database Connection Setup (env-driven, shared with backend/.env)
 const dbConfig = getDbConfig();
@@ -139,13 +159,12 @@ async function run() {
     await client.connect();
     console.log(`✅ Connected to PostgreSQL on port ${dbConfig.port}`);
 
-    // Create tables
-    console.log('Recreating catalog tables...');
-    await client.query('DROP TABLE IF EXISTS catalog_sections CASCADE');
-    await client.query('DROP TABLE IF EXISTS catalog_courses CASCADE');
-
+    // Keep the existing tables and replace their contents atomically. This
+    // preserves dependent tables/constraints and avoids a half-imported catalog.
+    console.log('Replacing catalog contents in one transaction...');
+    await client.query('BEGIN');
     await client.query(`
-      CREATE TABLE catalog_courses (
+      CREATE TABLE IF NOT EXISTS catalog_courses (
         course_code VARCHAR(20) PRIMARY KEY,
         subject VARCHAR(10) NOT NULL,
         course_no VARCHAR(10) NOT NULL,
@@ -161,16 +180,20 @@ async function run() {
     `);
 
     await client.query(`
-      CREATE TABLE catalog_sections (
+      CREATE TABLE IF NOT EXISTS catalog_sections (
         id SERIAL PRIMARY KEY,
         course_code VARCHAR(20) REFERENCES catalog_courses(course_code) ON DELETE CASCADE,
         section_no VARCHAR(10) NOT NULL,
         instructor VARCHAR(255),
-        schedule TEXT
+        schedule TEXT,
+        UNIQUE (course_code, section_no)
       )
     `);
-
-    console.log('✓ Tables created successfully.');
+    await client.query('TRUNCATE TABLE catalog_sections RESTART IDENTITY');
+    await client.query(`
+      CREATE UNIQUE INDEX IF NOT EXISTS catalog_sections_course_section_uidx
+      ON catalog_sections (course_code, section_no)
+    `);
 
     // Insert Courses
     console.log('Inserting courses...');
@@ -180,12 +203,29 @@ async function run() {
           course_code, subject, course_no, title, faculty, credits, 
           description, corequisites, prerequisites, required_programs, elective_programs
         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        ON CONFLICT (course_code) DO UPDATE SET
+          subject = EXCLUDED.subject,
+          course_no = EXCLUDED.course_no,
+          title = EXCLUDED.title,
+          faculty = EXCLUDED.faculty,
+          credits = EXCLUDED.credits,
+          description = EXCLUDED.description,
+          corequisites = EXCLUDED.corequisites,
+          prerequisites = EXCLUDED.prerequisites,
+          required_programs = EXCLUDED.required_programs,
+          elective_programs = EXCLUDED.elective_programs
       `, [
         c.course_code, c.subject, c.course_no, c.title, c.faculty, c.credits,
         c.description, c.corequisites, c.prerequisites, c.required_programs, c.elective_programs
       ]);
     }
     console.log(`✓ Inserted ${Object.keys(courses).length} courses`);
+
+    const importedCodes = Object.keys(courses);
+    await client.query(
+      'DELETE FROM catalog_courses WHERE NOT (course_code = ANY($1::text[]))',
+      [importedCodes]
+    );
 
     // Insert Sections
     console.log('Inserting sections...');
@@ -197,14 +237,18 @@ async function run() {
     }
     console.log(`✓ Inserted ${sections.length} sections`);
 
+    await client.query('COMMIT');
+
     console.log('\n🎉 All offered courses and sections successfully imported!');
     await client.end();
 
   } catch (err) {
     console.error('\n❌ Database operation failed:', err.message);
     if (client) {
+      try { await client.query('ROLLBACK'); } catch (e) {}
       try { await client.end(); } catch (e) {}
     }
+    process.exitCode = 1;
   }
 }
 

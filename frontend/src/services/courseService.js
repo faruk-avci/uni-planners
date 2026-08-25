@@ -6,7 +6,15 @@
 // production behind a reverse proxy. Set VITE_API_URL to target a different host.
 const API_BASE = import.meta.env.VITE_API_URL || ''
 
+import { trackEvent } from '../utils/analytics.js';
+
 export const courseService = {
+  async getSiteSettings() {
+    const res = await fetch(API_BASE + '/api/site-settings', { cache: 'no-store' })
+    if (!res.ok) throw new Error('Site settings could not be loaded')
+    return await res.json()
+  },
+
   /**
    * Search courses by query and filters from the PostgreSQL database
    */
@@ -20,6 +28,11 @@ export const courseService = {
         body: JSON.stringify({ query, major, type: programType }),
       });
       if (!res.ok) throw new Error('API request failed');
+
+      if (query.length > 0 || major) {
+        trackEvent('search', 'courses', query, { major, programType });
+      }
+
       return await res.json();
     } catch (err) {
       console.error('Failed to search courses from database:', err);
@@ -39,6 +52,36 @@ export const courseService = {
       console.error('Failed to fetch majors from database:', err);
       return [];
     }
+  },
+
+  async getPreferences() {
+    const res = await fetch(API_BASE + '/api/preferences', { credentials: 'include' })
+    if (!res.ok) throw new Error('Preferences could not be loaded')
+    return await res.json()
+  },
+
+  async saveMajorPreference(major, source) {
+    const res = await fetch(API_BASE + '/api/preferences/major', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ major, source }),
+    })
+    if (!res.ok) throw new Error('Major preference could not be saved')
+    return await res.json()
+  },
+
+  async getCurriculums() {
+    const res = await fetch(API_BASE + '/api/curriculums');
+    if (!res.ok) throw new Error('Curriculum list request failed');
+    return await res.json();
+  },
+
+  async getCurriculum(id) {
+    const res = await fetch(API_BASE + '/api/curriculums/' + encodeURIComponent(id));
+    if (!res.ok) throw new Error('Curriculum request failed');
+    trackEvent('pageview', 'curriculum', id);
+    return await res.json();
   },
 
   /**
@@ -94,6 +137,57 @@ export const courseService = {
     }
   },
 
+  async getSavedBaskets() {
+    const res = await fetch(API_BASE + '/api/saved-baskets', { credentials: 'include' })
+    if (!res.ok) throw new Error('Saved baskets could not be loaded')
+    return await res.json()
+  },
+
+  async saveNamedBasket(name, items = []) {
+    const res = await fetch(API_BASE + '/api/saved-baskets', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        name,
+        items: items.map(item => ({
+          code: item.code,
+          sections: item.sections || [],
+          source: item.source || null,
+        })),
+      }),
+    })
+    if (!res.ok) {
+      const result = await res.json().catch(() => ({}))
+      throw new Error(result.error || 'Basket could not be saved')
+    }
+    return await res.json()
+  },
+
+  async deleteSavedBasket(id) {
+    const res = await fetch(API_BASE + '/api/saved-baskets/' + encodeURIComponent(id), {
+      method: 'DELETE',
+      credentials: 'include',
+    })
+    if (!res.ok) throw new Error('Saved basket could not be deleted')
+    return await res.json()
+  },
+
+  async trackCourseAdd(code, source = 'search', selectionMode = 'course') {
+    try {
+      const res = await fetch(API_BASE + '/api/analytics/course-add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        keepalive: true,
+        body: JSON.stringify({ code, source, selectionMode }),
+      })
+      return res.ok
+    } catch {
+      return false
+    }
+  },
+
   /**
    * Fetch grading/assessment breakdown for a list of course codes.
    */
@@ -117,9 +211,8 @@ export const courseService = {
    * Generate conflict-free schedules from the basket, honoring free days.
    * @param {Array} basket  items with { code, selectedSection }
    * @param {Array} freeDays  full Turkish day names, e.g. ["Cuma"]
-   * @param {String} preference  'morning' | 'evening' | 'balanced'
    */
-  async generateSchedule(basket = [], freeDays = [], preference = 'balanced') {
+  async generateSchedule(basket = [], freeDays = []) {
     const courses = basket.map(item => ({
       code: item.code,
       sections: item.sections || [], // [] = all sections of the course
@@ -129,9 +222,15 @@ export const courseService = {
       const res = await fetch(API_BASE + '/api/schedule/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ courses, freeDays, preference }),
+        body: JSON.stringify({ courses, freeDays }),
       });
       if (!res.ok) throw new Error('Schedule generation failed');
+
+      trackEvent('feature_usage', 'generate_schedule', null, {
+        courseCount: courses.length,
+        freeDays
+      });
+
       return await res.json();
     } catch (err) {
       console.error('Failed to generate schedules:', err);
@@ -152,11 +251,82 @@ export const courseService = {
         body: JSON.stringify({ occupied, exclude: excludeCodes, major }),
       });
       if (!res.ok) throw new Error('Fitting request failed');
+
+      trackEvent('feature_usage', 'fitting_programs', major, {
+        occupiedSlots: occupied.length,
+        excludeCount: excludeCodes.length
+      });
+
       return await res.json();
     } catch (err) {
       console.error('Failed to fetch fitting courses:', err);
       return { success: false, courses: [], total: 0 };
     }
+  },
+
+  async shareSchedule(schedule, major = '') {
+    const res = await fetch(API_BASE + '/api/shared-schedules', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ schedule, major }),
+    })
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok) throw new Error(data.error || 'Schedule could not be shared')
+    return data
+  },
+
+  async exportScheduleImage(schedule, language = 'tr', layout = 'grid') {
+    const res = await fetch(API_BASE + '/api/schedule/export-image', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ schedule, language, layout }),
+    })
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}))
+      throw new Error(data.error || 'Schedule image could not be created')
+    }
+    return await res.blob()
+  },
+
+  async exportScheduleCalendar(schedule, language = 'tr') {
+    const res = await fetch(API_BASE + '/api/schedule/export-calendar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ schedule, language }),
+    })
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}))
+      throw new Error(data.error || 'Calendar could not be created')
+    }
+    return await res.blob()
+  },
+
+  async getSharedSchedule(id) {
+    const res = await fetch(API_BASE + '/api/shared-schedules/' + encodeURIComponent(id), {
+      credentials: 'include',
+      cache: 'no-store',
+    })
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok) throw new Error(data.error || 'Shared schedule could not be loaded')
+    return data
+  },
+
+  async getDinoLeaderboard(limit = 100) {
+    const res = await fetch(`${API_BASE}/api/dino/leaderboard?limit=${encodeURIComponent(limit)}`)
+    if (!res.ok) throw new Error('Dino leaderboard request failed')
+    return await res.json()
+  },
+
+  async submitDinoScore(email, score) {
+    const res = await fetch(API_BASE + '/api/dino/score', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, score }),
+    })
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.error || 'Dino score request failed')
+    return data
   },
 
   /**

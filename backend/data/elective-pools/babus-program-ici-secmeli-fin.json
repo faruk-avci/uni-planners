@@ -1,0 +1,35 @@
+{
+  "key": "babus-program-ici-secmeli-fin",
+  "label": "BABUS Program-İçi Seçmeli (FIN)",
+  "sourceFile": "bus_fin.xls",
+  "courses": [
+    {
+      "code": "FIN 301",
+      "title_tr": "Yatırımlar",
+      "title_en": "Yatırımlar",
+      "credits": 6,
+      "prereq": "FIN 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "FIN 302",
+      "title_tr": "Kurumsal Finans",
+      "title_en": "Kurumsal Finans",
+      "credits": 6,
+      "prereq": "FIN 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "FIN 312",
+      "title_tr": "Bankacılık ve Finansal Aracılık",
+      "title_en": "Bankacılık ve Finansal Aracılık",
+      "credits": 6,
+      "prereq": "(MATH 202 or MATH 216) and FIN 202",
+      "coreq": "",
+      "practical": false
+    }
+  ],
+  "updatedAt": "2026-08-24T16:11:56.596Z"
+}

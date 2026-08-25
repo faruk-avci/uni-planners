@@ -1,0 +1,13 @@
+[Unit]
+Description=UniPlanner PostgreSQL backup
+After=postgresql.service
+Requires=postgresql.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/bash /opt/uniplanner/app/deployment/ubuntu/backup-database.sh
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+PrivateTmp=true
+ProtectHome=true

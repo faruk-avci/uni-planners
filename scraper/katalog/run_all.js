@@ -71,6 +71,9 @@ async function run() {
         const prefix = `[${major}] `;
         const formatted = stdout.split('\n').map(line => line ? prefix + line : '').join('\n');
         console.log(formatted);
+        if (stderr.trim()) {
+          console.error(stderr.split('\n').map(line => line ? prefix + line : '').join('\n'));
+        }
 
         // Verify the result
         const majorOutputDir = config.term
@@ -116,7 +119,10 @@ async function run() {
   await Promise.all(promises);
 
   // Write final report
-  const reportPath = path.join(__dirname, 'scrape_report.json');
+  const reportPath = config.term
+    ? path.join(__dirname, 'downloads', termSlug(config.term), 'scrape_report.json')
+    : path.join(__dirname, 'scrape_report.json');
+  fs.mkdirSync(path.dirname(reportPath), { recursive: true });
   fs.writeFileSync(reportPath, JSON.stringify(summary, null, 2));
 
   console.log(`\n==================================================`);

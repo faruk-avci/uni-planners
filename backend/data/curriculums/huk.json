@@ -1,0 +1,528 @@
+{
+  "id": "huk",
+  "title_tr": "Hukuk",
+  "title_en": "Law",
+  "faculty": "law",
+  "programCodes": [
+    "BLAW"
+  ],
+  "sourceFile": "hukuk.xls",
+  "importedAt": "2026-08-24T15:56:50.457Z",
+  "semesters": {
+    "1": {
+      "fall": [
+        {
+          "code": "ENG 103",
+          "title_tr": "İngilizce I (Öğrenim dili Türkçe programlar)",
+          "title_en": "İngilizce I (Öğrenim dili Türkçe programlar)",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HIST 200",
+          "title_tr": "Atatürk İlkeleri ve İnkılap Tarihi",
+          "title_en": "Atatürk İlkeleri ve İnkılap Tarihi",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 105",
+          "title_tr": "Anayasa Hukuku I",
+          "title_en": "Anayasa Hukuku I",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 107",
+          "title_tr": "Medeni Hukuk I: Giriş, Temel Kavramlar,  Kişiler Hukuku",
+          "title_en": "Medeni Hukuk I: Giriş, Temel Kavramlar,  Kişiler Hukuku",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "TLL 100",
+          "title_tr": "Türk Dili ve Edebiyatı",
+          "title_en": "Türk Dili ve Edebiyatı",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "TRL 109",
+          "title_tr": "Dönüştürücü Öğrenme",
+          "title_en": "Dönüştürücü Öğrenme",
+          "credits": 2,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        }
+      ],
+      "spring": [
+        {
+          "code": "ENG 104",
+          "title_tr": "İngilizce II (Öğrenim dili Türkçe programlar)",
+          "title_en": "İngilizce II (Öğrenim dili Türkçe programlar)",
+          "credits": 4,
+          "prereq": "ENG 103 dersinden başarılı olmak",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 106",
+          "title_tr": "Anayasa Hukuku II",
+          "title_en": "Anayasa Hukuku II",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 108",
+          "title_tr": "Medeni Hukuk II: Aile Hukuku",
+          "title_en": "Medeni Hukuk II: Aile Hukuku",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 112",
+          "title_tr": "Yargı İşleyişi",
+          "title_en": "Yargı İşleyişi",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 209",
+          "title_tr": "Türk Hukuk Tarihi",
+          "title_en": "Türk Hukuk Tarihi",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "SEC 203",
+          "title_tr": "Sektörel Hazırlık",
+          "title_en": "Sektörel Hazırlık",
+          "credits": 2,
+          "prereq": "",
+          "coreq": "SEC 203L",
+          "practical": false
+        },
+        {
+          "code": "",
+          "title_tr": "BLAW Serbest Seçmeli",
+          "title_en": "BLAW Serbest Seçmeli",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "blaw-serbest-secmeli"
+        }
+      ]
+    },
+    "2": {
+      "fall": [
+        {
+          "code": "HUK 201",
+          "title_tr": "Ceza Hukuku Genel Hükümler I",
+          "title_en": "Ceza Hukuku Genel Hükümler I",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 203",
+          "title_tr": "İdare Hukuku",
+          "title_en": "İdare Hukuku",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 205",
+          "title_tr": "Borçlar Hukuku Genel Hükümler I",
+          "title_en": "Borçlar Hukuku Genel Hükümler I",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 217",
+          "title_tr": "Devletler Genel Hukuku",
+          "title_en": "Devletler Genel Hukuku",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 309",
+          "title_tr": "Genel Kamu Hukuku",
+          "title_en": "Genel Kamu Hukuku",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "",
+          "title_tr": "BLAW Serbest Seçmeli",
+          "title_en": "BLAW Serbest Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "blaw-serbest-secmeli"
+        }
+      ],
+      "spring": [
+        {
+          "code": "HUK 202",
+          "title_tr": "Ceza Hukuku Genel Hükümler II",
+          "title_en": "Ceza Hukuku Genel Hükümler II",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 206",
+          "title_tr": "Borçlar Hukuku Genel Hükümler II",
+          "title_en": "Borçlar Hukuku Genel Hükümler II",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 220",
+          "title_tr": "İdare ve Yargılama Hukuku",
+          "title_en": "İdare ve Yargılama Hukuku",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 310",
+          "title_tr": "İnsan Hakları Hukuku",
+          "title_en": "İnsan Hakları Hukuku",
+          "credits": 4,
+          "prereq": "En az 60 AKTS tamamlamış olmak",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "",
+          "title_tr": "BLAW Serbest Seçmeli",
+          "title_en": "BLAW Serbest Seçmeli",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "blaw-serbest-secmeli"
+        },
+        {
+          "code": "",
+          "title_tr": "BLAW Serbest Seçmeli",
+          "title_en": "BLAW Serbest Seçmeli",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "blaw-serbest-secmeli"
+        }
+      ]
+    },
+    "3": {
+      "fall": [
+        {
+          "code": "HUK 215",
+          "title_tr": "Bilişim Teknolojileri ve Hukuk",
+          "title_en": "Bilişim Teknolojileri ve Hukuk",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 218",
+          "title_tr": "Hukuk Felsefesi ve Sosyolojisi",
+          "title_en": "Hukuk Felsefesi ve Sosyolojisi",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 307",
+          "title_tr": "Eşya Hukuku I",
+          "title_en": "Eşya Hukuku I",
+          "credits": 4,
+          "prereq": "HUK 107 dersini başarı ile tamamlamış olmak",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 313",
+          "title_tr": "Ceza Hukuku Özel Hükümler",
+          "title_en": "Ceza Hukuku Özel Hükümler",
+          "credits": 4,
+          "prereq": "HUK 201 and HUK 202",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 357",
+          "title_tr": "Ticaret Hukuku I",
+          "title_en": "Ticaret Hukuku I",
+          "credits": 6,
+          "prereq": "HUK 205 ve HUK 206 derslerini başarı ile tamamlamış olmak",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "",
+          "title_tr": "BLAW Serbest Seçmeli",
+          "title_en": "BLAW Serbest Seçmeli",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "blaw-serbest-secmeli"
+        },
+        {
+          "code": "",
+          "title_tr": "BLAW Sertifika Seçmeli",
+          "title_en": "BLAW Sertifika Seçmeli",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "blaw-sertifika-secmeli"
+        }
+      ],
+      "spring": [
+        {
+          "code": "HUK 306",
+          "title_tr": "Ticaret Hukuku II",
+          "title_en": "Ticaret Hukuku II",
+          "credits": 6,
+          "prereq": "HUK 205 dersini başarı ile tamamlamış olmak",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 308",
+          "title_tr": "Eşya Hukuku II",
+          "title_en": "Eşya Hukuku II",
+          "credits": 4,
+          "prereq": "HUK 107 dersini başarı ile tamamlamış olmak",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 316",
+          "title_tr": "Borçlar Hukuku Özel Hükümler",
+          "title_en": "Borçlar Hukuku Özel Hükümler",
+          "credits": 4,
+          "prereq": "HUK 205 and HUK 206",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 359",
+          "title_tr": "Vergi Hukuku",
+          "title_en": "Vergi Hukuku",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 371",
+          "title_tr": "Medeni Usul Hukuku",
+          "title_en": "Medeni Usul Hukuku",
+          "credits": 6,
+          "prereq": "HUK 107 ve HUK 205 derslerini başarı ile tamamlamış olmak",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "",
+          "title_tr": "BLAW Serbest Seçmeli",
+          "title_en": "BLAW Serbest Seçmeli",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "blaw-serbest-secmeli"
+        }
+      ]
+    },
+    "4": {
+      "fall": [
+        {
+          "code": "HUK 401",
+          "title_tr": "Ceza Muhakemesi Hukuku I",
+          "title_en": "Ceza Muhakemesi Hukuku I",
+          "credits": 6,
+          "prereq": "HUK 201 ve HUK 202 derslerini başarı ile tamamlamış olmak",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 403",
+          "title_tr": "Miras Hukuku",
+          "title_en": "Miras Hukuku",
+          "credits": 4,
+          "prereq": "En az 60 AKTS kredisi tamamlamış olmak",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 409",
+          "title_tr": "İş Hukuku I",
+          "title_en": "İş Hukuku I",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 416",
+          "title_tr": "İcra ve İflas Hukuku",
+          "title_en": "İcra ve İflas Hukuku",
+          "credits": 6,
+          "prereq": "HUK 107 ve HUK 205 derslerini başarı ile tamamlamış olmak",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 418",
+          "title_tr": "Milletlerarası Özel Hukuk",
+          "title_en": "Milletlerarası Özel Hukuk",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "",
+          "title_tr": "BLAW Serbest Seçmeli",
+          "title_en": "BLAW Serbest Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "blaw-serbest-secmeli"
+        }
+      ],
+      "spring": [
+        {
+          "code": "HUK 402",
+          "title_tr": "Ceza Muhakemesi Hukuku II",
+          "title_en": "Ceza Muhakemesi Hukuku II",
+          "credits": 4,
+          "prereq": "HUK 201 ve HUK 202 derslerini başarı ile tamamlamış olmak",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 410",
+          "title_tr": "İş Hukuku II",
+          "title_en": "İş Hukuku II",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 413",
+          "title_tr": "Sigorta Hukuku",
+          "title_en": "Sigorta Hukuku",
+          "credits": 4,
+          "prereq": "En az 90 AKTS tamamlamış olmak",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HUK 419",
+          "title_tr": "Alternatif Uyuşmazlık Çözüm Yolları",
+          "title_en": "Alternatif Uyuşmazlık Çözüm Yolları",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "",
+          "title_tr": "BLAW Serbest Seçmeli",
+          "title_en": "BLAW Serbest Seçmeli",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "blaw-serbest-secmeli"
+        },
+        {
+          "code": "",
+          "title_tr": "BLAW Serbest Seçmeli",
+          "title_en": "BLAW Serbest Seçmeli",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "blaw-serbest-secmeli"
+        },
+        {
+          "code": "",
+          "title_tr": "BLAW Staj",
+          "title_en": "BLAW Staj",
+          "credits": 3,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "blaw-staj"
+        },
+        {
+          "code": "",
+          "title_tr": "BLAW Staj",
+          "title_en": "BLAW Staj",
+          "credits": 3,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "blaw-staj"
+        }
+      ]
+    }
+  },
+  "electivePoolRefs": {
+    "blaw-serbest-secmeli": "blaw-serbest-secmeli",
+    "blaw-staj": "blaw-staj",
+    "blaw-sertifika-secmeli": "blaw-sertifika-secmeli"
+  },
+  "electiveLabels": {
+    "blaw-serbest-secmeli": "BLAW Serbest Seçmeli",
+    "blaw-sertifika-secmeli": "BLAW Sertifika Seçmeli",
+    "blaw-staj": "BLAW Staj"
+  },
+  "updatedAt": "2026-08-24T15:56:50.458Z"
+}

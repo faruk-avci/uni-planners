@@ -1,0 +1,215 @@
+{
+  "key": "bsplt-fakulte-ici-secmeli",
+  "label": "BSPLT Fakülte-İçi Seçmeli",
+  "sourceFile": "plt_fakulteiçi.xls",
+  "courses": [
+    {
+      "code": "AVM 102",
+      "title_tr": "Havaalanı ve Faaliyetleri",
+      "title_en": "Havaalanı ve Faaliyetleri",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "AVM 202",
+      "title_tr": "Havacılık Yönetiminde Veri Analizi",
+      "title_en": "Havacılık Yönetiminde Veri Analizi",
+      "credits": 6,
+      "prereq": "BUS 102 / BUS 101",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "AVM 301",
+      "title_tr": "Havayolu Yönetimi",
+      "title_en": "Havayolu Yönetimi",
+      "credits": 6,
+      "prereq": "90 ECTS & MATH 102/MATH 103",
+      "coreq": "",
+      "practical": true
+    },
+    {
+      "code": "AVM 304",
+      "title_tr": "Havayolu Pazarlaması",
+      "title_en": "Havayolu Pazarlaması",
+      "credits": 6,
+      "prereq": "MKTG 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "AVM 307",
+      "title_tr": "İnsansız Hava Aracı Sistemlerine Giriş",
+      "title_en": "İnsansız Hava Aracı Sistemlerine Giriş",
+      "credits": 6,
+      "prereq": "60 ECTS & 30 ECTS",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "AVM 308",
+      "title_tr": "Genel Havacılık Faaliyetleri ve Yönetimi",
+      "title_en": "Genel Havacılık Faaliyetleri ve Yönetimi",
+      "credits": 4,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "AVM 309",
+      "title_tr": "Hava Ulaştırma Ekonomisi",
+      "title_en": "Hava Ulaştırma Ekonomisi",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "AVM 314",
+      "title_tr": "Havacılıkta İnovasyon",
+      "title_en": "Havacılıkta İnovasyon",
+      "credits": 6,
+      "prereq": "90 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "AVM 315",
+      "title_tr": "Havacılıkta Çeşitlilik, Eşitlik ve Kapsayıcılık",
+      "title_en": "Havacılıkta Çeşitlilik, Eşitlik ve Kapsayıcılık",
+      "credits": 4,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "AVM 401",
+      "title_tr": "Havayolu Filo Planlaması Ve Uçuş Ağı Yönetimi",
+      "title_en": "Havayolu Filo Planlaması Ve Uçuş Ağı Yönetimi",
+      "credits": 6,
+      "prereq": "AVM 301",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "AVM 404",
+      "title_tr": "Havacılık Güvenliği",
+      "title_en": "Havacılık Güvenliği",
+      "credits": 4,
+      "prereq": "En az 120 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "AVM 406",
+      "title_tr": "Hava Hukuku",
+      "title_en": "Hava Hukuku",
+      "credits": 4,
+      "prereq": "En az 120 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "AVM 407",
+      "title_tr": "Havayolu İş Modelleri ve Stratejileri",
+      "title_en": "Havayolu İş Modelleri ve Stratejileri",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "AVM 408",
+      "title_tr": "Havacılık Yönetiminde Öngörü ve Optimizasyon",
+      "title_en": "Havacılık Yönetiminde Öngörü ve Optimizasyon",
+      "credits": 6,
+      "prereq": "AVM 202 veya OPER 202",
+      "coreq": "",
+      "practical": true
+    },
+    {
+      "code": "AVM 409",
+      "title_tr": "Yer Hizmetleri Yönetimi",
+      "title_en": "Yer Hizmetleri Yönetimi",
+      "credits": 6,
+      "prereq": "En az 120 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "AVM 414",
+      "title_tr": "Hava Kargo Yönetimi",
+      "title_en": "Hava Kargo Yönetimi",
+      "credits": 6,
+      "prereq": "En az 120 AKTS tamamlamış olmak.",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "PLT 106",
+      "title_tr": "Havacılık Psikolojisi",
+      "title_en": "Havacılık Psikolojisi",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": true
+    },
+    {
+      "code": "PLT 109",
+      "title_tr": "Evrenin Keşfi",
+      "title_en": "Evrenin Keşfi",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "PLT 110",
+      "title_tr": "Uzay Yolculuklarının Fiziği",
+      "title_en": "Uzay Yolculuklarının Fiziği",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "PLT 410",
+      "title_tr": "Havayolu İşe Giriş Hazırlığı",
+      "title_en": "Havayolu İşe Giriş Hazırlığı",
+      "credits": 6,
+      "prereq": "PLT202,PLT204,PLT206,PLT 313",
+      "coreq": "",
+      "practical": true
+    },
+    {
+      "code": "PLT 411",
+      "title_tr": "Uçak Kaza Kırım İncelemeleri",
+      "title_en": "Uçak Kaza Kırım İncelemeleri",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": true
+    },
+    {
+      "code": "PLT 412",
+      "title_tr": "Çoklu Ekip Koordinasyonu (ÇEK)",
+      "title_en": "Çoklu Ekip Koordinasyonu (ÇEK)",
+      "credits": 6,
+      "prereq": "PLT202 ve PLT204 ve PLT206",
+      "coreq": "",
+      "practical": true
+    },
+    {
+      "code": "PLT 413",
+      "title_tr": "İleri Düzey Havayolu Operasyonları",
+      "title_en": "İleri Düzey Havayolu Operasyonları",
+      "credits": 6,
+      "prereq": "PLT202 ve PLT204 ve PLT206",
+      "coreq": "",
+      "practical": true
+    }
+  ],
+  "updatedAt": "2026-08-24T16:02:24.807Z"
+}

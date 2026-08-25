@@ -1,0 +1,35 @@
+{
+  "key": "babus-program-ici-secmeli-mktg",
+  "label": "BABUS Program-İçi Seçmeli (MKTG)",
+  "sourceFile": "bus_mktg.xls",
+  "courses": [
+    {
+      "code": "MKTG 311",
+      "title_tr": "Pazarlama Araştırması",
+      "title_en": "Pazarlama Araştırması",
+      "credits": 6,
+      "prereq": "MKTG 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MKTG 313",
+      "title_tr": "Pazarlama Stratejileri",
+      "title_en": "Pazarlama Stratejileri",
+      "credits": 6,
+      "prereq": "MKTG 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MKTG 314",
+      "title_tr": "Tüketici Davranışları",
+      "title_en": "Tüketici Davranışları",
+      "credits": 6,
+      "prereq": "MKTG 201",
+      "coreq": "",
+      "practical": false
+    }
+  ],
+  "updatedAt": "2026-08-24T16:11:52.370Z"
+}

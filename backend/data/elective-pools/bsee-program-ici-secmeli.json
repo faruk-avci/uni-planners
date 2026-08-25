@@ -1,0 +1,494 @@
+{
+  "key": "bsee-program-ici-secmeli",
+  "label": "BSEE Program-İçi Seçmeli",
+  "sourceFile": "ee_programiçi.xls",
+  "courses": [
+    {
+      "code": "CS 102",
+      "title_tr": "Nesneye Dayalı Programlama",
+      "title_en": "Nesneye Dayalı Programlama",
+      "credits": 6,
+      "prereq": "CS 101 veya CS 103",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "CS 105",
+      "title_tr": "Nesne-Yönelimli Programlamaya Giriş",
+      "title_en": "Nesne-Yönelimli Programlamaya Giriş",
+      "credits": 6,
+      "prereq": "CS 101 or CS 103 or CS 104",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "CS 201",
+      "title_tr": "Veri Yapıları ve Algoritmalar",
+      "title_en": "Veri Yapıları ve Algoritmalar",
+      "credits": 6,
+      "prereq": "(CS 102 or CS 105) and (CS112 or MATH 112)",
+      "coreq": "CS 201L",
+      "practical": false
+    },
+    {
+      "code": "CS 202",
+      "title_tr": "Veritabanı Yönetim Sistemleri",
+      "title_en": "Veritabanı Yönetim Sistemleri",
+      "credits": 6,
+      "prereq": "CS 201",
+      "coreq": "",
+      "practical": true
+    },
+    {
+      "code": "CS 240",
+      "title_tr": "Bilgisayar Mimarisi",
+      "title_en": "Bilgisayar Mimarisi",
+      "credits": 6,
+      "prereq": "EE 203",
+      "coreq": "CS 240L",
+      "practical": true
+    },
+    {
+      "code": "CS 320",
+      "title_tr": "Yazılım Mühendisliği",
+      "title_en": "Yazılım Mühendisliği",
+      "credits": 6,
+      "prereq": "CS 202",
+      "coreq": "",
+      "practical": true
+    },
+    {
+      "code": "CS 321",
+      "title_tr": "Programlama Paradigmaları",
+      "title_en": "Programlama Paradigmaları",
+      "credits": 6,
+      "prereq": "CS 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "CS 333",
+      "title_tr": "Algoritma Analizi",
+      "title_en": "Algoritma Analizi",
+      "credits": 6,
+      "prereq": "CS 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "CS 350",
+      "title_tr": "İşletim Sistemleri",
+      "title_en": "İşletim Sistemleri",
+      "credits": 6,
+      "prereq": "CS 201",
+      "coreq": "",
+      "practical": true
+    },
+    {
+      "code": "CS 410",
+      "title_tr": "Otomat Kuramı ve Biçimsel Diller",
+      "title_en": "Otomat Kuramı ve Biçimsel Diller",
+      "credits": 6,
+      "prereq": "CS 201 and (MATH 112 or CS 112)",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "CS 423",
+      "title_tr": "Bilgisayarla Görme",
+      "title_en": "Bilgisayarla Görme",
+      "credits": 6,
+      "prereq": "MATH 211 and (CS 102 or CS 105) and EE 433 almamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "CS 440",
+      "title_tr": "Finansta Makine Öğrenmesi",
+      "title_en": "Finansta Makine Öğrenmesi",
+      "credits": 6,
+      "prereq": "MATH 211 or MATH 217 or CE 217 or MATH 216 or MATH 202) and (CS 101 or CS 103 or MIS 103 or CS 104)",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "CS 446",
+      "title_tr": "Network Teknolojilerinin Güvenliği",
+      "title_en": "Network Teknolojilerinin Güvenliği",
+      "credits": 6,
+      "prereq": "(CS 112 or MATH 112) and (CS 101 or CS 104)",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "CS 447",
+      "title_tr": "Bilgisayar Ağları",
+      "title_en": "Bilgisayar Ağları",
+      "credits": 6,
+      "prereq": "CS 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "CS 454",
+      "title_tr": "Yapay Sinir Ağları ve Otomatik Öğrenmeye Giriş",
+      "title_en": "Yapay Sinir Ağları ve Otomatik Öğrenmeye Giriş",
+      "credits": 6,
+      "prereq": "MATH 211 and (CS100 or CS101 or CS 103 or CS 104))",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "CS 466",
+      "title_tr": "Derin Öğrenmeye Giriş",
+      "title_en": "Derin Öğrenmeye Giriş",
+      "credits": 6,
+      "prereq": "(MATH 211 and CS 102) or MATH 211 and (CS 102 or CS 105)",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "CS 468",
+      "title_tr": "Ağ Üzerine Güncel Konular",
+      "title_en": "Ağ Üzerine Güncel Konular",
+      "credits": 6,
+      "prereq": "CS 447",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 208",
+      "title_tr": "C ile Temel Programlama Kavramları",
+      "title_en": "C ile Temel Programlama Kavramları",
+      "credits": 6,
+      "prereq": "CS 101 veya CS 104",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 302",
+      "title_tr": "AI Tabanlı Sayısal Sinyal İşleme",
+      "title_en": "AI Tabanlı Sayısal Sinyal İşleme",
+      "credits": 6,
+      "prereq": "EE 201 and MATH 104 and (CS 104 or CS 101)",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 303",
+      "title_tr": "Güç Sistemlerinin Temelleri",
+      "title_en": "Güç Sistemlerinin Temelleri",
+      "credits": 6,
+      "prereq": "EE 202 and (CS 110 or CS 102 or EE 101) and MATH 211",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 350",
+      "title_tr": "Elektronik II",
+      "title_en": "Elektronik II",
+      "credits": 6,
+      "prereq": "EE 301",
+      "coreq": "EE 350L",
+      "practical": true
+    },
+    {
+      "code": "EE 367",
+      "title_tr": "Optiğe Giriş",
+      "title_en": "Optiğe Giriş",
+      "credits": 6,
+      "prereq": "PHYS102",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 371",
+      "title_tr": "Enerji iletim sistemleri",
+      "title_en": "Enerji iletim sistemleri",
+      "credits": 6,
+      "prereq": "EE 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 411",
+      "title_tr": "Sayısal Yöntemler",
+      "title_en": "Sayısal Yöntemler",
+      "credits": 6,
+      "prereq": "MATH 211 veya ME214",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 421",
+      "title_tr": "Sayısal Görüntü İşleme",
+      "title_en": "Sayısal Görüntü İşleme",
+      "credits": 6,
+      "prereq": "(EE 201 and (CS 100 or CS 101 or CS 103 or CS 104) and (MATH 211 or ME 214) and (MATH 217 or MATH 215)",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 422",
+      "title_tr": "Sayısal Konuşma  İşleme",
+      "title_en": "Sayısal Konuşma  İşleme",
+      "credits": 6,
+      "prereq": "EE 302 and MATH 211 and MATH 217",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 423",
+      "title_tr": "Sinyal İşleme için Derin Öğrenme",
+      "title_en": "Sinyal İşleme için Derin Öğrenme",
+      "credits": 6,
+      "prereq": "EE 302 or CS 451 or CS 454 or CS 466",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 432",
+      "title_tr": "Sinyal işleme için ileri MATLAB",
+      "title_en": "Sinyal işleme için ileri MATLAB",
+      "credits": 6,
+      "prereq": "(CS 101 veya CS 104) ve EE 101 ve EE 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 442",
+      "title_tr": "Sayısal Haberleşmeye Giriş",
+      "title_en": "Sayısal Haberleşmeye Giriş",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "EE 341",
+      "practical": false
+    },
+    {
+      "code": "EE 444",
+      "title_tr": "Kablosuz Haberleşme",
+      "title_en": "Kablosuz Haberleşme",
+      "credits": 6,
+      "prereq": "EE 341",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 450",
+      "title_tr": "Kablosuz Ağlar",
+      "title_en": "Kablosuz Ağlar",
+      "credits": 6,
+      "prereq": "EE 444 or EE 341",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 452",
+      "title_tr": "Nesnelerin Internetine Giriş",
+      "title_en": "Nesnelerin Internetine Giriş",
+      "credits": 6,
+      "prereq": "150 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 455",
+      "title_tr": "RF Entegre Devreler",
+      "title_en": "RF Entegre Devreler",
+      "credits": 6,
+      "prereq": "EE 301",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 457",
+      "title_tr": "Haberleşme  Sistem Tasarımı",
+      "title_en": "Haberleşme  Sistem Tasarımı",
+      "credits": 6,
+      "prereq": "EE 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 458",
+      "title_tr": "Haberleşme Devre Tasarımı",
+      "title_en": "Haberleşme Devre Tasarımı",
+      "credits": 6,
+      "prereq": "EE 301",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 462",
+      "title_tr": "HDL Tabanlı Sayısal Sistemler Tasarımı",
+      "title_en": "HDL Tabanlı Sayısal Sistemler Tasarımı",
+      "credits": 6,
+      "prereq": "EE 203",
+      "coreq": "EE 462L",
+      "practical": false
+    },
+    {
+      "code": "EE 468",
+      "title_tr": "Donanım Tasarım Desenleri",
+      "title_en": "Donanım Tasarım Desenleri",
+      "credits": 6,
+      "prereq": "EE 203",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 473",
+      "title_tr": "Enerji Sistemleri",
+      "title_en": "Enerji Sistemleri",
+      "credits": 6,
+      "prereq": "EE 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 474",
+      "title_tr": "Mühendisler için Optimizasyon",
+      "title_en": "Mühendisler için Optimizasyon",
+      "credits": 6,
+      "prereq": "MATH 211 or MATH 214",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 475",
+      "title_tr": "Elektrikli Mobilite Ekosistemi",
+      "title_en": "Elektrikli Mobilite Ekosistemi",
+      "credits": 6,
+      "prereq": "CS 104 or CS 101",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 476",
+      "title_tr": "Enerji Piyasaları ve Politikaları",
+      "title_en": "Enerji Piyasaları ve Politikaları",
+      "credits": 6,
+      "prereq": "En az 150 AKTS kredisi tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 478",
+      "title_tr": "MEMS Aygıtlar ve Uygulamaları",
+      "title_en": "MEMS Aygıtlar ve Uygulamaları",
+      "credits": 6,
+      "prereq": "EE 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 480",
+      "title_tr": "İleri Optoelektronik: Yenilikçi Tasarımlar",
+      "title_en": "İleri Optoelektronik: Yenilikçi Tasarımlar",
+      "credits": 6,
+      "prereq": "EE 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 483",
+      "title_tr": "Mikrodalga Mühendisliği",
+      "title_en": "Mikrodalga Mühendisliği",
+      "credits": 6,
+      "prereq": "EE 202 and EE 204",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 484",
+      "title_tr": "Antenler",
+      "title_en": "Antenler",
+      "credits": 6,
+      "prereq": "EE 204",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 486",
+      "title_tr": "Kuantum Bilişim Teknolojileri",
+      "title_en": "Kuantum Bilişim Teknolojileri",
+      "credits": 6,
+      "prereq": "EE 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 488",
+      "title_tr": "Fotonik",
+      "title_en": "Fotonik",
+      "credits": 6,
+      "prereq": "EE 367",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 491",
+      "title_tr": "Kontrol sistemleri",
+      "title_en": "Kontrol sistemleri",
+      "credits": 6,
+      "prereq": "EE 201 and MATH 212",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 493",
+      "title_tr": "Güç Elektroniği",
+      "title_en": "Güç Elektroniği",
+      "credits": 6,
+      "prereq": "EE 301",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EE 497",
+      "title_tr": "Otomotiv Gömülü Yazılımına Giriş",
+      "title_en": "Otomotiv Gömülü Yazılımına Giriş",
+      "credits": 6,
+      "prereq": "CS 104 or CS 101",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "IE 203",
+      "title_tr": "Mühendislik Ekonomisi",
+      "title_en": "Mühendislik Ekonomisi",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "IE 203R",
+      "practical": false
+    },
+    {
+      "code": "IE 357",
+      "title_tr": "Enerji İçgörüleri",
+      "title_en": "Enerji İçgörüleri",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "ME 417",
+      "title_tr": "Mekatronik",
+      "title_en": "Mekatronik",
+      "credits": 6,
+      "prereq": "CS 100 veya CS 101 veya CS 103 veya CS 104",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "ME 419",
+      "title_tr": "Muhendisler icin Hesaplamali Metotlar",
+      "title_en": "Muhendisler icin Hesaplamali Metotlar",
+      "credits": 6,
+      "prereq": "(CS 100 or CS 104) and MATH 212",
+      "coreq": "",
+      "practical": false
+    }
+  ],
+  "updatedAt": "2026-08-24T17:39:47.553Z"
+}

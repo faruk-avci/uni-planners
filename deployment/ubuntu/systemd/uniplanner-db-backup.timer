@@ -1,0 +1,11 @@
+[Unit]
+Description=Run UniPlanner PostgreSQL backup daily
+
+[Timer]
+OnCalendar=*-*-* 03:15:00
+RandomizedDelaySec=15m
+Persistent=true
+Unit=uniplanner-db-backup.service
+
+[Install]
+WantedBy=timers.target

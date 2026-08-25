@@ -9,8 +9,9 @@
  * Output: downloads/assessments.json
  */
 
-import { execSync } from 'child_process';
+import { execFileSync } from 'child_process';
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -245,7 +246,7 @@ function extractAssessments(fullText) {
 // ── Get course code from filename: "CS_101.A_Syllabus.pdf" → "CS 101" ──
 function getCourseCode(filename) {
   // Pattern: SUBJ_NUM.SECTION_Syllabus.pdf or SUBJ_NUM.SEC_Syllabus.pdf
-  const m = filename.match(/^([A-ZÇĞİÖŞÜa-zçğıöşü]+)_(\d+[A-Z]?)(?:\.\w+)?_Syllabus\.pdf$/i);
+  const m = filename.match(/^([\p{L}]+)_(\d+[\p{L}]?)(?:\.[\p{L}\p{N}]+)?_Syllabus\.pdf$/iu);
   if (!m) return null;
   return `${m[1].toUpperCase()} ${m[2]}`;
 }
@@ -310,9 +311,13 @@ async function main() {
       }
 
       const filePath = path.join(dir, file);
+      const processingPath = /[^\x00-\x7f]/.test(filePath)
+        ? path.join(os.tmpdir(), `ozu-syllabus-${process.pid}-${totalPdfs}.pdf`)
+        : filePath;
       let text;
       try {
-        text = execSync(`pdftotext -layout "${filePath}" -`, {
+        if (processingPath !== filePath) fs.copyFileSync(filePath, processingPath);
+        text = execFileSync('pdftotext', ['-layout', processingPath, '-'], {
           encoding: 'utf-8',
           timeout: 10000,
           stdio: ['pipe', 'pipe', 'pipe']
@@ -320,6 +325,10 @@ async function main() {
       } catch (e) {
         empty++;
         continue;
+      } finally {
+        if (processingPath !== filePath && fs.existsSync(processingPath)) {
+          fs.unlinkSync(processingPath);
+        }
       }
 
       if (!text || text.trim().length < 50) {

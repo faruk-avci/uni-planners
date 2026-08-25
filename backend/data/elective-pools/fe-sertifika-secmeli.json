@@ -1,0 +1,323 @@
+{
+  "key": "fe-sertifika-secmeli",
+  "label": "FE Sertifika Seçmeli",
+  "sourceFile": "ee_sertifika.xls",
+  "courses": [
+    {
+      "code": "AIC 390",
+      "title_tr": "İstem Mühendisliği",
+      "title_en": "İstem Mühendisliği",
+      "credits": 4,
+      "prereq": "SEC 201 ve (MATH 211 veya ME 214) ve (MATH 216 veya CE 217 veya MATH 217)",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "CEC 391",
+      "title_tr": "Beton Malzemeleri",
+      "title_en": "Beton Malzemeleri",
+      "credits": 4,
+      "prereq": "CE 205 and SEC 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "CEC 393",
+      "title_tr": "Jeodezi ve Jeoinformasyon (Sertifika Seçmeli)",
+      "title_en": "Jeodezi ve Jeoinformasyon (Sertifika Seçmeli)",
+      "credits": 4,
+      "prereq": "SEC 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "CEC 394",
+      "title_tr": "Zemin İncelemeleri (Sertifika Seçmeli)",
+      "title_en": "Zemin İncelemeleri (Sertifika Seçmeli)",
+      "credits": 4,
+      "prereq": "CE 302 and SEC 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "CEC 395",
+      "title_tr": "İklim Değişikliğine Uyumlu Şehirler (Sertifika Seçmeli)",
+      "title_en": "İklim Değişikliğine Uyumlu Şehirler (Sertifika Seçmeli)",
+      "credits": 4,
+      "prereq": "SEC 201 and CE 210",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "CEC 397",
+      "title_tr": "Yalın İnşaat Yönetimi (Sertifika Seçmeli)",
+      "title_en": "Yalın İnşaat Yönetimi (Sertifika Seçmeli)",
+      "credits": 4,
+      "prereq": "SEC 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "CEC 398",
+      "title_tr": "Geoteknik Saha İncelemeleri (Sertifika Seçmeli)",
+      "title_en": "Geoteknik Saha İncelemeleri (Sertifika Seçmeli)",
+      "credits": 4,
+      "prereq": "SEC 201 ve CE 302",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "CEC 399",
+      "title_tr": "İnşaat Sözleşme Dinamikleri: Karmaşıklıkların Yönetimi ve Stratejik Perspektifler",
+      "title_en": "İnşaat Sözleşme Dinamikleri: Karmaşıklıkların Yönetimi ve Stratejik Perspektifler",
+      "credits": 4,
+      "prereq": "SEC 201 ve CE 302",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "CSC 390",
+      "title_tr": "Yüksek Başarımlı Hesaplamaya Giriş",
+      "title_en": "Yüksek Başarımlı Hesaplamaya Giriş",
+      "credits": 4,
+      "prereq": "SEC 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "CSC 391",
+      "title_tr": "Web Uygulama Geliştirme (Sertifika Seçmeli)",
+      "title_en": "Web Uygulama Geliştirme (Sertifika Seçmeli)",
+      "credits": 4,
+      "prereq": "(CS 102 or CS 105) and SEC 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "CSC 392",
+      "title_tr": "İOS Uygulama Geliştirme (Sertifika Seçmeli)",
+      "title_en": "İOS Uygulama Geliştirme (Sertifika Seçmeli)",
+      "credits": 4,
+      "prereq": "(CS 201 OR CS 222) AND SEC 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "CSC 393",
+      "title_tr": "Spring Framework ile Backend Uygulamaları Geliştirmek (Sertifika Seçmeli)",
+      "title_en": "Spring Framework ile Backend Uygulamaları Geliştirmek (Sertifika Seçmeli)",
+      "credits": 4,
+      "prereq": "(CS 102 or CS 105) and SEC 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "CSC 394",
+      "title_tr": "Android OS ve Mobil Uygulamalar (Sertifika Seçmeli)",
+      "title_en": "Android OS ve Mobil Uygulamalar (Sertifika Seçmeli)",
+      "credits": 4,
+      "prereq": "(CS 102 or CS 105) and SEC 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "CSC 395",
+      "title_tr": "Bilgisayar Mühendisliğinin Mutfağı",
+      "title_en": "Bilgisayar Mühendisliğinin Mutfağı",
+      "credits": 4,
+      "prereq": "(CS102 veya CS105) ve SEC 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "CSC 396",
+      "title_tr": "Siber Güvenlik Temelleri (Sertifika Seçmeli)",
+      "title_en": "Siber Güvenlik Temelleri (Sertifika Seçmeli)",
+      "credits": 4,
+      "prereq": "(CS 102 or CS 105) and SEC 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "CSC 397",
+      "title_tr": "Blokzincirine Giriş",
+      "title_en": "Blokzincirine Giriş",
+      "credits": 4,
+      "prereq": "SEC 201 and (CS 101 or CS 104)",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "CSC 399",
+      "title_tr": "Haberleşme Güvenliği (Sertifika Seçmeli)",
+      "title_en": "Haberleşme Güvenliği (Sertifika Seçmeli)",
+      "credits": 4,
+      "prereq": "SEC 201 and (CS 100 or CS 101 or CS 103 or CS 104)",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EEC 391",
+      "title_tr": "Ağ Teknolojileri (Sertifika Seçmeli)",
+      "title_en": "Ağ Teknolojileri (Sertifika Seçmeli)",
+      "credits": 4,
+      "prereq": "SEC 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EEC 392",
+      "title_tr": "Endüstriyel Otomasyon",
+      "title_en": "Endüstriyel Otomasyon",
+      "credits": 4,
+      "prereq": "(CS 101 or CS 103 or CS 100 or CS 104) and EE 203 and SEC 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EEC 393",
+      "title_tr": "Mühendisler için Python",
+      "title_en": "Mühendisler için Python",
+      "credits": 4,
+      "prereq": "(CS 100 or CS 101 or CS 103 or CS 104) and SEC 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EEC 394",
+      "title_tr": "Kablosuz İletişim Mühendisliği Teknolojileri",
+      "title_en": "Kablosuz İletişim Mühendisliği Teknolojileri",
+      "credits": 4,
+      "prereq": "SEC 201 and EE 341",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EEC 395",
+      "title_tr": "Endüstriyel Uygulamalarda Sibergüvenlik",
+      "title_en": "Endüstriyel Uygulamalarda Sibergüvenlik",
+      "credits": 4,
+      "prereq": "SEC 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EEC 396",
+      "title_tr": "Otomotiv Elektroniği (Sertifika Seçmeli)",
+      "title_en": "Otomotiv Elektroniği (Sertifika Seçmeli)",
+      "credits": 4,
+      "prereq": "SEC 201 and EE 202",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "EEC 397",
+      "title_tr": "Teknolojide Yükselen Trendler I",
+      "title_en": "Teknolojide Yükselen Trendler I",
+      "credits": 4,
+      "prereq": "(CS101 or CS104) and SEC 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "IEC 391",
+      "title_tr": "Proje Yönetimi (Sertifika Seçmeli)",
+      "title_en": "Proje Yönetimi (Sertifika Seçmeli)",
+      "credits": 4,
+      "prereq": "SEC 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "IEC 393",
+      "title_tr": "Kurum Mimarisi Yönetimi",
+      "title_en": "Kurum Mimarisi Yönetimi",
+      "credits": 4,
+      "prereq": "SEC 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "IEC 394",
+      "title_tr": "İşletmede Sürdürülebilirlik (Sertifika Seçmeli)",
+      "title_en": "İşletmede Sürdürülebilirlik (Sertifika Seçmeli)",
+      "credits": 4,
+      "prereq": "SEC 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "IEC 395",
+      "title_tr": "Çevik Yönetim (Sertifika Seçmeli)",
+      "title_en": "Çevik Yönetim (Sertifika Seçmeli)",
+      "credits": 4,
+      "prereq": "SEC 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "IEC 396",
+      "title_tr": "Çevik Yazılım ve Ürün Geliştirme",
+      "title_en": "Çevik Yazılım ve Ürün Geliştirme",
+      "credits": 4,
+      "prereq": "SEC 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "IEC 397",
+      "title_tr": "İş Süreçleri Yönetimi",
+      "title_en": "İş Süreçleri Yönetimi",
+      "credits": 4,
+      "prereq": "SEC 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "IEC 399",
+      "title_tr": "İnovasyon ve Teknoloji Yönetimi",
+      "title_en": "İnovasyon ve Teknoloji Yönetimi",
+      "credits": 4,
+      "prereq": "SEC 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MEC 391",
+      "title_tr": "CNC Makina Programlama (Sertifika Seçmeli)",
+      "title_en": "CNC Makina Programlama (Sertifika Seçmeli)",
+      "credits": 4,
+      "prereq": "ME 112 and SEC 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MEC 392",
+      "title_tr": "CNC Makina Programlama II (Sertifika Seçmeli)",
+      "title_en": "CNC Makina Programlama II (Sertifika Seçmeli)",
+      "credits": 4,
+      "prereq": "SEC 201 and ME 112",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MEC 395",
+      "title_tr": "Endüstriyel Robot Programlama",
+      "title_en": "Endüstriyel Robot Programlama",
+      "credits": 4,
+      "prereq": "(CS 100 or CS 103 or CS 101 or CS 104) and SEC 201",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MEC 396",
+      "title_tr": "Hesaplamalı Akışkanlar Dinamiği için Profesyonel Simulasyon Yazılımı Kullanımı (Sertifika Seçmeli)",
+      "title_en": "Hesaplamalı Akışkanlar Dinamiği için Profesyonel Simulasyon Yazılımı Kullanımı (Sertifika Seçmeli)",
+      "credits": 4,
+      "prereq": "(MATH 214 or ME 214)  and ME 321 and SEC 201",
+      "coreq": "",
+      "practical": false
+    }
+  ],
+  "updatedAt": "2026-08-24T17:39:53.645Z"
+}

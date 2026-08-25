@@ -1,0 +1,350 @@
+{
+  "key": "blaw-sertifika-secmeli",
+  "label": "BLAW Sertifika Seçmeli",
+  "sourceFile": "huk_sertifika.xls",
+  "courses": [
+    {
+      "code": "HUK 381",
+      "title_tr": "Anayasa Hukukunda Güncel Sorunlar",
+      "title_en": "Anayasa Hukukunda Güncel Sorunlar",
+      "credits": 4,
+      "prereq": "En az 90 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 383",
+      "title_tr": "Anayasa Mahkemesine Bireysel Başvuru",
+      "title_en": "Anayasa Mahkemesine Bireysel Başvuru",
+      "credits": 4,
+      "prereq": "En az 60 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 384",
+      "title_tr": "Temel Hak ve Özgürlükler",
+      "title_en": "Temel Hak ve Özgürlükler",
+      "credits": 4,
+      "prereq": "En az 90 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 385",
+      "title_tr": "Avrupa İnsan Hakları Mahkemesine Bireysel Başvuru",
+      "title_en": "Avrupa İnsan Hakları Mahkemesine Bireysel Başvuru",
+      "credits": 4,
+      "prereq": "En az 60 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 386",
+      "title_tr": "Hukukta Yorum",
+      "title_en": "Hukukta Yorum",
+      "credits": 4,
+      "prereq": "En az 90 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 387",
+      "title_tr": "Ekonomik ve Mali Ceza Hukuku",
+      "title_en": "Ekonomik ve Mali Ceza Hukuku",
+      "credits": 4,
+      "prereq": "En az 60 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 388",
+      "title_tr": "İdare Hukukunda Güncel Sorunlar",
+      "title_en": "İdare Hukukunda Güncel Sorunlar",
+      "credits": 4,
+      "prereq": "En az 90 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 389",
+      "title_tr": "İcra ve İflas Hukukunda Güncel Sorunlar",
+      "title_en": "İcra ve İflas Hukukunda Güncel Sorunlar",
+      "credits": 4,
+      "prereq": "En az 60 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 390",
+      "title_tr": "Sağlık Hukukunda Sorumluluk I",
+      "title_en": "Sağlık Hukukunda Sorumluluk I",
+      "credits": 4,
+      "prereq": "En az 60 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 391",
+      "title_tr": "Sağlık Hukukunda Sorumluluk II",
+      "title_en": "Sağlık Hukukunda Sorumluluk II",
+      "credits": 4,
+      "prereq": "60 AKTS başarı ile tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 392",
+      "title_tr": "Doğa, Yaşam ve Kent Hukuku I",
+      "title_en": "Doğa, Yaşam ve Kent Hukuku I",
+      "credits": 4,
+      "prereq": "60 AKTS başarı ile tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 393",
+      "title_tr": "Doğa, Yaşam ve Kent Hukuku II",
+      "title_en": "Doğa, Yaşam ve Kent Hukuku II",
+      "credits": 4,
+      "prereq": "60 AKTS başarı ile tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 394",
+      "title_tr": "Özel Hukukta Güncel Sorunlar I",
+      "title_en": "Özel Hukukta Güncel Sorunlar I",
+      "credits": 4,
+      "prereq": "En az 60 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 395",
+      "title_tr": "Özel Hukukta Güncel Sorunlar II",
+      "title_en": "Özel Hukukta Güncel Sorunlar II",
+      "credits": 4,
+      "prereq": "En az 120 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 396",
+      "title_tr": "Kamu Hukukunda Güncel Sorunlar I",
+      "title_en": "Kamu Hukukunda Güncel Sorunlar I",
+      "credits": 4,
+      "prereq": "120 AKTS başarı ile tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 397",
+      "title_tr": "Temel Hakların Korunması I",
+      "title_en": "Temel Hakların Korunması I",
+      "credits": 4,
+      "prereq": "60 AKTS başarı ile tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 398",
+      "title_tr": "Temel Hakların Korunması II",
+      "title_en": "Temel Hakların Korunması II",
+      "credits": 4,
+      "prereq": "60 AKTS başarı ile tamamlamış",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 399",
+      "title_tr": "Tüketici Hukuku I",
+      "title_en": "Tüketici Hukuku I",
+      "credits": 4,
+      "prereq": "En az 90 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 480",
+      "title_tr": "Sınai Mülkiyet Hukuku II",
+      "title_en": "Sınai Mülkiyet Hukuku II",
+      "credits": 2,
+      "prereq": "150 AKTS başarı ile tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 481",
+      "title_tr": "Sınai Mülkiyet Hukuku III",
+      "title_en": "Sınai Mülkiyet Hukuku III",
+      "credits": 4,
+      "prereq": "120 AKTS başarı ile tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 482",
+      "title_tr": "Tüketici Hukuku II",
+      "title_en": "Tüketici Hukuku II",
+      "credits": 4,
+      "prereq": "120 AKTS başarı ile tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 483",
+      "title_tr": "Tüketici Hukuku III",
+      "title_en": "Tüketici Hukuku III",
+      "credits": 4,
+      "prereq": "90 AKTS başarı ile tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 484",
+      "title_tr": "Temel Hakların Korunması III",
+      "title_en": "Temel Hakların Korunması III",
+      "credits": 4,
+      "prereq": "90 AKTS başarı ile tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 485",
+      "title_tr": "Kamu Hukukunda Güncel Sorunlar II",
+      "title_en": "Kamu Hukukunda Güncel Sorunlar II",
+      "credits": 4,
+      "prereq": "90 AKTS başarı ile tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 486",
+      "title_tr": "Kamu Hukukunda Güncel Sorunlar III",
+      "title_en": "Kamu Hukukunda Güncel Sorunlar III",
+      "credits": 4,
+      "prereq": "120 AKTS başarı ile tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 487",
+      "title_tr": "Özel Hukukta Güncel Sorunlar III",
+      "title_en": "Özel Hukukta Güncel Sorunlar III",
+      "credits": 4,
+      "prereq": "120 AKTS başarı ile tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 488",
+      "title_tr": "Sağlık Hukukunda Sorumluluk III",
+      "title_en": "Sağlık Hukukunda Sorumluluk III",
+      "credits": 4,
+      "prereq": "60 AKTS başarı ile tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 489",
+      "title_tr": "Doğa, Yaşam ve Kent Hukuku III",
+      "title_en": "Doğa, Yaşam ve Kent Hukuku III",
+      "credits": 4,
+      "prereq": "60 AKTS başarı ile tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 490",
+      "title_tr": "Sınai Mülkiyet Hukuku I",
+      "title_en": "Sınai Mülkiyet Hukuku I",
+      "credits": 4,
+      "prereq": "150 AKTS başarı ile tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 491",
+      "title_tr": "Uygulamalı Bankacılık Hukuku",
+      "title_en": "Uygulamalı Bankacılık Hukuku",
+      "credits": 4,
+      "prereq": "En az 120 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 492",
+      "title_tr": "İş Hukukunda Güncel Sorunlar",
+      "title_en": "İş Hukukunda Güncel Sorunlar",
+      "credits": 4,
+      "prereq": "En az 120 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 493",
+      "title_tr": "Çocuk Hakları Perspektifinden Özel Hukuk",
+      "title_en": "Çocuk Hakları Perspektifinden Özel Hukuk",
+      "credits": 4,
+      "prereq": "En az 90 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 494",
+      "title_tr": "Ceza Hukukunda Güncel Sorunlar",
+      "title_en": "Ceza Hukukunda Güncel Sorunlar",
+      "credits": 4,
+      "prereq": "En az 90 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 495",
+      "title_tr": "Hukuk Felsefesinde Güncel Sorunlar",
+      "title_en": "Hukuk Felsefesinde Güncel Sorunlar",
+      "credits": 4,
+      "prereq": "En az 90 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 496",
+      "title_tr": "Deniz Ticareti Hukukunda Güncel Sorunlar",
+      "title_en": "Deniz Ticareti Hukukunda Güncel Sorunlar",
+      "credits": 4,
+      "prereq": "En az 60 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 497",
+      "title_tr": "Medeni Hukukta Güncel Sorunlar",
+      "title_en": "Medeni Hukukta Güncel Sorunlar",
+      "credits": 4,
+      "prereq": "En az 60 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 498",
+      "title_tr": "Ticaret Hukukunda Güncel Sorunlar",
+      "title_en": "Ticaret Hukukunda Güncel Sorunlar",
+      "credits": 4,
+      "prereq": "En az 60 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HUK 499",
+      "title_tr": "Milletlerarası Özel Hukukta Güncel Sorunlar",
+      "title_en": "Milletlerarası Özel Hukukta Güncel Sorunlar",
+      "credits": 4,
+      "prereq": "En az 60 AKTS tamamlamış olmak",
+      "coreq": "",
+      "practical": false
+    }
+  ],
+  "updatedAt": "2026-08-24T15:56:45.291Z"
+}

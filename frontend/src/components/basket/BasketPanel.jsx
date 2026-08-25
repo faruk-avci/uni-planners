@@ -1,6 +1,13 @@
+import { useState } from 'react'
+import { courseService } from '../../services/courseService'
 import './BasketPanel.css'
 
-function BasketPanel({ basket, setBasket, removeSection, totalCredits, language }) {
+function BasketPanel({ basket, setBasket, removeSection, totalCredits, language, savedBaskets, setSavedBaskets }) {
+  const [saveFormOpen, setSaveFormOpen] = useState(false)
+  const [saveName, setSaveName] = useState('')
+  const [saveBusy, setSaveBusy] = useState(false)
+  const [saveStatus, setSaveStatus] = useState(null)
+
   const t = {
     title: language === 'tr' ? 'Sepetim' : 'My Basket',
     credits: language === 'tr' ? 'AKTS' : 'ECTS',
@@ -9,6 +16,59 @@ function BasketPanel({ basket, setBasket, removeSection, totalCredits, language 
     remove: language === 'tr' ? 'Kaldır' : 'Remove',
     courses: language === 'tr' ? 'Eklenen Dersler' : 'Added Courses',
     sections: language === 'tr' ? 'Eklenen Şubeler' : 'Added Sections',
+    saveBasket: language === 'tr' ? 'Sepeti Kaydet' : 'Save Basket',
+    save: language === 'tr' ? 'Kaydet' : 'Save',
+    cancel: language === 'tr' ? 'Vazgeç' : 'Cancel',
+    savePlaceholder: language === 'tr' ? 'Sepet adı' : 'Basket name',
+    savedBaskets: language === 'tr' ? 'Kayıtlı Sepetler' : 'Saved Baskets',
+    load: language === 'tr' ? 'Yükle' : 'Load',
+    saved: language === 'tr' ? 'Sepet kaydedildi.' : 'Basket saved.',
+    loaded: language === 'tr' ? 'Kayıtlı sepet yüklendi.' : 'Saved basket loaded.',
+    deleted: language === 'tr' ? 'Kayıtlı sepet silindi.' : 'Saved basket deleted.',
+    saveError: language === 'tr' ? 'Sepet işlemi tamamlanamadı.' : 'Basket operation failed.',
+    deleteConfirm: language === 'tr' ? 'Bu kayıtlı sepet silinsin mi?' : 'Delete this saved basket?',
+    courseCount: language === 'tr' ? 'ders' : 'courses',
+    creditWarning: language === 'tr'
+      ? '36 AKTS veya üzeri ders yükü almaya uygun olduğunuzdan emin olun.'
+      : 'Make sure you are eligible to take 36 ECTS or more.',
+    creditDanger: language === 'tr'
+      ? '42 AKTS üzeri ders yükü seçtiniz. Bu ders yükünü almaya uygun olduğunuzdan emin olun.'
+      : 'You selected more than 42 ECTS. Make sure you are eligible for this course load.',
+  }
+
+  const handleSaveBasket = async event => {
+    event.preventDefault()
+    const name = saveName.trim()
+    if (!name || basket.length === 0 || saveBusy) return
+    setSaveBusy(true)
+    setSaveStatus(null)
+    try {
+      const saved = await courseService.saveNamedBasket(name, basket)
+      setSavedBaskets(current => [saved, ...current])
+      setSaveName('')
+      setSaveFormOpen(false)
+      setSaveStatus({ type: 'success', text: t.saved })
+    } catch {
+      setSaveStatus({ type: 'error', text: t.saveError })
+    } finally {
+      setSaveBusy(false)
+    }
+  }
+
+  const loadSavedBasket = saved => {
+    setBasket(saved.items.map(item => ({ ...item, sections: [...(item.sections || [])] })))
+    setSaveStatus({ type: 'success', text: t.loaded })
+  }
+
+  const deleteSavedBasket = async saved => {
+    if (!window.confirm(t.deleteConfirm)) return
+    try {
+      await courseService.deleteSavedBasket(saved.id)
+      setSavedBaskets(current => current.filter(item => item.id !== saved.id))
+      setSaveStatus({ type: 'success', text: t.deleted })
+    } catch {
+      setSaveStatus({ type: 'error', text: t.saveError })
+    }
   }
 
   const removeCourse = (code) => setBasket(prev => prev.filter(c => c.code !== code))
@@ -32,10 +92,18 @@ function BasketPanel({ basket, setBasket, removeSection, totalCredits, language 
         </div>
       </div>
 
-      {basket.length === 0 ? (
-        <p className="basket-empty">{t.empty}</p>
-      ) : (
-        <>
+      {totalCredits > 36 && (
+        <div className={`basket-credit-warning ${totalCredits > 42 ? 'basket-credit-danger' : ''}`} role="status">
+          <span className="basket-credit-warning-icon" aria-hidden="true">i</span>
+          <span>{totalCredits > 42 ? t.creditDanger : t.creditWarning}</span>
+        </div>
+      )}
+
+      <div className="basket-scroll-content">
+        {basket.length === 0 ? (
+          <p className="basket-empty">{t.empty}</p>
+        ) : (
+          <>
           {/* Added whole courses */}
           {wholeCourses.length > 0 && (
             <div className="basket-group">
@@ -83,12 +151,71 @@ function BasketPanel({ basket, setBasket, removeSection, totalCredits, language 
             </div>
           )}
 
+          </>
+        )}
+
+        {saveStatus && (
+          <p className={`basket-save-status basket-save-status-${saveStatus.type}`} role="status">{saveStatus.text}</p>
+        )}
+
+        {savedBaskets.length > 0 && (
+          <div className="saved-baskets">
+            <h4 className="saved-baskets-title">{t.savedBaskets}</h4>
+            <div className="saved-baskets-list">
+              {savedBaskets.map(saved => (
+                <div key={saved.id} className="saved-basket-item">
+                  <button className="saved-basket-load" type="button" onClick={() => loadSavedBasket(saved)} title={t.load}>
+                    <span className="saved-basket-info">
+                      <span className="saved-basket-name">{saved.name}</span>
+                      <span className="saved-basket-count">{saved.items.length} {t.courseCount}</span>
+                    </span>
+                    <span className="saved-basket-load-label">{t.load}</span>
+                  </button>
+                  <button
+                    className="saved-basket-delete"
+                    type="button"
+                    onClick={() => deleteSavedBasket(saved)}
+                    title={language === 'tr' ? 'Sil' : 'Delete'}
+                    aria-label={`${saved.name} ${language === 'tr' ? 'sepetini sil' : 'delete basket'}`}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {basket.length > 0 && (
+        <div className="basket-fixed-actions-area">
+          {saveFormOpen && (
+            <form className="basket-save-form" onSubmit={handleSaveBasket}>
+              <input
+                className="basket-save-input"
+                value={saveName}
+                onChange={event => setSaveName(event.target.value)}
+                placeholder={t.savePlaceholder}
+                maxLength={60}
+                autoFocus
+              />
+              <button className="btn btn-sm btn-primary" type="submit" disabled={!saveName.trim() || saveBusy}>
+                {saveBusy ? '…' : t.save}
+              </button>
+              <button className="btn btn-sm btn-ghost" type="button" onClick={() => setSaveFormOpen(false)}>
+                {t.cancel}
+              </button>
+            </form>
+          )}
           <div className="basket-actions">
+            <button className="btn btn-sm btn-ghost basket-save-trigger" onClick={() => setSaveFormOpen(open => !open)}>
+              {t.saveBasket}
+            </button>
             <button className="btn btn-sm btn-danger-ghost basket-clear-btn" onClick={() => setBasket([])}>
               {t.clear}
             </button>
           </div>
-        </>
+        </div>
       )}
     </div>
   )

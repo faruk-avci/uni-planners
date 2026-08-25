@@ -1,0 +1,477 @@
+{
+  "id": "ee",
+  "title_tr": "Elektrik-Elektronik Mühendisliği",
+  "title_en": "Electrical-Electronics Engineering",
+  "faculty": "engineering",
+  "programCodes": [
+    "BSEE"
+  ],
+  "sourceFile": "ee.xls",
+  "importedAt": "2026-08-24T17:40:09.574Z",
+  "semesters": {
+    "1": {
+      "fall": [
+        {
+          "code": "CS 104",
+          "title_tr": "Programlamaya Giriş",
+          "title_en": "Programlamaya Giriş",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "CS 104L",
+          "practical": false
+        },
+        {
+          "code": "EE 101",
+          "title_tr": "Elektrik Elektronik Mühendisliğine Giriş",
+          "title_en": "Elektrik Elektronik Mühendisliğine Giriş",
+          "credits": 2,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "ENG 101",
+          "title_tr": "İngilizce I",
+          "title_en": "İngilizce I",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "MATH 103",
+          "title_tr": "Mühendislik için Yüksek Matematik I",
+          "title_en": "Mühendislik için Yüksek Matematik I",
+          "credits": 8,
+          "prereq": "",
+          "coreq": "MATH 103R",
+          "practical": false
+        },
+        {
+          "code": "PHYS 101",
+          "title_tr": "Fizik I",
+          "title_en": "Fizik I",
+          "credits": 8,
+          "prereq": "",
+          "coreq": "PHYS 101L",
+          "practical": true
+        },
+        {
+          "code": "TRL 100",
+          "title_tr": "Dönüştürücü Öğrenme",
+          "title_en": "Dönüştürücü Öğrenme",
+          "credits": 2,
+          "prereq": "",
+          "coreq": "",
+          "practical": true
+        }
+      ],
+      "spring": [
+        {
+          "code": "BUS 101",
+          "title_tr": "İşletmeye Giriş I (Karar Verme)",
+          "title_en": "İşletmeye Giriş I (Karar Verme)",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "BUS 101L",
+          "practical": false
+        },
+        {
+          "code": "ENG 102",
+          "title_tr": "İngilizce II",
+          "title_en": "İngilizce II",
+          "credits": 4,
+          "prereq": "ENG 101",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "MATH 104",
+          "title_tr": "Mühendislik için Yüksek Matematik II",
+          "title_en": "Mühendislik için Yüksek Matematik II",
+          "credits": 8,
+          "prereq": "MATH103",
+          "coreq": "MATH 104R",
+          "practical": false
+        },
+        {
+          "code": "MATH 112",
+          "title_tr": "Ayrık Matematik",
+          "title_en": "Ayrık Matematik",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "PHYS 102",
+          "title_tr": "Fizik II",
+          "title_en": "Fizik II",
+          "credits": 8,
+          "prereq": "PHYS 101",
+          "coreq": "PHYS 102L",
+          "practical": true
+        }
+      ]
+    },
+    "2": {
+      "fall": [
+        {
+          "code": "BUS 102",
+          "title_tr": "İşletmeye Giriş II (Girişimcilik)",
+          "title_en": "İşletmeye Giriş II (Girişimcilik)",
+          "credits": 4,
+          "prereq": "BUS 101 or BUS 100",
+          "coreq": "BUS 102L",
+          "practical": false
+        },
+        {
+          "code": "EE 203",
+          "title_tr": "Sayısal Sistemler",
+          "title_en": "Sayısal Sistemler",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "EE 203L",
+          "practical": true
+        },
+        {
+          "code": "MATH 211",
+          "title_tr": "Doğrusal Cebir",
+          "title_en": "Doğrusal Cebir",
+          "credits": 6,
+          "prereq": "MATH 103",
+          "coreq": "MATH 211R",
+          "practical": false
+        },
+        {
+          "code": "MATH 212",
+          "title_tr": "Diferansiyel Denklemler",
+          "title_en": "Diferansiyel Denklemler",
+          "credits": 6,
+          "prereq": "MATH 104",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "SEC 201",
+          "title_tr": "Sektörel Hazırlık",
+          "title_en": "Sektörel Hazırlık",
+          "credits": 2,
+          "prereq": "",
+          "coreq": "SEC201L",
+          "practical": false
+        },
+        {
+          "code": "TLL 100",
+          "title_tr": "Türk Dili ve Edebiyatı",
+          "title_en": "Türk Dili ve Edebiyatı",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        }
+      ],
+      "spring": [
+        {
+          "code": "EE 201",
+          "title_tr": "Sinyaller ve Sistemler",
+          "title_en": "Sinyaller ve Sistemler",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "MATH 212",
+          "practical": false
+        },
+        {
+          "code": "EE 202",
+          "title_tr": "Devre Analizi",
+          "title_en": "Devre Analizi",
+          "credits": 6,
+          "prereq": "MATH 211 and PHYS102",
+          "coreq": "EE 202L",
+          "practical": true
+        },
+        {
+          "code": "EE 204",
+          "title_tr": "Elektromanyetik",
+          "title_en": "Elektromanyetik",
+          "credits": 6,
+          "prereq": "PHYS 102 and MATH 104",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HIST 200",
+          "title_tr": "Atatürk İlkeleri ve İnkılap Tarihi",
+          "title_en": "Atatürk İlkeleri ve İnkılap Tarihi",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "MATH 217",
+          "title_tr": "Olasılık ve İstatistik",
+          "title_en": "Olasılık ve İstatistik",
+          "credits": 6,
+          "prereq": "MATH 103",
+          "coreq": "",
+          "practical": false
+        }
+      ]
+    },
+    "3": {
+      "fall": [
+        {
+          "code": "CS 304",
+          "title_tr": "Yapay Zeka, Makina Öğrenmesi ve Veri Bilimine Giriş",
+          "title_en": "Yapay Zeka, Makina Öğrenmesi ve Veri Bilimine Giriş",
+          "credits": 6,
+          "prereq": "MATH 211 and (MATH 217 or CE 217 or MATH 215) and (CS 101 or CS 104)",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "EE 300",
+          "title_tr": "Staj I",
+          "title_en": "Staj I",
+          "credits": 2,
+          "prereq": "SEC 201",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "EE 301",
+          "title_tr": "Elektronik I",
+          "title_en": "Elektronik I",
+          "credits": 6,
+          "prereq": "EE 202",
+          "coreq": "EE 301L",
+          "practical": true
+        },
+        {
+          "code": "EE 341",
+          "title_tr": "Haberleşme Sistemlerinin Temelleri",
+          "title_en": "Haberleşme Sistemlerinin Temelleri",
+          "credits": 6,
+          "prereq": "MATH 217 ve MATH 211",
+          "coreq": "EE 201, EE 341L",
+          "practical": true
+        },
+        {
+          "code": "",
+          "title_tr": "BSEE Program-İçi Seçmeli",
+          "title_en": "BSEE Program-İçi Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "bsee-program-ici-secmeli"
+        },
+        {
+          "code": "",
+          "title_tr": "FE Sertifika Seçmeli",
+          "title_en": "FE Sertifika Seçmeli",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "fe-sertifika-secmeli"
+        }
+      ],
+      "spring": [
+        {
+          "code": "ECON 210",
+          "title_tr": "İktisada Giriş",
+          "title_en": "İktisada Giriş",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "EE 321",
+          "title_tr": "Mikroişlemciler",
+          "title_en": "Mikroişlemciler",
+          "credits": 6,
+          "prereq": "(CS 100 or CS 101 or CS 103 or CS 104) ve EE 203",
+          "coreq": "EE 321L",
+          "practical": true
+        },
+        {
+          "code": "EE 372",
+          "title_tr": "Elektrik Makineleri",
+          "title_en": "Elektrik Makineleri",
+          "credits": 6,
+          "prereq": "EE 204 and EE 101",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "FE 301",
+          "title_tr": "Mühendis Olmak",
+          "title_en": "Mühendis Olmak",
+          "credits": 2,
+          "prereq": "En az 105 AKTS tamamlamış olmak",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "",
+          "title_tr": "BSEE Program-İçi Seçmeli",
+          "title_en": "BSEE Program-İçi Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "bsee-program-ici-secmeli"
+        },
+        {
+          "code": "",
+          "title_tr": "FE Sertifika Seçmeli",
+          "title_en": "FE Sertifika Seçmeli",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "fe-sertifika-secmeli"
+        }
+      ]
+    },
+    "4": {
+      "fall": [
+        {
+          "code": "EE 401",
+          "title_tr": "Elektrik-Elektronik Mühendisliği Bitirme Projesi I",
+          "title_en": "Elektrik-Elektronik Mühendisliği Bitirme Projesi I",
+          "credits": 4,
+          "prereq": "(CS 101 or CS 103 or CS 104) and EE 201 and EE202 and EE 203 and EE204 and (EE 301, EE 321 or EE 341'den en az biri)",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "",
+          "title_tr": "BSEE Program-İçi Seçmeli",
+          "title_en": "BSEE Program-İçi Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "bsee-program-ici-secmeli"
+        },
+        {
+          "code": "",
+          "title_tr": "BSEE Program-İçi Seçmeli",
+          "title_en": "BSEE Program-İçi Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "bsee-program-ici-secmeli"
+        },
+        {
+          "code": "",
+          "title_tr": "FE Serbest Seçmeli",
+          "title_en": "FE Serbest Seçmeli",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "fe-serbest-secmeli"
+        },
+        {
+          "code": "",
+          "title_tr": "FE Serbest Seçmeli",
+          "title_en": "FE Serbest Seçmeli",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "fe-serbest-secmeli"
+        },
+        {
+          "code": "",
+          "title_tr": "FE Sosyal Bilimler Seçmeli",
+          "title_en": "FE Sosyal Bilimler Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "fe-sosyal-bilimler-secmeli"
+        }
+      ],
+      "spring": [
+        {
+          "code": "EE 400",
+          "title_tr": "Staj II",
+          "title_en": "Staj II",
+          "credits": 4,
+          "prereq": "SEC 201",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "EE 402",
+          "title_tr": "Elektrik-Elektronik Mühendisliği Bitirme Projesi II",
+          "title_en": "Elektrik-Elektronik Mühendisliği Bitirme Projesi II",
+          "credits": 4,
+          "prereq": "EE 401",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "",
+          "title_tr": "BSEE Program-İçi Seçmeli",
+          "title_en": "BSEE Program-İçi Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "bsee-program-ici-secmeli"
+        },
+        {
+          "code": "",
+          "title_tr": "BSEE Program-İçi Seçmeli",
+          "title_en": "BSEE Program-İçi Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "bsee-program-ici-secmeli"
+        },
+        {
+          "code": "",
+          "title_tr": "FE Serbest Seçmeli",
+          "title_en": "FE Serbest Seçmeli",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "fe-serbest-secmeli"
+        },
+        {
+          "code": "",
+          "title_tr": "FE Serbest Seçmeli",
+          "title_en": "FE Serbest Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "fe-serbest-secmeli"
+        }
+      ]
+    }
+  },
+  "electivePoolRefs": {
+    "bsee-program-ici-secmeli": "bsee-program-ici-secmeli",
+    "fe-sertifika-secmeli": "fe-sertifika-secmeli",
+    "fe-serbest-secmeli": "fe-serbest-secmeli",
+    "fe-sosyal-bilimler-secmeli": "fe-sosyal-bilimler-secmeli"
+  },
+  "electiveLabels": {
+    "bsee-program-ici-secmeli": "BSEE Program-İçi Seçmeli",
+    "fe-sertifika-secmeli": "FE Sertifika Seçmeli",
+    "fe-serbest-secmeli": "FE Serbest Seçmeli",
+    "fe-sosyal-bilimler-secmeli": "FE Sosyal Bilimler Seçmeli"
+  },
+  "updatedAt": "2026-08-24T17:40:09.574Z"
+}

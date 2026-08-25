@@ -1,0 +1,35 @@
+{
+  "key": "babus-program-ici-secmeli-mgmt",
+  "label": "BABUS Program-İçi Seçmeli (MGMT)",
+  "sourceFile": "bus_mgnt.xls",
+  "courses": [
+    {
+      "code": "MGMT 306",
+      "title_tr": "İnsan Kaynakları Yönetimi",
+      "title_en": "İnsan Kaynakları Yönetimi",
+      "credits": 6,
+      "prereq": "(MGMT 202 or PSY 305) and (BUS 100 or BUS 101)",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MGMT 311",
+      "title_tr": "Proje Yönetimi",
+      "title_en": "Proje Yönetimi",
+      "credits": 6,
+      "prereq": "BUS 102 ve (SEC 201 veya SEC 203)",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "MGMT 314",
+      "title_tr": "Örgütlerde Liderlik ve İnsan Yönetimi",
+      "title_en": "Örgütlerde Liderlik ve İnsan Yönetimi",
+      "credits": 6,
+      "prereq": "To complete at least 105 ECTS",
+      "coreq": "",
+      "practical": false
+    }
+  ],
+  "updatedAt": "2026-08-24T16:12:00.769Z"
+}

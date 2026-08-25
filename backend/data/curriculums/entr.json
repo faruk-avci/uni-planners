@@ -1,0 +1,470 @@
+{
+  "id": "entr",
+  "title_tr": "Girişimcilik",
+  "title_en": "Entrepreneurship",
+  "faculty": "business",
+  "programCodes": [
+    "BAENT"
+  ],
+  "sourceFile": "girişimcilik.xls",
+  "importedAt": "2026-08-24T16:07:38.486Z",
+  "semesters": {
+    "1": {
+      "fall": [
+        {
+          "code": "BUS 100",
+          "title_tr": "İşletmenin Temelleri",
+          "title_en": "İşletmenin Temelleri",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "BUS 190",
+          "title_tr": "İşletme Bilişimine Giriş",
+          "title_en": "İşletme Bilişimine Giriş",
+          "credits": 2,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "ECON 101",
+          "title_tr": "Mikroekonomi",
+          "title_en": "Mikroekonomi",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "ENG 101",
+          "title_tr": "İngilizce I",
+          "title_en": "İngilizce I",
+          "credits": 4,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "HIST 200",
+          "title_tr": "Atatürk İlkeleri ve İnkılap Tarihi",
+          "title_en": "Atatürk İlkeleri ve İnkılap Tarihi",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "MATH 101",
+          "title_tr": "Sosyal Bilimler için Matematik I",
+          "title_en": "Sosyal Bilimler için Matematik I",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "MATH 101R",
+          "practical": false
+        },
+        {
+          "code": "TRL 100",
+          "title_tr": "Dönüştürücü Öğrenme",
+          "title_en": "Dönüştürücü Öğrenme",
+          "credits": 2,
+          "prereq": "",
+          "coreq": "",
+          "practical": true
+        }
+      ],
+      "spring": [
+        {
+          "code": "BUS 102",
+          "title_tr": "İşletmeye Giriş II (Girişimcilik)",
+          "title_en": "İşletmeye Giriş II (Girişimcilik)",
+          "credits": 4,
+          "prereq": "BUS 101 or BUS 100",
+          "coreq": "BUS 102L",
+          "practical": false
+        },
+        {
+          "code": "BUS 199",
+          "title_tr": "Problem Çözümü İçin Algoritma Tasarımı",
+          "title_en": "Problem Çözümü İçin Algoritma Tasarımı",
+          "credits": 4,
+          "prereq": "BUS 100 or BUS 101",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "ECON 102",
+          "title_tr": "Makroekonomi",
+          "title_en": "Makroekonomi",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "ENG 102",
+          "title_tr": "İngilizce II",
+          "title_en": "İngilizce II",
+          "credits": 4,
+          "prereq": "ENG 101",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "MATH 102",
+          "title_tr": "Sosyal Bilimler için Matematik II",
+          "title_en": "Sosyal Bilimler için Matematik II",
+          "credits": 6,
+          "prereq": "MATH 101",
+          "coreq": "MATH 102R",
+          "practical": false
+        },
+        {
+          "code": "",
+          "title_tr": "BAENT Sosyal Bilimler Seçmeli",
+          "title_en": "BAENT Sosyal Bilimler Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "baent-sosyal-bilimler-secmeli"
+        }
+      ]
+    },
+    "2": {
+      "fall": [
+        {
+          "code": "ACCT 201",
+          "title_tr": "Finansal Muhasebe",
+          "title_en": "Finansal Muhasebe",
+          "credits": 6,
+          "prereq": "(BUS 101 or (BUS 100 and BUS 190)) and (MATH 101 or MATH 103)",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "BUS 200",
+          "title_tr": "Yapay Zekâ Destekli İş Analitiği Temelleri",
+          "title_en": "Yapay Zekâ Destekli İş Analitiği Temelleri",
+          "credits": 4,
+          "prereq": "(BUS100 ve BUS190) veya BUS101",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "MATH 201",
+          "title_tr": "Sosyal Bilimler için Olasılık",
+          "title_en": "Sosyal Bilimler için Olasılık",
+          "credits": 6,
+          "prereq": "BUS 101 or (BUS 100 and BUS 190) and MATH 101",
+          "coreq": "MATH 201R",
+          "practical": false
+        },
+        {
+          "code": "MGMT 202",
+          "title_tr": "Örgütler",
+          "title_en": "Örgütler",
+          "credits": 6,
+          "prereq": "ENG102 and (BUS100 or BUS101)",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "MKTG 201",
+          "title_tr": "Pazarlama",
+          "title_en": "Pazarlama",
+          "credits": 6,
+          "prereq": "(BUS101 or (BUS100 and BUS190)) and (ENG102 or ENG 104)",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "SEC 201",
+          "title_tr": "Sektörel Hazırlık",
+          "title_en": "Sektörel Hazırlık",
+          "credits": 2,
+          "prereq": "",
+          "coreq": "SEC201L",
+          "practical": false
+        }
+      ],
+      "spring": [
+        {
+          "code": "ENTR 201",
+          "title_tr": "Girişimcilik",
+          "title_en": "Girişimcilik",
+          "credits": 6,
+          "prereq": "BUS 102",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "FIN 202",
+          "title_tr": "Finans",
+          "title_en": "Finans",
+          "credits": 6,
+          "prereq": "(ACCT 201 and (ECON 101 or ECON 102 or ECON 210)",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "MATH 202",
+          "title_tr": "Sosyal Bilimler için İstatistik",
+          "title_en": "Sosyal Bilimler için İstatistik",
+          "credits": 6,
+          "prereq": "MATH 102 and MATH 201",
+          "coreq": "MATH 202R",
+          "practical": false
+        },
+        {
+          "code": "OPER 202",
+          "title_tr": "Operasyon Yönetimi",
+          "title_en": "Operasyon Yönetimi",
+          "credits": 6,
+          "prereq": "MATH 201",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "TLL 100",
+          "title_tr": "Türk Dili ve Edebiyatı",
+          "title_en": "Türk Dili ve Edebiyatı",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false
+        }
+      ]
+    },
+    "3": {
+      "fall": [
+        {
+          "code": "BUS 311",
+          "title_tr": "Staj I",
+          "title_en": "Staj I",
+          "credits": 2,
+          "prereq": "BUS 102 and SEC 201 and having completed at least 105 AKTS -(ACCT 201 or MGMT 202 or MKTG 201 or OPER 202) and having completed at least 90 AKTS",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "ENTR 303",
+          "title_tr": "Yaratıcılık ve Fikir Geliştirme",
+          "title_en": "Yaratıcılık ve Fikir Geliştirme",
+          "credits": 6,
+          "prereq": "BUS 102",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "ENTR 305",
+          "title_tr": "Girişimci Pazarlama",
+          "title_en": "Girişimci Pazarlama",
+          "credits": 6,
+          "prereq": "(BUS 102 or ENTR 201) and MKTG 201",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "ENTR 308",
+          "title_tr": "Girişimci Finans",
+          "title_en": "Girişimci Finans",
+          "credits": 6,
+          "prereq": "(BUS 102 or ENTR 201) and FIN 202 and MATH 202",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "ENTR 310",
+          "title_tr": "Yeni Girişimlerde Liderlik ve Yönetim",
+          "title_en": "Yeni Girişimlerde Liderlik ve Yönetim",
+          "credits": 6,
+          "prereq": "(BUS 102 veya ENTR 201) ve MGMT 202",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "SEC 302",
+          "title_tr": "Sektörel Çözümler: Yerel Uzmanlık",
+          "title_en": "Sektörel Çözümler: Yerel Uzmanlık",
+          "credits": 4,
+          "prereq": "SEC 201 and BUS 102 and to complete at least 105 ECTS",
+          "coreq": "",
+          "practical": true
+        }
+      ],
+      "spring": [
+        {
+          "code": "BUS 312",
+          "title_tr": "Staj II",
+          "title_en": "Staj II",
+          "credits": 4,
+          "prereq": "BUS 102 and SEC 201 and having completed 135 ECTS",
+          "coreq": "BUS 311",
+          "practical": true
+        },
+        {
+          "code": "ENTR 302",
+          "title_tr": "İş Modeli Geliştirme",
+          "title_en": "İş Modeli Geliştirme",
+          "credits": 6,
+          "prereq": "BUS 102",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "ENTR 304",
+          "title_tr": "İnsan Odaklı Tasarım",
+          "title_en": "İnsan Odaklı Tasarım",
+          "credits": 6,
+          "prereq": "BUS 102",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "MIS 311",
+          "title_tr": "Yönetim Bilişim Sistemlerine Giriş",
+          "title_en": "Yönetim Bilişim Sistemlerine Giriş",
+          "credits": 6,
+          "prereq": "BUS 102 and MKTG 201",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "",
+          "title_tr": "BAENT Program-İçi Seçmeli",
+          "title_en": "BAENT Program-İçi Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "baent-program-ici-secmeli"
+        },
+        {
+          "code": "",
+          "title_tr": "BAENT Serbest Seçmeli",
+          "title_en": "BAENT Serbest Seçmeli",
+          "credits": 2,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "baent-serbest-secmeli"
+        }
+      ]
+    },
+    "4": {
+      "fall": [
+        {
+          "code": "ENTR 403",
+          "title_tr": "Sosyal Girişimcilik ve Yenilikçilik",
+          "title_en": "Sosyal Girişimcilik ve Yenilikçilik",
+          "credits": 6,
+          "prereq": "BUS 102",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "ENTR 408",
+          "title_tr": "Kurum İçi Girişimcilik",
+          "title_en": "Kurum İçi Girişimcilik",
+          "credits": 6,
+          "prereq": "BUS 102",
+          "coreq": "",
+          "practical": false
+        },
+        {
+          "code": "SEC 401",
+          "title_tr": "İşletmede Sektörel Uygulamalar",
+          "title_en": "İşletmede Sektörel Uygulamalar",
+          "credits": 6,
+          "prereq": "SEC 201 and having completed 165 ECTS",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "",
+          "title_tr": "BAENT Program-İçi Seçmeli",
+          "title_en": "BAENT Program-İçi Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "baent-program-ici-secmeli"
+        },
+        {
+          "code": "",
+          "title_tr": "BAENT Serbest Seçmeli",
+          "title_en": "BAENT Serbest Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "baent-serbest-secmeli"
+        }
+      ],
+      "spring": [
+        {
+          "code": "ENTR 404",
+          "title_tr": "Bitirme Projesi",
+          "title_en": "Bitirme Projesi",
+          "credits": 6,
+          "prereq": "ENTR 201 and ENTR 305 and ENTR 308 and to complete at least 165 AKTS”",
+          "coreq": "ENTR 302",
+          "practical": true
+        },
+        {
+          "code": "MGMT 402",
+          "title_tr": "Strateji",
+          "title_en": "Strateji",
+          "credits": 6,
+          "prereq": "SEC 302 and 150 AKTS",
+          "coreq": "",
+          "practical": true
+        },
+        {
+          "code": "",
+          "title_tr": "BAENT Program-İçi Seçmeli",
+          "title_en": "BAENT Program-İçi Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "baent-program-ici-secmeli"
+        },
+        {
+          "code": "",
+          "title_tr": "BAENT Serbest Seçmeli",
+          "title_en": "BAENT Serbest Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "baent-serbest-secmeli"
+        },
+        {
+          "code": "",
+          "title_tr": "BAENT Serbest Seçmeli",
+          "title_en": "BAENT Serbest Seçmeli",
+          "credits": 6,
+          "prereq": "",
+          "coreq": "",
+          "practical": false,
+          "electiveType": "baent-serbest-secmeli"
+        }
+      ]
+    }
+  },
+  "electivePoolRefs": {
+    "baent-sosyal-bilimler-secmeli": "baent-sosyal-bilimler-secmeli",
+    "baent-program-ici-secmeli": "baent-program-ici-secmeli",
+    "baent-serbest-secmeli": "baent-serbest-secmeli"
+  },
+  "electiveLabels": {
+    "baent-sosyal-bilimler-secmeli": "BAENT Sosyal Bilimler Seçmeli",
+    "baent-program-ici-secmeli": "BAENT Program-İçi Seçmeli",
+    "baent-serbest-secmeli": "BAENT Serbest Seçmeli"
+  },
+  "updatedAt": "2026-08-24T16:07:38.486Z"
+}

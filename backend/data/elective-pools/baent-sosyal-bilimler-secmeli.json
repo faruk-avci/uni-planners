@@ -1,0 +1,62 @@
+{
+  "key": "baent-sosyal-bilimler-secmeli",
+  "label": "BAENT Sosyal Bilimler Seçmeli",
+  "sourceFile": "ent_sosyal.xls",
+  "courses": [
+    {
+      "code": "ANTH 205",
+      "title_tr": "Ekonomi, Kültür ve Politika",
+      "title_en": "Ekonomi, Kültür ve Politika",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "ANTH 206",
+      "title_tr": "Bilim, Teknoloji ve Toplum",
+      "title_en": "Bilim, Teknoloji ve Toplum",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "HIST 104",
+      "title_tr": "Dünya Tarihi II",
+      "title_en": "Dünya Tarihi II",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "PHIL 104",
+      "title_tr": "Doğruluk, Bilgi ve Etik Karar Verme",
+      "title_en": "Doğruluk, Bilgi ve Etik Karar Verme",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "PSY 100",
+      "title_tr": "Genel Psikoloji",
+      "title_en": "Genel Psikoloji",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    },
+    {
+      "code": "SOC 201",
+      "title_tr": "Sosyal Bilimlere Giriş",
+      "title_en": "Sosyal Bilimlere Giriş",
+      "credits": 6,
+      "prereq": "",
+      "coreq": "",
+      "practical": false
+    }
+  ],
+  "updatedAt": "2026-08-24T16:06:45.026Z"
+}

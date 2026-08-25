@@ -124,6 +124,109 @@ function scoreSchedule(sections, preference) {
   return score;
 }
 
+function clockMinutes(value) {
+  const [hours, minutes] = String(value || '').split(':').map(Number);
+  return Number.isFinite(hours) && Number.isFinite(minutes) ? hours * 60 + minutes : null;
+}
+
+function sectionOverlapTimes(sectionA, sectionB) {
+  const overlaps = [];
+  for (const timeA of sectionA.times || []) {
+    for (const timeB of sectionB.times || []) {
+      if (timeA.day !== timeB.day) continue;
+      const startA = clockMinutes(timeA.start);
+      const endA = clockMinutes(timeA.end);
+      const startB = clockMinutes(timeB.start);
+      const endB = clockMinutes(timeB.end);
+      if ([startA, endA, startB, endB].some(value => value === null)) continue;
+      const start = Math.max(startA, startB);
+      const end = Math.min(endA, endB);
+      if (start >= end) continue;
+      const format = minutes => `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`;
+      overlaps.push({ day: timeA.day, start: format(start), end: format(end) });
+    }
+  }
+  return overlaps;
+}
+
+/**
+ * Explain why a basket is unsatisfiable without guessing. A hard-conflict
+ * pair means every available section of course A overlaps every available
+ * section of course B. Removal options are verified by the same generator.
+ */
+function diagnoseScheduleConflicts(coursesSections) {
+  const entries = Object.entries(coursesSections).filter(([, sections]) => sections.length > 0);
+  const hardConflicts = [];
+
+  for (let i = 0; i < entries.length; i++) {
+    const [courseA, sectionsA] = entries[i];
+    for (let j = i + 1; j < entries.length; j++) {
+      const [courseB, sectionsB] = entries[j];
+      let compatible = false;
+      const overlapTimes = [];
+      for (const sectionA of sectionsA) {
+        for (const sectionB of sectionsB) {
+          if (!masksConflict(sectionA.mask, sectionB.mask)) {
+            compatible = true;
+            break;
+          }
+          overlapTimes.push(...sectionOverlapTimes(sectionA, sectionB));
+        }
+        if (compatible) break;
+      }
+      if (!compatible) {
+        hardConflicts.push({
+          courseA,
+          courseB,
+          sectionsA: [...new Set(sectionsA.map(section => section.section))],
+          sectionsB: [...new Set(sectionsB.map(section => section.section))],
+          overlaps: [...new Map(overlapTimes.map(time => [`${time.day}|${time.start}|${time.end}`, time])).values()].slice(0, 6),
+        });
+      }
+    }
+  }
+
+  const codes = entries.map(([code]) => code);
+  const without = removed => Object.fromEntries(entries.filter(([code]) => !removed.has(code)));
+  const removalOptions = [];
+  const hardConflictCourses = [...new Set(hardConflicts.flatMap(pair => [pair.courseA, pair.courseB]))];
+  const singleCandidates = codes.length <= 12 ? codes : hardConflictCourses.slice(0, 10);
+
+  for (const code of singleCandidates) {
+    if (generateCombinations(without(new Set([code])), 1).length > 0) {
+      removalOptions.push({ courses: [code] });
+    }
+  }
+
+  // Some unsatisfiable baskets need two removals. Keep this exact search
+  // bounded so diagnostics cannot dominate a large generation request.
+  if (removalOptions.length === 0 && codes.length <= 10) {
+    for (let i = 0; i < codes.length && removalOptions.length < 6; i++) {
+      for (let j = i + 1; j < codes.length && removalOptions.length < 6; j++) {
+        const removed = new Set([codes[i], codes[j]]);
+        if (generateCombinations(without(removed), 1).length > 0) {
+          removalOptions.push({ courses: [codes[i], codes[j]] });
+        }
+      }
+    }
+  }
+
+  return {
+    analyzedCourseCount: codes.length,
+    hardConflicts: hardConflicts.slice(0, 8),
+    removalOptions: removalOptions.slice(0, 8),
+    multiCourseInteraction: hardConflicts.length === 0,
+  };
+}
+
+function freeDayIndexesForSections(sections) {
+  const occupied = [0, 0, 0, 0, 0];
+  for (const section of sections) {
+    for (let d = 0; d < 5; d++) occupied[d] |= section.mask[d];
+  }
+  return occupied.flatMap((mask, index) => mask === 0 ? [index] : []);
+}
+
 /**
  * Main entry point.
  *
@@ -139,7 +242,7 @@ function generateSchedules(coursesSections, { freeDayIdxs, preference = 'balance
     .filter(([, secs]) => secs.length === 0)
     .map(([code]) => code);
   if (emptyCourses.length > 0) {
-    return { schedules: [], totalGenerated: 0, limited: false, emptyCourses };
+    return { schedules: [], totalGenerated: 0, limited: false, emptyCourses, availableFreeDayIndexes: [] };
   }
 
   let combos = generateCombinations(pruned);
@@ -148,7 +251,10 @@ function generateSchedules(coursesSections, { freeDayIdxs, preference = 'balance
     combos.sort((a, b) => scoreSchedule(b, preference) - scoreSchedule(a, preference));
   }
 
+  const availableFreeDayIndexes = [...new Set(combos.flatMap(freeDayIndexesForSections))].sort((a, b) => a - b);
+
   const totalGenerated = combos.length;
+  const diagnostics = totalGenerated === 0 ? diagnoseScheduleConflicts(pruned) : null;
   const limited = totalGenerated > limit;
   const sliced = combos.slice(0, limit);
 
@@ -162,10 +268,18 @@ function generateSchedules(coursesSections, { freeDayIdxs, preference = 'balance
       times: s.times,
     }));
     const totalCredits = lessons.reduce((sum, l) => sum + (l.credits || 0), 0);
-    return { lessons, totalCredits };
+    return { lessons, totalCredits, freeDayIndexes: freeDayIndexesForSections(sections) };
   });
 
-  return { schedules, totalGenerated, limited, emptyCourses: [] };
+  return { schedules, totalGenerated, limited, emptyCourses: [], availableFreeDayIndexes, diagnostics };
 }
 
-export { DAY_INDEX, buildMask, generateSchedules, scoreSchedule, applyFreeDays };
+export {
+  DAY_INDEX,
+  buildMask,
+  generateSchedules,
+  scoreSchedule,
+  applyFreeDays,
+  freeDayIndexesForSections,
+  diagnoseScheduleConflicts,
+};
