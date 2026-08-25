@@ -31,7 +31,7 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-5);
-  padding: var(--space-6) var(--space-7) var(--space-5);
+  padding: var(--space-6) var(--space-6) var(--space-5);
   background: color-mix(in srgb, var(--bg-secondary), transparent 4%);
   border-bottom: 1px solid var(--border-secondary);
   backdrop-filter: blur(12px);
@@ -76,7 +76,7 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-3);
-  padding: var(--space-5) var(--space-7);
+  padding: var(--space-5) var(--space-6);
 }
 
 .major-prompt-faculty {
@@ -169,7 +169,7 @@
 }
 
 .major-prompt-other {
-  margin: 0 var(--space-7) var(--space-7);
+  margin: 0 var(--space-6) var(--space-6);
   padding: var(--space-4);
   background: var(--bg-tertiary);
   border: 1px solid var(--border-secondary);
