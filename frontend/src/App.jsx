@@ -19,7 +19,22 @@ import { canonicalProgramCode, groupMajorOptions } from './data/programs'
 import { trackEvent } from './utils/analytics.js'
 
 const isUndergraduateMajor = value => Boolean(value && !['none', 'master', 'doctorate'].includes(value))
-const sharedIdFromHash = hash => String(hash || '').match(/^#\/share\/([A-Za-z0-9]{8})$/)?.[1] || ''
+const sharedIdFromPath = pathname => String(pathname || '').match(/^\/share\/([A-Za-z0-9]{8})\/?$/)?.[1] || ''
+const legacyPathFromHash = hash => {
+  const value = String(hash || '')
+  if (value === '#/curriculum') return '/curriculum'
+  if (value === '#/how-to') return '/how-to'
+  const sharedId = value.match(/^#\/share\/([A-Za-z0-9]{8})$/)?.[1]
+  return sharedId ? `/share/${sharedId}` : ''
+}
+const routeFromLocation = () => {
+  const pathname = legacyPathFromHash(window.location.hash) || window.location.pathname
+  const sharedId = sharedIdFromPath(pathname)
+  if (sharedId) return { page: 'shared', sharedId }
+  if (/^\/curriculum\/?$/.test(pathname)) return { page: 'curriculum', sharedId: '' }
+  if (/^\/how-to\/?$/.test(pathname)) return { page: 'howto', sharedId: '' }
+  return { page: 'planner', sharedId: '' }
+}
 const PUBLIC_COLOR_THEMES = new Set(['iris', 'neutral', 'ozu', 'ocean', 'forest', 'violet', 'coral'])
 const FAVICON_COLORS = {
   iris: '#6658e8',
@@ -40,6 +55,7 @@ const ENGLISH_DAY_NAMES = {
 }
 
 function App() {
+  const initialRoute = useRef(routeFromLocation()).current
   const [language, setLanguage] = useState('tr')
   const [siteSettings, setSiteSettings] = useState({ mainFont: 'system', catalogTerm: '2025-2026 Yaz', surveyUrl: '' })
   const [colorTheme, setColorTheme] = useState(() => {
@@ -49,13 +65,8 @@ function App() {
   const logoPresses = useRef((Number(localStorage.getItem('uniplanner_logo_presses')) || 0) % 20)
   const [dinoMode, setDinoMode] = useState(() => localStorage.getItem('uniplanner_dino_mode') === 'true')
   const [dinoOpen, setDinoOpen] = useState(() => localStorage.getItem('uniplanner_dino_mode') === 'true')
-  const [activePage, setActivePage] = useState(() => {
-    if (sharedIdFromHash(window.location.hash)) return 'shared'
-    if (window.location.hash === '#/curriculum') return 'curriculum'
-    if (window.location.hash === '#/how-to') return 'howto'
-    return 'planner'
-  })
-  const [sharedScheduleId, setSharedScheduleId] = useState(() => sharedIdFromHash(window.location.hash))
+  const [activePage, setActivePage] = useState(initialRoute.page)
+  const [sharedScheduleId, setSharedScheduleId] = useState(initialRoute.sharedId)
   // Basket model: each item is a course. `sections: []` = whole course (all
   // sections); a non-empty list pins specific sections. A course is either
   // whole OR section-specific, never both (ported from v1 rules).
@@ -127,15 +138,15 @@ function App() {
 
   useEffect(() => {
     const syncPage = () => {
-      const sharedId = sharedIdFromHash(window.location.hash)
-      setSharedScheduleId(sharedId)
-      if (sharedId) setActivePage('shared')
-      else if (window.location.hash === '#/curriculum') setActivePage('curriculum')
-      else if (window.location.hash === '#/how-to') setActivePage('howto')
-      else setActivePage('planner')
+      const legacyPath = legacyPathFromHash(window.location.hash)
+      if (legacyPath) window.history.replaceState(null, '', legacyPath)
+      const route = routeFromLocation()
+      setSharedScheduleId(route.sharedId)
+      setActivePage(route.page)
     }
-    window.addEventListener('hashchange', syncPage)
-    return () => window.removeEventListener('hashchange', syncPage)
+    syncPage()
+    window.addEventListener('popstate', syncPage)
+    return () => window.removeEventListener('popstate', syncPage)
   }, [])
 
   useEffect(() => {
@@ -164,7 +175,8 @@ function App() {
   }, [mobileBasketOpen])
 
   const navigate = page => {
-    window.location.hash = page === 'curriculum' ? '/curriculum' : page === 'howto' ? '/how-to' : '/'
+    const path = page === 'curriculum' ? '/curriculum' : page === 'howto' ? '/how-to' : '/'
+    window.history.pushState(null, '', path)
     setSharedScheduleId('')
     setActivePage(page)
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -643,7 +655,7 @@ function App() {
     setSharingSchedule(true)
     try {
       const result = await courseService.shareSchedule(schedule, major)
-      const url = `${window.location.origin}${window.location.pathname}#/share/${result.id}`
+      const url = `${window.location.origin}/share/${result.id}`
       let copied = false
       try {
         await navigator.clipboard.writeText(url)
