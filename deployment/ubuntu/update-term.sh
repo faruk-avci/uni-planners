@@ -35,7 +35,8 @@ echo "Updating SIS term: ${TERM_LABEL}"
 export HOME=/var/lib/uniplanner
 export PATH=/usr/local/bin:/usr/bin:/bin
 export NODE_ENV=production
-runuser -u "$SERVICE_USER" --preserve-environment -- \
+sudo -H -u "$SERVICE_USER" \
+  --preserve-env=NODE_ENV,DB_HOST,DB_PORT,DB_USER,DB_PASSWORD,DB_NAME \
   npm run --prefix "$SCRAPER_DIR" term:update -- --term "$TERM_LABEL"
 
 env_tmp="$(mktemp /etc/uniplanner/backend.env.XXXXXX)"
