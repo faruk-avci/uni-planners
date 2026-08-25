@@ -11,7 +11,7 @@ const MAJOR_PREFERENCE_SOURCES = new Set([
   'existing_browser',
 ]);
 
-const GRADE_VALUES = new Set(['prep', '1', '2', '3', '4', '5+']);
+const GRADE_VALUES = new Set(['prep', '1', '2', '3', '4']);
 
 router.get('/preferences', async (req, res) => {
   try {

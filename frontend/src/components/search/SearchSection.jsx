@@ -12,7 +12,7 @@ function SearchSection({ language, onAddCourse, catalogTerm }) {
 
   const t = {
     title: language === 'tr' ? 'Ders Ara' : 'Search Courses',
-    placeholder: language === 'tr' ? 'Ders kodu veya adı yazın... (örn. EE 201, Sinyaller)' : 'Type course code or name... (e.g. EE 201, Signals)',
+    placeholder: language === 'tr' ? 'Ders kodu yazın... (örn. EE 201)' : 'Type a course code... (e.g. EE 201)',
     search: language === 'tr' ? 'Ara' : 'Search',
     term: catalogTerm || '2025-2026 Yaz',
     addAll: language === 'tr' ? 'Tümünü Ekle' : 'Add All',

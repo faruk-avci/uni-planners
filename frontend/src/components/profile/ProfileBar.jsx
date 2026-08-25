@@ -32,7 +32,6 @@ function ProfileBar({ language, majorLabel, grade, onMajorClick, onGradeChange }
               <option value="2">{tr('2. sınıf', 'Year 2')}</option>
               <option value="3">{tr('3. sınıf', 'Year 3')}</option>
               <option value="4">{tr('4. sınıf', 'Year 4')}</option>
-              <option value="5+">{tr('5. sınıf ve üzeri', 'Year 5+')}</option>
             </select>
           </span>
           <span className="profile-select-arrow" aria-hidden="true">⌄</span>
