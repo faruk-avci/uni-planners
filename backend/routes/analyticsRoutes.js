@@ -1,6 +1,5 @@
 import express from 'express';
 import { pool } from '../config/db.js';
-import { enqueueSiteEvent } from '../services/activityLogger.js';
 
 const router = express.Router();
 
@@ -51,27 +50,6 @@ router.get('/stats', async (_req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-});
-
-router.post('/analytics/track', (req, res) => {
-  const category = String(req.body?.category || '').trim().slice(0, 32);
-  const action = String(req.body?.action || '').trim().slice(0, 64);
-  const label = req.body?.label ? String(req.body.label).trim() : null;
-  const data = req.body?.data ?? null;
-
-  if (!category || !action) {
-    return res.status(400).json({ success: false, error: 'Category and action are required' });
-  }
-
-  enqueueSiteEvent({
-    session_id: req.sessionId || null,
-    event_category: category,
-    event_action: action,
-    event_label: label,
-    event_data: data,
-    created_at: new Date().toISOString(),
-  });
-  res.status(201).json({ success: true });
 });
 
 export default router;

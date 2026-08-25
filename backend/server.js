@@ -7,7 +7,7 @@ import { ensureSchema, pool } from './config/db.js';
 // Middleware
 import { sessionMiddleware } from './middleware/session.js';
 import { requestLogger } from './middleware/requestLogger.js';
-import { drainRequestLogs, drainSiteEvents, requestLogStats, siteEventStats, stopActivityLoggerTimer } from './services/activityLogger.js';
+import { drainRequestLogs, requestLogStats, stopActivityLoggerTimer } from './services/activityLogger.js';
 import { heavyTaskPool, heavyTaskPoolConfig } from './services/heavyTaskPool.js';
 
 // Routes
@@ -51,7 +51,6 @@ app.get('/api/health', async (_req, res) => {
       database: 'ok',
       heavyTasks: heavyTaskPool.stats(),
       requestLogs: requestLogStats(),
-      siteEvents: siteEventStats(),
     });
   } catch (err) {
     res.status(503).json({ status: 'unavailable', database: 'error' });
@@ -102,7 +101,6 @@ async function shutdown(signal) {
   server?.close();
   stopActivityLoggerTimer();
   await drainRequestLogs().catch(() => {});
-  await drainSiteEvents().catch(() => {});
   await heavyTaskPool.close().catch(() => {});
   await pool.end().catch(() => {});
   process.exit(0);

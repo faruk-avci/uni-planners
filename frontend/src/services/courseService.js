@@ -6,8 +6,6 @@
 // production behind a reverse proxy. Set VITE_API_URL to target a different host.
 const API_BASE = import.meta.env.VITE_API_URL || ''
 
-import { trackEvent } from '../utils/analytics.js';
-
 export const courseService = {
   async getSiteSettings() {
     const res = await fetch(API_BASE + '/api/site-settings', { cache: 'no-store' })
@@ -28,10 +26,6 @@ export const courseService = {
         body: JSON.stringify({ query, major, type: programType }),
       });
       if (!res.ok) throw new Error('API request failed');
-
-      if (query.length > 0 || major) {
-        trackEvent('search', 'courses', query, { major, programType });
-      }
 
       return await res.json();
     } catch (err) {
@@ -80,7 +74,6 @@ export const courseService = {
   async getCurriculum(id) {
     const res = await fetch(API_BASE + '/api/curriculums/' + encodeURIComponent(id));
     if (!res.ok) throw new Error('Curriculum request failed');
-    trackEvent('pageview', 'curriculum', id);
     return await res.json();
   },
 
@@ -226,11 +219,6 @@ export const courseService = {
       });
       if (!res.ok) throw new Error('Schedule generation failed');
 
-      trackEvent('feature_usage', 'generate_schedule', null, {
-        courseCount: courses.length,
-        freeDays
-      });
-
       return await res.json();
     } catch (err) {
       console.error('Failed to generate schedules:', err);
@@ -251,11 +239,6 @@ export const courseService = {
         body: JSON.stringify({ occupied, exclude: excludeCodes, major }),
       });
       if (!res.ok) throw new Error('Fitting request failed');
-
-      trackEvent('feature_usage', 'fitting_programs', major, {
-        occupiedSlots: occupied.length,
-        excludeCount: excludeCodes.length
-      });
 
       return await res.json();
     } catch (err) {

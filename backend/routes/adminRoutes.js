@@ -176,7 +176,7 @@ router.get('/analytics/majors', async (_req, res) => {
            FROM sessions
           WHERE first_major_code IS NOT NULL
           GROUP BY first_major_code
-          ORDER BY visitors DESC, major_code`
+          ORDER BY visitors DESC, first_major_code`
       ),
       pool.query(
         `SELECT major_code AS major, count(*)::int AS selections,
@@ -265,7 +265,7 @@ router.get('/analytics/events', async (req, res) => {
                 major_code AS label, NULL::jsonb AS data, 'major_selection' AS kind
            FROM major_selection_events
        ) AS combined
-       ${sinceValid ? 'WHERE created_at > $2' : ''}
+       ${sinceValid ? 'WHERE created_at >= $2' : ''}
        ORDER BY created_at DESC
        LIMIT $1`,
       sinceValid ? [limit, since] : [limit]

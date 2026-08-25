@@ -31,7 +31,6 @@ function actionFor(method, path) {
     [/^GET \/api\/preferences$/, 'preferences_load'],
     [/^PUT \/api\/preferences\/major$/, 'major_set'],
     [/^POST \/api\/analytics\/course-add$/, 'course_add_track'],
-    [/^POST \/api\/analytics\/track$/, 'client_event_track'],
     [/^GET \/api\/dino\/leaderboard$/, 'dino_leaderboard_load'],
     [/^POST \/api\/dino\/score$/, 'dino_score_submit'],
     [/^POST \/api\/shared-schedules$/, 'schedule_share_create'],

@@ -17,7 +17,6 @@ import SharedSchedulePage from './components/shared/SharedSchedulePage'
 import CorequisitePrompt from './components/coreq/CorequisitePrompt'
 import { courseService } from './services/courseService'
 import { canonicalProgramCode, groupMajorOptions } from './data/programs'
-import { trackEvent } from './utils/analytics.js'
 
 const isUndergraduateMajor = value => Boolean(value && !['none', 'master', 'doctorate'].includes(value))
 const sharedIdFromPath = pathname => String(pathname || '').match(/^\/share\/([A-Za-z0-9]{8})\/?$/)?.[1] || ''
@@ -152,10 +151,6 @@ function App() {
     window.addEventListener('popstate', syncPage)
     return () => window.removeEventListener('popstate', syncPage)
   }, [])
-
-  useEffect(() => {
-    trackEvent('pageview', activePage);
-  }, [activePage])
 
   useEffect(() => {
     if (activePage === 'curriculum' && majorPreferenceLoaded && !major) setMajorPromptReason('curriculum')
@@ -418,7 +413,6 @@ function App() {
       const remaining = item.sections.filter(s => s !== sectionName)
       return remaining.length === 0 ? [] : [{ ...item, sections: remaining }]
     }))
-    trackEvent('course', 'remove_section', code, { section: sectionName })
   }
 
   const saveMajorPreference = (value, source = 'curriculum') => {
@@ -525,10 +519,6 @@ function App() {
         }
       }))
       setCoreqPrompt({ corequisites, overrideFreeDays, basket: generationBasket })
-      trackEvent('schedule', 'coreq_warning_shown', null, {
-        corequisites: corequisites.map(item => item.code),
-        requiredBy: corequisites.flatMap(item => item.requiredBy),
-      })
     } finally {
       setCheckingCoreqs(false)
     }
@@ -537,19 +527,11 @@ function App() {
   const continueWithoutCorequisite = () => {
     if (!coreqPrompt) return
     const pending = coreqPrompt
-    trackEvent('schedule', 'coreq_warning_bypassed', null, {
-      corequisites: pending.corequisites.map(item => item.code),
-    })
     setCoreqPrompt(null)
     generateSchedules(pending.overrideFreeDays, pending.basket)
   }
 
   const cancelCorequisiteWarning = () => {
-    if (coreqPrompt) {
-      trackEvent('schedule', 'coreq_warning_cancelled', null, {
-        corequisites: coreqPrompt.corequisites.map(item => item.code),
-      })
-    }
     setCoreqPrompt(null)
   }
 
@@ -571,9 +553,6 @@ function App() {
     notify('success', tr(
       `Yan koşul ${corequisite.code} eklendi. Program oluşturuluyor.`,
       `Corequisite ${corequisite.code} added. Generating schedules.`))
-    trackEvent('schedule', 'coreq_added_before_generation', null, {
-      corequisites: [corequisite.code],
-    })
     checkCorequisitesAndGenerate(pending.overrideFreeDays, nextBasket)
   }
 
@@ -623,7 +602,6 @@ function App() {
   }
 
   const handleShowFitting = () => {
-    trackEvent('schedule', 'fitting_press', major || null)
     scrollToFittingResults.current = true
     setFittingShown(true)
     setOpenFitGroups(new Set())
@@ -1297,12 +1275,7 @@ function App() {
           </button>
           <p className="mobile-basket-footer">
             Designed and coded with <span>❤️</span> by{' '}
-            <a
-              href="https://github.com/faruk-avci"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => trackEvent('link', 'external_click', 'https://github.com/faruk-avci', { placement: 'mobile_basket_footer' })}
-            >@omer-faruk-avci</a>
+            <a href="https://github.com/faruk-avci" target="_blank" rel="noopener noreferrer">@omer-faruk-avci</a>
           </p>
 
           {mobileBasketOpen && (
@@ -1370,13 +1343,7 @@ function App() {
         <div className="container footer-content">
           <p className="footer-credit">
             UniPlanners · Designed and coded with <span>❤️</span> by{' '}
-            <a
-              href="https://github.com/faruk-avci"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="footer-link"
-              onClick={() => trackEvent('link', 'external_click', 'https://github.com/faruk-avci', { placement: 'site_footer' })}
-            >
+            <a href="https://github.com/faruk-avci" target="_blank" rel="noopener noreferrer" className="footer-link">
               @omer-faruk-avci
             </a>
           </p>

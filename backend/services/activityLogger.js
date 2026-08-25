@@ -66,62 +66,8 @@ export async function drainRequestLogs() {
   }
 }
 
-let siteEventQueue = []
-let siteEventFlushing = false
-let siteEventDropped = 0
-
-export function enqueueSiteEvent(record) {
-  if (siteEventQueue.length >= MAX_QUEUE_SIZE) {
-    siteEventDropped += 1
-    if (siteEventDropped === 1 || siteEventDropped % 1000 === 0) {
-      console.error(JSON.stringify({ event: 'site_event_dropped', dropped: siteEventDropped, queueSize: siteEventQueue.length }))
-    }
-    return
-  }
-  siteEventQueue.push(record)
-  if (siteEventQueue.length >= MAX_BATCH_SIZE) flushSiteEvents().catch(() => {})
-}
-
-export async function flushSiteEvents() {
-  if (siteEventFlushing || siteEventQueue.length === 0) return
-  siteEventFlushing = true
-  const batch = siteEventQueue.splice(0, MAX_BATCH_SIZE)
-  try {
-    await pool.query(
-      `INSERT INTO site_events (session_id, event_category, event_action, event_label, event_data, created_at)
-       SELECT NULLIF(x.session_id, '')::uuid, x.event_category, x.event_action,
-              x.event_label, x.event_data, x.created_at
-         FROM jsonb_to_recordset($1::jsonb) AS x(
-           session_id text, event_category text, event_action text,
-           event_label text, event_data jsonb, created_at timestamptz
-         )`,
-      [JSON.stringify(batch)]
-    )
-  } catch (error) {
-    siteEventQueue = [...batch, ...siteEventQueue].slice(0, MAX_QUEUE_SIZE)
-    console.error(JSON.stringify({ event: 'site_event_flush_failed', error: error.message, queued: siteEventQueue.length }))
-  } finally {
-    siteEventFlushing = false
-    if (siteEventQueue.length >= MAX_BATCH_SIZE) setImmediate(() => flushSiteEvents().catch(() => {}))
-  }
-}
-
-export function siteEventStats() {
-  return { queued: siteEventQueue.length, flushing: siteEventFlushing, dropped: siteEventDropped }
-}
-
-export async function drainSiteEvents() {
-  while (siteEventFlushing) await new Promise(resolve => setTimeout(resolve, 10))
-  while (siteEventQueue.length > 0) {
-    const before = siteEventQueue.length
-    await flushSiteEvents()
-    if (siteEventQueue.length >= before) break
-  }
-}
-
 const timer = setInterval(() => {
   flushRequestLogs().catch(() => {})
-  flushSiteEvents().catch(() => {})
 }, FLUSH_INTERVAL_MS)
 timer.unref?.()
 

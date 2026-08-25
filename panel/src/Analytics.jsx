@@ -71,6 +71,7 @@ function EventLog() {
   const [error, setError] = useState('')
   const sinceRef = useRef('')
   const timerRef = useRef(null)
+  const seenRef = useRef(new Set())
 
   const poll = async () => {
     try {
@@ -79,7 +80,13 @@ function EventLog() {
       const data = await request(`/analytics/events?${params.toString()}`)
       if (data.events.length > 0) {
         sinceRef.current = data.events[0].created_at
-        setEvents(prev => [...data.events, ...prev].slice(0, MAX_ROWS))
+        const fresh = data.events.filter(event => {
+          const key = `${event.kind}:${event.id}`
+          if (seenRef.current.has(key)) return false
+          seenRef.current.add(key)
+          return true
+        })
+        if (fresh.length > 0) setEvents(prev => [...fresh, ...prev].slice(0, MAX_ROWS))
       }
       setError('')
     } catch (err) {
