@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { courseService } from '../../services/courseService'
 import './SearchSection.css'
 
 function SearchSection({ language, onAddCourse, catalogTerm }) {
-  const [searchQuery, setSearchQuery] = useState('EE')
+  const [searchQuery, setSearchQuery] = useState('')
   const [expandedCourse, setExpandedCourse] = useState(null)
 
   // Asynchronous API states
@@ -31,11 +31,6 @@ function SearchSection({ language, onAddCourse, catalogTerm }) {
       setIsLoading(false)
     })
   }
-
-  // Run initial search on mount
-  useEffect(() => {
-    doSearch()
-  }, [])
 
   const dayAbbr = {
     'Pazartesi': 'Pzt',

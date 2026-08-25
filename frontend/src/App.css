@@ -43,7 +43,6 @@
   max-height: calc(100dvh - var(--header-height) - 2 * var(--space-6));
   overflow: hidden;
   overscroll-behavior: contain;
-  scrollbar-gutter: stable;
 }
 
 .sidebar > .basket-panel {

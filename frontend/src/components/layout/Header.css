@@ -245,6 +245,10 @@
 
 /* Responsive */
 @media (max-width: 1024px) {
+  .header {
+    width: calc(100% - 2 * var(--space-3));
+  }
+
   .header-inner {
     display: flex;
     justify-content: space-between;

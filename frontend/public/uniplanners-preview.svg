@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f7f7f8"/>
+  <rect x="54" y="54" width="1092" height="522" rx="32" fill="#ffffff" stroke="#e4e4e7" stroke-width="2"/>
+
+  <circle cx="116" cy="119" r="28" fill="#6658e8"/>
+  <text x="162" y="130" fill="#18181b" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="700">UniPlanners</text>
+  <text x="86" y="221" fill="#18181b" font-family="Arial, Helvetica, sans-serif" font-size="54" font-weight="700">Ders programını kolayca oluştur.</text>
+  <text x="88" y="269" fill="#71717a" font-family="Arial, Helvetica, sans-serif" font-size="25">Derslerini ve şubelerini seç, çakışmasız programlarını gör.</text>
+
+  <g transform="translate(86 326)">
+    <rect width="1028" height="192" rx="22" fill="#fafafa" stroke="#e4e4e7" stroke-width="2"/>
+    <line x1="128" y1="0" x2="128" y2="192" stroke="#e4e4e7"/>
+    <line x1="308" y1="0" x2="308" y2="192" stroke="#e4e4e7"/>
+    <line x1="488" y1="0" x2="488" y2="192" stroke="#e4e4e7"/>
+    <line x1="668" y1="0" x2="668" y2="192" stroke="#e4e4e7"/>
+    <line x1="848" y1="0" x2="848" y2="192" stroke="#e4e4e7"/>
+    <line x1="0" y1="48" x2="1028" y2="48" stroke="#e4e4e7"/>
+
+    <text x="154" y="31" fill="#71717a" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700">PAZARTESİ</text>
+    <text x="348" y="31" fill="#71717a" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700">SALI</text>
+    <text x="507" y="31" fill="#71717a" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700">ÇARŞAMBA</text>
+    <text x="689" y="31" fill="#71717a" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700">PERŞEMBE</text>
+    <text x="906" y="31" fill="#71717a" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700">CUMA</text>
+
+    <text x="34" y="87" fill="#a1a1aa" font-family="Arial, Helvetica, sans-serif" font-size="16">10:40</text>
+    <text x="34" y="151" fill="#a1a1aa" font-family="Arial, Helvetica, sans-serif" font-size="16">12:40</text>
+
+    <rect x="143" y="64" width="150" height="52" rx="12" fill="#e9e7ff"/>
+    <text x="158" y="87" fill="#5145cd" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700">EE 203</text>
+    <text x="158" y="106" fill="#6658e8" font-family="Arial, Helvetica, sans-serif" font-size="13">10:40–12:30</text>
+
+    <rect x="323" y="124" width="150" height="52" rx="12" fill="#dcfce7"/>
+    <text x="338" y="147" fill="#15803d" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700">MATH 202</text>
+    <text x="338" y="166" fill="#16a34a" font-family="Arial, Helvetica, sans-serif" font-size="13">12:40–14:30</text>
+
+    <rect x="503" y="64" width="150" height="52" rx="12" fill="#dbeafe"/>
+    <text x="518" y="87" fill="#1d4ed8" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700">ENG 101</text>
+    <text x="518" y="106" fill="#2563eb" font-family="Arial, Helvetica, sans-serif" font-size="13">10:40–12:30</text>
+
+    <rect x="683" y="124" width="150" height="52" rx="12" fill="#fce7f3"/>
+    <text x="698" y="147" fill="#be185d" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700">CS 201</text>
+    <text x="698" y="166" fill="#db2777" font-family="Arial, Helvetica, sans-serif" font-size="13">12:40–14:30</text>
+
+    <rect x="863" y="64" width="150" height="112" rx="12" fill="#ffedd5"/>
+    <text x="878" y="88" fill="#c2410c" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700">Programın hazır</text>
+    <text x="878" y="112" fill="#d97706" font-family="Arial, Helvetica, sans-serif" font-size="14">Çakışma yok</text>
+    <circle cx="883" cy="145" r="7" fill="#16a34a"/>
+    <text x="899" y="151" fill="#52525b" font-family="Arial, Helvetica, sans-serif" font-size="14">5 ders</text>
+  </g>
+
+  <text x="1114" y="551" text-anchor="end" fill="#6658e8" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">uniplanners.org</text>
+</svg>
