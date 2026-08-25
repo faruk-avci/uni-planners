@@ -36,7 +36,6 @@ function actionFor(method, path) {
     [/^POST \/api\/shared-schedules$/, 'schedule_share_create'],
     [/^GET \/api\/shared-schedules\/[^/]+$/, 'schedule_share_view'],
     [/^GET \/api\/stats$/, 'site_stats_load'],
-    [/^GET \/api\/analytics\//, 'analytics_view'],
     [/^POST \/api\/admin\/login$/, 'admin_login'],
     [/^POST \/api\/admin\/logout$/, 'admin_logout'],
     [/^GET \/api\/admin\/curriculums$/, 'admin_curriculum_list'],
@@ -96,10 +95,6 @@ function metadataFor(req, path) {
     metadata.courseCode = clean(body.code, 20)
     metadata.source = clean(body.source, 32)
     metadata.selectionMode = clean(body.selectionMode, 16)
-  } else if (path === '/api/analytics/track') {
-    metadata.category = clean(body.category, 32)
-    metadata.action = clean(body.action, 64)
-    metadata.label = clean(body.label, 200)
   } else if (path === '/api/dino/score') {
     metadata.score = Number(body.score) || 0
     metadata.hasEmail = Boolean(body.email)

@@ -243,6 +243,32 @@ router.get('/analytics/requests', async (req, res) => {
   }
 })
 
+// Requests already carrying their own dedicated, richer log (course_add_events,
+// major_selection_events) are excluded here so the same action doesn't show twice.
+// Everything else that hits a real endpoint is included by default; only pure
+// boilerplate reads that fire on every page load are excluded as noise.
+const REQUEST_LOG_EXCLUDED_ACTIONS = [
+  'health_check',
+  'major_options_load',
+  'site_settings_load',
+  'basket_load',
+  'saved_basket_list',
+  'preferences_load',
+  'site_stats_load',
+  'course_view',
+  'assessments_load',
+  'course_add_track',
+  'major_set',
+  'admin_login',
+  'admin_logout',
+  'admin_curriculum_list',
+  'admin_site_settings_load',
+  'admin_curriculum_view',
+  'admin_elective_pool_list',
+  'admin_analytics_view',
+  'api_request',
+]
+
 router.get('/analytics/events', async (req, res) => {
   const requestedLimit = Number.parseInt(req.query.limit, 10)
   const limit = Number.isFinite(requestedLimit) ? Math.min(Math.max(requestedLimit, 1), 500) : 100
@@ -264,11 +290,20 @@ router.get('/analytics/events', async (req, res) => {
          SELECT id, selected_at AS created_at, session_id, 'major' AS category, source AS action,
                 major_code AS label, NULL::jsonb AS data, 'major_selection' AS kind
            FROM major_selection_events
+         UNION ALL
+         SELECT id, created_at, session_id,
+                split_part(event_action, '_', 1) AS category,
+                regexp_replace(event_action, '^[^_]*_', '') AS action,
+                request_path AS label,
+                (COALESCE(metadata, '{}'::jsonb) || jsonb_build_object('status', status_code)) AS data,
+                'request' AS kind
+           FROM server_request_logs
+          WHERE NOT (event_action = ANY($3::text[]))
        ) AS combined
-       ${sinceValid ? 'WHERE created_at >= $2' : ''}
+       WHERE ($2::timestamptz IS NULL OR created_at >= $2::timestamptz)
        ORDER BY created_at DESC
        LIMIT $1`,
-      sinceValid ? [limit, since] : [limit]
+      [limit, sinceValid ? since : null, REQUEST_LOG_EXCLUDED_ACTIONS]
     )
     res.json({ events: rows })
   } catch (err) {
