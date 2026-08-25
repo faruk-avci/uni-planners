@@ -418,6 +418,7 @@ function App() {
       const remaining = item.sections.filter(s => s !== sectionName)
       return remaining.length === 0 ? [] : [{ ...item, sections: remaining }]
     }))
+    trackEvent('course', 'remove_section', code, { section: sectionName })
   }
 
   const saveMajorPreference = (value, source = 'curriculum') => {
@@ -622,6 +623,7 @@ function App() {
   }
 
   const handleShowFitting = () => {
+    trackEvent('schedule', 'fitting_press', major || null)
     scrollToFittingResults.current = true
     setFittingShown(true)
     setOpenFitGroups(new Set())
@@ -1295,7 +1297,12 @@ function App() {
           </button>
           <p className="mobile-basket-footer">
             Designed and coded with <span>❤️</span> by{' '}
-            <a href="https://github.com/faruk-avci" target="_blank" rel="noopener noreferrer">@omer-faruk-avci</a>
+            <a
+              href="https://github.com/faruk-avci"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackEvent('link', 'external_click', 'https://github.com/faruk-avci', { placement: 'mobile_basket_footer' })}
+            >@omer-faruk-avci</a>
           </p>
 
           {mobileBasketOpen && (
@@ -1363,7 +1370,13 @@ function App() {
         <div className="container footer-content">
           <p className="footer-credit">
             UniPlanners · Designed and coded with <span>❤️</span> by{' '}
-            <a href="https://github.com/faruk-avci" target="_blank" rel="noopener noreferrer" className="footer-link">
+            <a
+              href="https://github.com/faruk-avci"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer-link"
+              onClick={() => trackEvent('link', 'external_click', 'https://github.com/faruk-avci', { placement: 'site_footer' })}
+            >
               @omer-faruk-avci
             </a>
           </p>

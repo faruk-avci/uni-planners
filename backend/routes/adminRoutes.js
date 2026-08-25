@@ -1,4 +1,5 @@
 import express from 'express'
+import { pool } from '../config/db.js'
 import { FACULTIES, PROGRAMS, PROGRAM_BY_ID } from '../config/programs.js'
 import { adminLogin, adminLogout, requireAdmin } from '../middleware/adminAuth.js'
 import { electiveKeyForLabel, parseCurriculumWorkbook, parseElectiveWorkbook } from '../services/curriculumWorkbook.js'
@@ -156,6 +157,147 @@ router.put('/curriculums/:id', (req, res) => {
 router.get('/suggest-elective-key', (req, res) => {
   const label = String(req.query.label || '')
   res.json({ key: electiveKeyForLabel(label) })
+})
+
+// --- Analytics ---
+
+router.get('/analytics/majors', async (_req, res) => {
+  try {
+    const [current, firstChoice, selections] = await Promise.all([
+      pool.query(
+        `SELECT major_code AS major, count(*)::int AS visitors
+           FROM sessions
+          WHERE major_code IS NOT NULL
+          GROUP BY major_code
+          ORDER BY visitors DESC, major_code`
+      ),
+      pool.query(
+        `SELECT first_major_code AS major, count(*)::int AS visitors
+           FROM sessions
+          WHERE first_major_code IS NOT NULL
+          GROUP BY first_major_code
+          ORDER BY visitors DESC, major_code`
+      ),
+      pool.query(
+        `SELECT major_code AS major, count(*)::int AS selections,
+                count(DISTINCT session_id)::int AS visitors
+           FROM major_selection_events
+          GROUP BY major_code
+          ORDER BY selections DESC, major_code`
+      ),
+    ])
+    res.json({ current: current.rows, firstChoice: firstChoice.rows, selections: selections.rows })
+  } catch (err) {
+    console.error('GET /admin/analytics/majors error:', err.message)
+    res.status(500).json({ error: 'Major analytics could not be loaded' })
+  }
+})
+
+router.get('/analytics/course-add-sources', async (req, res) => {
+  const parsedDays = Number.parseInt(req.query.days, 10)
+  const days = Number.isFinite(parsedDays) ? Math.min(Math.max(parsedDays, 1), 365) : 30
+  try {
+    const { rows } = await pool.query(
+      `SELECT source, count(*)::int AS additions, count(DISTINCT session_id)::int AS visitors
+         FROM course_add_events
+        WHERE added_at >= now() - make_interval(days => $1)
+        GROUP BY source
+        ORDER BY additions DESC, source`,
+      [days]
+    )
+    res.json({ days, total: rows.reduce((sum, row) => sum + row.additions, 0), sources: rows })
+  } catch (err) {
+    console.error('GET /admin/analytics/course-add-sources error:', err.message)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+router.get('/analytics/requests', async (req, res) => {
+  const requestedLimit = Number.parseInt(req.query.limit, 10)
+  const limit = Number.isFinite(requestedLimit) ? Math.min(Math.max(requestedLimit, 1), 500) : 100
+  const action = String(req.query.action || '').trim().slice(0, 80)
+  const status = Number.parseInt(req.query.status, 10)
+  const sessionId = String(req.query.session || '').trim()
+  const conditions = []
+  const values = []
+  if (action) { values.push(action); conditions.push(`event_action = $${values.length}`) }
+  if (Number.isFinite(status)) { values.push(status); conditions.push(`status_code = $${values.length}`) }
+  if (sessionId) { values.push(sessionId); conditions.push(`session_id = $${values.length}::uuid`) }
+  values.push(limit)
+
+  try {
+    const { rows } = await pool.query(
+      `SELECT id, request_id, session_id, event_action, method, request_path,
+              status_code, duration_ms, request_size, response_size,
+              ip_address, user_agent, referrer, metadata, created_at
+         FROM server_request_logs
+        ${conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''}
+        ORDER BY created_at DESC
+        LIMIT $${values.length}`,
+      values
+    )
+    res.json({ requests: rows })
+  } catch (err) {
+    console.error('GET /admin/analytics/requests error:', err.message)
+    res.status(500).json({ error: 'Failed to load request logs' })
+  }
+})
+
+router.get('/analytics/events', async (req, res) => {
+  const requestedLimit = Number.parseInt(req.query.limit, 10)
+  const limit = Number.isFinite(requestedLimit) ? Math.min(Math.max(requestedLimit, 1), 500) : 100
+  const since = String(req.query.since || '').trim()
+  const sinceValid = since && !Number.isNaN(Date.parse(since))
+
+  try {
+    const { rows } = await pool.query(
+      `SELECT * FROM (
+         SELECT id, created_at, session_id, event_category AS category, event_action AS action,
+                event_label AS label, event_data AS data, 'site' AS kind
+           FROM site_events
+         UNION ALL
+         SELECT id, added_at AS created_at, session_id, 'course' AS category, source AS action,
+                course_code AS label, jsonb_build_object('selectionMode', selection_mode) AS data,
+                'course_add' AS kind
+           FROM course_add_events
+         UNION ALL
+         SELECT id, selected_at AS created_at, session_id, 'major' AS category, source AS action,
+                major_code AS label, NULL::jsonb AS data, 'major_selection' AS kind
+           FROM major_selection_events
+       ) AS combined
+       ${sinceValid ? 'WHERE created_at > $2' : ''}
+       ORDER BY created_at DESC
+       LIMIT $1`,
+      sinceValid ? [limit, since] : [limit]
+    )
+    res.json({ events: rows })
+  } catch (err) {
+    console.error('GET /admin/analytics/events error:', err.message)
+    res.status(500).json({ error: 'Failed to load events' })
+  }
+})
+
+router.get('/analytics/summary', async (req, res) => {
+  try {
+    const [totalEvents, activeSessions, recentSearches] = await Promise.all([
+      pool.query('SELECT count(*)::int FROM site_events'),
+      pool.query(`SELECT count(*)::int FROM sessions WHERE last_seen >= now() - interval '24 hours'`),
+      pool.query(`SELECT event_label as query, count(*)::int as count
+                  FROM site_events
+                  WHERE event_category = 'search'
+                  GROUP BY event_label
+                  ORDER BY count DESC LIMIT 10`),
+    ])
+
+    res.json({
+      totalEvents: totalEvents.rows[0].count,
+      activeSessions24h: activeSessions.rows[0].count,
+      topSearches: recentSearches.rows,
+    })
+  } catch (err) {
+    console.error('GET /admin/analytics/summary error:', err.message)
+    res.status(500).json({ error: 'Failed to load summary' })
+  }
 })
 
 export default router

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { trackEvent } from '../../utils/analytics'
 import './Header.css'
 
 const COLOR_THEMES = [
@@ -63,7 +64,13 @@ function Header({
               {language === 'tr' ? 'Nasıl Kullanılır' : 'How to Use'}
             </button>
             {surveyUrl && (
-              <a href={surveyUrl} target="_blank" rel="noopener noreferrer" className="nav-link nav-link-secondary">
+              <a
+                href={surveyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="nav-link nav-link-secondary"
+                onClick={() => trackEvent('link', 'external_click', surveyUrl, { placement: 'header_nav' })}
+              >
                 {language === 'tr' ? 'Anket' : 'Survey'}
               </a>
             )}
@@ -82,7 +89,13 @@ function Header({
             {language === 'tr' ? 'Nasıl?' : 'How to'}
           </button>
           {surveyUrl && (
-            <a href={surveyUrl} target="_blank" rel="noopener noreferrer" className="action-btn howto-mobile">
+            <a
+              href={surveyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="action-btn howto-mobile"
+              onClick={() => trackEvent('link', 'external_click', surveyUrl, { placement: 'header_mobile' })}
+            >
               {language === 'tr' ? 'Anket' : 'Survey'}
             </a>
           )}

@@ -157,6 +157,22 @@ input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px v
 .preview-pools h3 { margin: 0 0 10px; font-size: 13px; }
 .pool-pill { display: inline-block; margin: 0 7px 7px 0; padding: 6px 9px; border-radius: 7px; color: #554a9c; background: var(--accent-soft); font-size: 10px; }
 
+.analytics-card .section-heading { align-items: center; }
+.bar-list-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.bar-list h3 { margin: 0 0 12px; font-size: 13px; }
+.bar-rows { display: grid; gap: 8px; }
+.bar-row { display: grid; grid-template-columns: 90px minmax(0, 1fr) 36px; gap: 10px; align-items: center; }
+.bar-label { overflow: hidden; color: var(--ink); font-size: 11px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.bar-track { height: 10px; border-radius: 999px; background: var(--soft); overflow: hidden; }
+.bar-fill { display: block; height: 100%; border-radius: 999px; background: var(--accent); }
+.bar-value { color: var(--muted); font-size: 11px; font-weight: 700; text-align: right; }
+.event-log-scroll { max-height: 420px; overflow: auto; border: 1px solid var(--line); border-radius: 11px; }
+.event-log-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.event-log-table th { position: sticky; top: 0; padding: 9px 11px; border-bottom: 1px solid var(--line); color: var(--muted); background: var(--soft); text-align: left; font-weight: 700; }
+.event-log-table td { padding: 8px 11px; border-bottom: 1px solid #f0f1f4; color: var(--ink); white-space: nowrap; }
+.event-log-table tr:last-child td { border-bottom: 0; }
+.event-log-data { overflow: hidden; max-width: 260px; color: var(--muted); text-overflow: ellipsis; font-family: ui-monospace, monospace; }
+
 @media (max-width: 900px) {
   .panel-shell { grid-template-columns: 74px minmax(0, 1fr); }
   .side-nav { padding-inline: 11px; }
@@ -209,4 +225,6 @@ input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px v
   .preview-panel { padding: 18px; }
   .preview-course { grid-template-columns: 66px minmax(0, 1fr); }
   .course-credit { grid-column: 2; }
+  .bar-list-grid { grid-template-columns: 1fr; gap: 18px; }
+  .analytics-card .section-heading { align-items: start; }
 }

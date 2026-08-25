@@ -67,6 +67,7 @@ async function ensureSchema() {
     )`);
   await pool.query(`ALTER TABLE sessions ADD COLUMN IF NOT EXISTS major_code VARCHAR(32)`);
   await pool.query(`ALTER TABLE sessions ADD COLUMN IF NOT EXISTS major_updated_at TIMESTAMPTZ`);
+  await pool.query(`ALTER TABLE sessions ADD COLUMN IF NOT EXISTS first_major_code VARCHAR(32)`);
   await pool.query(`
     CREATE TABLE IF NOT EXISTS basket_items (
       id          SERIAL PRIMARY KEY,

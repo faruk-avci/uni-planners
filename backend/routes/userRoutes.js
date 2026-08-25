@@ -47,7 +47,11 @@ router.put('/preferences/major', async (req, res) => {
       const current = await client.query('SELECT major_code FROM sessions WHERE id = $1 FOR UPDATE', [req.sessionId]);
       const previousMajor = current.rows[0]?.major_code || null;
       await client.query(
-        'UPDATE sessions SET major_code = $1, major_updated_at = now() WHERE id = $2',
+        `UPDATE sessions
+            SET major_code = $1,
+                major_updated_at = now(),
+                first_major_code = COALESCE(first_major_code, $1)
+          WHERE id = $2`,
         [storedMajor, req.sessionId]
       );
       if (previousMajor !== storedMajor) {

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import Analytics from './Analytics.jsx'
 
 const API = '/api/admin'
 const DEFAULT_SITE_SETTINGS = { mainFont: 'system', catalogTerm: '2025-2026 Yaz', surveyUrl: '' }
@@ -9,7 +10,7 @@ const FONT_PREVIEWS = {
   rounded: '"Trebuchet MS", ui-rounded, system-ui, sans-serif',
 }
 
-async function request(path, options = {}) {
+export async function request(path, options = {}) {
   const response = await fetch(`${API}${path}`, { credentials: 'include', ...options })
   const data = await response.json().catch(() => ({}))
   if (!response.ok) {
@@ -268,6 +269,7 @@ function Dashboard({ onLogout }) {
         <nav>
           <button className="nav-active" onClick={() => document.getElementById('curriculum-management')?.scrollIntoView({ behavior: 'smooth' })}><span>▦</span>Müfredatlar</button>
           <button onClick={() => document.getElementById('site-settings')?.scrollIntoView({ behavior: 'smooth' })}><span>⚙</span>Site ayarları</button>
+          <button onClick={() => document.getElementById('analytics')?.scrollIntoView({ behavior: 'smooth' })}><span>◔</span>Analitik</button>
         </nav>
         <div className="side-footer"><a href="https://uniplanner.org">Siteye git ↗</a><button onClick={onLogout}>Çıkış yap</button></div>
       </aside>
@@ -352,6 +354,8 @@ function Dashboard({ onLogout }) {
         </section>
 
         <CurriculumPreview curriculum={preview} onClose={() => setPreview(null)} />
+
+        <Analytics />
       </main>
     </div>
   )

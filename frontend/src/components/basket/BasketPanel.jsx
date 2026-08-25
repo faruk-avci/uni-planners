@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { courseService } from '../../services/courseService'
+import { trackEvent } from '../../utils/analytics'
 import './BasketPanel.css'
 
 function BasketPanel({ basket, setBasket, removeSection, totalCredits, language, savedBaskets, setSavedBaskets }) {
@@ -48,6 +49,7 @@ function BasketPanel({ basket, setBasket, removeSection, totalCredits, language,
       setSaveName('')
       setSaveFormOpen(false)
       setSaveStatus({ type: 'success', text: t.saved })
+      trackEvent('basket', 'save', name, { itemCount: basket.length })
     } catch {
       setSaveStatus({ type: 'error', text: t.saveError })
     } finally {
@@ -58,6 +60,7 @@ function BasketPanel({ basket, setBasket, removeSection, totalCredits, language,
   const loadSavedBasket = saved => {
     setBasket(saved.items.map(item => ({ ...item, sections: [...(item.sections || [])] })))
     setSaveStatus({ type: 'success', text: t.loaded })
+    trackEvent('basket', 'load', saved.name, { itemCount: saved.items.length })
   }
 
   const deleteSavedBasket = async saved => {
@@ -66,12 +69,21 @@ function BasketPanel({ basket, setBasket, removeSection, totalCredits, language,
       await courseService.deleteSavedBasket(saved.id)
       setSavedBaskets(current => current.filter(item => item.id !== saved.id))
       setSaveStatus({ type: 'success', text: t.deleted })
+      trackEvent('basket', 'delete_saved', saved.name)
     } catch {
       setSaveStatus({ type: 'error', text: t.saveError })
     }
   }
 
-  const removeCourse = (code) => setBasket(prev => prev.filter(c => c.code !== code))
+  const removeCourse = (code) => {
+    setBasket(prev => prev.filter(c => c.code !== code))
+    trackEvent('course', 'remove', code, { source: 'basket' })
+  }
+
+  const clearBasket = () => {
+    trackEvent('basket', 'clear', null, { itemCount: basket.length })
+    setBasket([])
+  }
 
   // Whole-course items vs. section-pinned items (flattened to one row per section).
   const wholeCourses = basket.filter(c => !c.sections || c.sections.length === 0)
@@ -211,7 +223,7 @@ function BasketPanel({ basket, setBasket, removeSection, totalCredits, language,
             <button className="btn btn-sm btn-ghost basket-save-trigger" onClick={() => setSaveFormOpen(open => !open)}>
               {t.saveBasket}
             </button>
-            <button className="btn btn-sm btn-danger-ghost basket-clear-btn" onClick={() => setBasket([])}>
+            <button className="btn btn-sm btn-danger-ghost basket-clear-btn" onClick={clearBasket}>
               {t.clear}
             </button>
           </div>
