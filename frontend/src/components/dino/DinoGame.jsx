@@ -64,7 +64,7 @@ function DinoGame({ active, open, onOpen, onClose, language }) {
   const refreshLeaderboard = useCallback(async () => {
     setLeaderboardLoading(true)
     try {
-      const data = await courseService.getDinoLeaderboard(100)
+      const data = await courseService.getDinoLeaderboard(25)
       setLeaderboard(data.players || [])
     } catch {
       setLeaderboard([])
@@ -390,7 +390,7 @@ function DinoGame({ active, open, onOpen, onClose, language }) {
 
         <aside className="dino-leaderboard" aria-label={tr('Tüm zamanlar sıralaması', 'All-time leaderboard')}>
           <header>
-            <div><span>{tr('Tüm zamanlar', 'All time')}</span><strong>{tr('En yüksek skorlar', 'High scores')}</strong></div>
+            <div><span>{tr('Tüm zamanlar · İlk 25', 'All time · Top 25')}</span><strong>{tr('En yüksek skorlar', 'High scores')}</strong></div>
             <button type="button" onClick={refreshLeaderboard} aria-label={tr('Sıralamayı yenile', 'Refresh leaderboard')}>↻</button>
           </header>
           {leaderboardLoading ? (

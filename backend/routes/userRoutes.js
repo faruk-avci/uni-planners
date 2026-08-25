@@ -7,6 +7,7 @@ const MAJOR_PREFERENCE_SOURCES = new Set([
   'generate',
   'curriculum',
   'fitting',
+  'profile',
   'existing_browser',
 ]);
 

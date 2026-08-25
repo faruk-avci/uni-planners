@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/leaderboard', async (req, res) => {
   const requestedLimit = Number.parseInt(req.query.limit, 10);
-  const limit = Number.isFinite(requestedLimit) ? Math.min(Math.max(requestedLimit, 1), 500) : 100;
+  const limit = Number.isFinite(requestedLimit) ? Math.min(Math.max(requestedLimit, 1), 500) : 25;
   try {
     const { rows } = await pool.query(
       `SELECT split_part(email, '@', 1) AS player,

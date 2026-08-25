@@ -4,6 +4,7 @@ import './styles/base.css'
 import './styles/animations.css'
 import './App.css'
 import Header from './components/layout/Header'
+import ProfileBar from './components/profile/ProfileBar'
 import SearchSection from './components/search/SearchSection'
 import BasketPanel from './components/basket/BasketPanel'
 import SchedulePreview from './components/schedule/SchedulePreview'
@@ -98,6 +99,7 @@ function App() {
   const [fitTypeFilter, setFitTypeFilter] = useState(() => new Set()) // empty = show all
   const [fitCreditFilter, setFitCreditFilter] = useState('all')
   const [majorsList, setMajorsList] = useState([])
+  const [grade, setGrade] = useState(() => localStorage.getItem('uniplanner_grade') || '')
   // '' = not chosen yet, 'none' = user declined to share, otherwise a program code
   const [major, setMajor] = useState(() => canonicalProgramCode(localStorage.getItem('uniplanner_major') || ''))
   const [majorPreferenceLoaded, setMajorPreferenceLoaded] = useState(() => Boolean(localStorage.getItem('uniplanner_major')))
@@ -425,6 +427,12 @@ function App() {
         console.error('Major preference could not be saved:', error)
       })
     }
+  }
+
+  const saveGradePreference = value => {
+    setGrade(value)
+    if (value) localStorage.setItem('uniplanner_grade', value)
+    else localStorage.removeItem('uniplanner_grade')
   }
 
   const generateSchedules = async (overrideFreeDays = null, overrideBasket = null) => {
@@ -849,7 +857,14 @@ function App() {
   const majorGroups = groupMajorOptions(majorsList, language)
   const selectedMajorLabel = majorGroups
     .flatMap(group => group.programs)
-    .find(program => program.value === major)?.label || major
+    .find(program => program.value === major)?.title
+    || (major === 'master'
+      ? tr('Yüksek Lisans', 'Master')
+      : major === 'doctorate'
+        ? tr('Doktora', 'Doctorate')
+        : major === 'none'
+          ? tr('Paylaşılmadı', 'Not shared')
+          : '')
 
   return (
     <div className="app">
@@ -879,16 +894,22 @@ function App() {
       )}
 
       {activePage !== 'shared' && (
-        <p className="welcome-line">
-          {language === 'tr' ? "UniPlanners'a hoş geldin." : 'Welcome to UniPlanners.'}
-        </p>
+        <ProfileBar
+          language={language}
+          majorLabel={selectedMajorLabel}
+          grade={grade}
+          onMajorClick={() => setMajorPromptReason('profile')}
+          onGradeChange={saveGradePreference}
+        />
       )}
 
       {activePage !== 'shared' && majorPromptReason && (
         <MajorPrompt
           language={language}
           groups={majorGroups}
+          selectedMajor={major}
           onSelect={handleMajorPromptSelect}
+          onClose={majorPromptReason === 'profile' ? () => setMajorPromptReason(null) : null}
         />
       )}
 

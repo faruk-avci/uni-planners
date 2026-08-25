@@ -18,6 +18,7 @@ import userRoutes from './routes/userRoutes.js';
 import analyticsRoutes from './routes/analyticsRoutes.js';
 import dinoRoutes from './routes/dinoRoutes.js';
 import sharedScheduleRoutes from './routes/sharedScheduleRoutes.js';
+import sharePageRoutes from './routes/sharePageRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 
 const app = express();
@@ -36,6 +37,10 @@ app.use(cors({
   credentials: true,
 }));
 app.use(express.json({ limit: '5mb' }));
+
+// Shared schedule pages need server-rendered social metadata. The React app
+// still takes over once the returned index document reaches the browser.
+app.use('/share', sharePageRoutes);
 
 // Monitoring must not create anonymous sessions or pollute user analytics.
 app.get('/api/health', async (_req, res) => {

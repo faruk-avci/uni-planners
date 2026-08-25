@@ -1,0 +1,181 @@
+.profile-bar {
+  display: flex;
+  width: calc(100% - 2 * var(--space-4));
+  max-width: var(--max-width);
+  min-height: 66px;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: var(--space-5);
+  margin: var(--space-3) auto 0;
+  padding: 9px 10px 9px var(--space-5);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-lg);
+}
+
+.profile-university,
+.profile-fields,
+.profile-field {
+  display: flex;
+  align-items: center;
+}
+
+.profile-university {
+  min-width: 0;
+  gap: var(--space-3);
+}
+
+.profile-university-mark {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  place-items: center;
+  color: var(--text-inverse);
+  background: var(--accent-primary);
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+}
+
+.profile-university > span:last-child,
+.profile-field > span:first-child,
+.profile-field span {
+  min-width: 0;
+}
+
+.profile-bar small {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--text-tertiary);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  letter-spacing: .055em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.profile-university strong {
+  display: block;
+  overflow: hidden;
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-fields {
+  min-width: 0;
+  gap: var(--space-2);
+}
+
+.profile-field {
+  min-height: 46px;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: 7px 12px;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  text-align: left;
+  transition: border-color var(--duration-fast), background var(--duration-fast), box-shadow var(--duration-fast);
+}
+
+.profile-field:hover,
+.profile-field:focus-within {
+  background: var(--accent-soft);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-primary), transparent 88%);
+}
+
+.profile-major-field {
+  width: min(330px, 32vw);
+}
+
+.profile-field strong {
+  display: block;
+  overflow: hidden;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-field-arrow {
+  color: var(--text-tertiary);
+  font-size: 22px;
+  line-height: 1;
+}
+
+.profile-grade-field {
+  position: relative;
+  width: 170px;
+  cursor: pointer;
+}
+
+.profile-grade-field > span:first-child {
+  width: 100%;
+}
+
+.profile-grade-field select {
+  width: 100%;
+  padding: 0 20px 0 0;
+  color: var(--text-primary);
+  background: transparent;
+  border: 0;
+  outline: 0;
+  appearance: none;
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+}
+
+.profile-select-arrow {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  color: var(--text-tertiary);
+  pointer-events: none;
+}
+
+@media (max-width: 1024px) {
+  .profile-bar { width: calc(100% - 2 * var(--space-3)); }
+  .profile-major-field { width: min(290px, 34vw); }
+}
+
+@media (max-width: 900px) {
+  .profile-bar {
+    width: calc(100% - 2 * var(--space-2));
+    gap: var(--space-3);
+    padding-left: var(--space-3);
+  }
+  .profile-university-mark { display: none; }
+  .profile-major-field { width: min(280px, 38vw); }
+}
+
+@media (max-width: 680px) {
+  .profile-bar {
+    display: grid;
+    min-height: 0;
+    justify-content: stretch;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+  }
+  .profile-university strong { white-space: normal; }
+  .profile-fields {
+    display: grid;
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr) 132px;
+  }
+  .profile-major-field,
+  .profile-grade-field { width: 100%; }
+}
+
+@media (max-width: 390px) {
+  .profile-fields { grid-template-columns: minmax(0, 1fr) 116px; }
+  .profile-field { padding-inline: 10px; }
+}

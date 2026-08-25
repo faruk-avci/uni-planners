@@ -312,7 +312,7 @@ export const courseService = {
     return data
   },
 
-  async getDinoLeaderboard(limit = 100) {
+  async getDinoLeaderboard(limit = 25) {
     const res = await fetch(`${API_BASE}/api/dino/leaderboard?limit=${encodeURIComponent(limit)}`)
     if (!res.ok) throw new Error('Dino leaderboard request failed')
     return await res.json()

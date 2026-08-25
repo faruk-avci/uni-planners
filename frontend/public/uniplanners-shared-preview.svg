@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4f2ff"/>
+      <stop offset="1" stop-color="#fafafa"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#312e81" flood-opacity=".14"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="1090" cy="80" r="190" fill="#6658e8" opacity=".08"/>
+  <circle cx="92" cy="600" r="170" fill="#6658e8" opacity=".06"/>
+
+  <g transform="translate(62 52)">
+    <circle cx="28" cy="28" r="28" fill="#6658e8"/>
+    <text x="72" y="40" fill="#18181b" font-family="Arial, Helvetica, sans-serif" font-size="38" font-weight="700">UniPlanners</text>
+  </g>
+
+  <g transform="translate(70 162)">
+    <text x="0" y="0" fill="#6658e8" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700" letter-spacing="2">PAYLAŞILAN PROGRAM</text>
+    <text x="0" y="72" fill="#18181b" font-family="Arial, Helvetica, sans-serif" font-size="58" font-weight="700">Bir ders programı</text>
+    <text x="0" y="137" fill="#18181b" font-family="Arial, Helvetica, sans-serif" font-size="58" font-weight="700">seninle paylaşıldı.</text>
+    <text x="0" y="191" fill="#71717a" font-family="Arial, Helvetica, sans-serif" font-size="25">Dersleri, şubeleri ve haftalık tabloyu görüntüle.</text>
+  </g>
+
+  <g transform="translate(762 135)" filter="url(#shadow)">
+    <rect width="360" height="380" rx="30" fill="#ffffff" stroke="#dedbe9" stroke-width="2"/>
+    <g transform="translate(40 38)">
+      <rect width="280" height="52" rx="14" fill="#f4f2ff"/>
+      <circle cx="27" cy="26" r="8" fill="#6658e8"/>
+      <rect x="49" y="17" width="91" height="8" rx="4" fill="#6658e8" opacity=".82"/>
+      <rect x="49" y="31" width="151" height="6" rx="3" fill="#a1a1aa" opacity=".55"/>
+
+      <rect y="70" width="280" height="52" rx="14" fill="#eefbf3"/>
+      <circle cx="27" cy="96" r="8" fill="#16a34a"/>
+      <rect x="49" y="87" width="118" height="8" rx="4" fill="#15803d" opacity=".82"/>
+      <rect x="49" y="101" width="175" height="6" rx="3" fill="#a1a1aa" opacity=".55"/>
+
+      <rect y="140" width="280" height="52" rx="14" fill="#eef6ff"/>
+      <circle cx="27" cy="166" r="8" fill="#2563eb"/>
+      <rect x="49" y="157" width="78" height="8" rx="4" fill="#1d4ed8" opacity=".82"/>
+      <rect x="49" y="171" width="132" height="6" rx="3" fill="#a1a1aa" opacity=".55"/>
+
+      <line x1="0" y1="225" x2="280" y2="225" stroke="#e4e4e7" stroke-width="2"/>
+      <rect x="0" y="246" width="86" height="56" rx="12" fill="#f4f2ff"/>
+      <rect x="97" y="246" width="86" height="56" rx="12" fill="#eefbf3"/>
+      <rect x="194" y="246" width="86" height="56" rx="12" fill="#fff1f5"/>
+    </g>
+  </g>
+
+  <g transform="translate(671 440)">
+    <circle cx="34" cy="34" r="34" fill="#6658e8"/>
+    <path d="M24 33.5a10 10 0 0 1 10-10h12a10 10 0 0 1 0 20h-7M44 34.5a10 10 0 0 1-10 10H22a10 10 0 0 1 0-20h7" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+  </g>
+
+  <text x="70" y="574" fill="#6658e8" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700">uniplanners.org</text>
+</svg>
