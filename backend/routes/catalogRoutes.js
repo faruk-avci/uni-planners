@@ -113,10 +113,11 @@ router.get('/majors', async (_req, res) => {
     const r1 = await pool.query('SELECT DISTINCT unnest(required_programs) AS program FROM catalog_courses');
     const r2 = await pool.query('SELECT DISTINCT unnest(elective_programs) AS program FROM catalog_courses');
     const majors = new Set([
+      ...Object.values(CURRICULUM_PROGRAMS).flat(),
       ...r1.rows.map(r => r.program),
       ...r2.rows.map(r => r.program),
     ]);
-    res.json(Array.from(majors).sort());
+    res.json(Array.from(majors).filter(Boolean).sort());
   } catch (err) {
     console.error('GET /majors error:', err.message);
     res.status(500).json({ error: err.message });

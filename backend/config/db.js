@@ -21,6 +21,42 @@ const pool = new Pool({
 
 // ─── Schema bootstrap (app-owned tables) ───────────────────────────
 async function ensureSchema() {
+  // Catalog tables must exist even before the first scraper run. This lets the
+  // curriculum and onboarding APIs return useful empty-catalog responses on a
+  // fresh server instead of failing with "relation does not exist".
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS catalog_courses (
+      course_code       VARCHAR(20) PRIMARY KEY,
+      subject           VARCHAR(10) NOT NULL,
+      course_no         VARCHAR(10) NOT NULL,
+      title             VARCHAR(255) NOT NULL,
+      faculty           VARCHAR(255),
+      credits           DECIMAL(3,1) NOT NULL,
+      description       TEXT,
+      corequisites      VARCHAR(255),
+      prerequisites     VARCHAR(255),
+      required_programs TEXT[] NOT NULL DEFAULT '{}',
+      elective_programs TEXT[] NOT NULL DEFAULT '{}'
+    )`);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS catalog_sections (
+      id          SERIAL PRIMARY KEY,
+      course_code VARCHAR(20) NOT NULL REFERENCES catalog_courses(course_code) ON DELETE CASCADE,
+      section_no  VARCHAR(10) NOT NULL,
+      instructor  VARCHAR(255),
+      schedule    TEXT,
+      UNIQUE (course_code, section_no)
+    )`);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS course_assessments (
+      id              SERIAL PRIMARY KEY,
+      course_code     VARCHAR(20) NOT NULL,
+      assessment_type TEXT,
+      category        TEXT,
+      weight          NUMERIC(6,2),
+      raw_text        TEXT
+    )`);
+
   await pool.query(`
     CREATE TABLE IF NOT EXISTS sessions (
       id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
