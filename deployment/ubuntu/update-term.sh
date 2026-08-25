@@ -52,5 +52,5 @@ mv -f -- "$env_tmp" "$ENV_FILE"
 trap - EXIT
 
 systemctl restart uniplanner-api.service
-bash "${SCRIPT_DIR}/health-check.sh" "http://127.0.0.1"
+bash "${SCRIPT_DIR}/health-check.sh" "https://${APP_DOMAIN}" "127.0.0.1"
 echo "Term update complete: ${TERM_LABEL}"

@@ -9,5 +9,10 @@ bash "${SCRIPT_DIR}/20-application.sh" "$SOURCE_DIR"
 bash "${SCRIPT_DIR}/25-scraper.sh"
 nginx -t
 systemctl reload nginx
-bash "${SCRIPT_DIR}/health-check.sh" "http://127.0.0.1"
+
+set -a
+# shellcheck disable=SC1091
+source /etc/uniplanner/backend.env
+set +a
+bash "${SCRIPT_DIR}/health-check.sh" "https://${APP_DOMAIN}" "127.0.0.1"
 echo "UniPlanner updated successfully."
