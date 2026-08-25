@@ -6,7 +6,7 @@
  *   3. Validated catalog and syllabus assessments are imported sequentially.
  */
 
-import { spawn } from 'child_process';
+import { spawn, spawnSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -15,14 +15,45 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function parseArgs() {
   const args = process.argv.slice(2);
-  const config = { term: '', pdfConcurrency: 2, headless: true, importData: true };
+  const config = { term: '', pdfConcurrency: 2, headless: true, importData: true, help: false };
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--term') config.term = String(args[++i] || '').trim();
-    else if (args[i] === '--pdf-concurrency') config.pdfConcurrency = Math.max(1, parseInt(args[++i], 10) || 2);
+    else if (args[i] === '--pdf-concurrency') config.pdfConcurrency = Math.min(8, Math.max(1, parseInt(args[++i], 10) || 2));
     else if (args[i] === '--headless') config.headless = args[++i] !== 'false';
-    else if (args[i] === '--no-import') config.importData = false;
+    else if (args[i] === '--no-import' || args[i] === '--prepare-only') config.importData = false;
+    else if (args[i] === '--help' || args[i] === '-h') config.help = true;
+    else throw new Error(`Unknown option: ${args[i]}`);
   }
   return config;
+}
+
+function printHelp() {
+  console.log(`
+UniPlanners term updater
+
+Usage:
+  npm run term:update -- --term "2026 - 2027 Güz"
+
+Options:
+  --term LABEL          Exact term label shown in SIS (required)
+  --prepare-only        Download and process files without importing them
+  --no-import           Backward-compatible alias for --prepare-only
+  --pdf-concurrency N   Parallel document bots, from 1 to 8 (default: 2)
+  --headless false      Show Chromium for SIS debugging
+  --help                Show this help
+
+Pipeline:
+  1. Download offered-course Excel files and ECTS/syllabus PDFs
+  2. Process program mappings and syllabus assessment weights
+  3. Validate outputs and atomically import them into PostgreSQL
+`);
+}
+
+function assertPrerequisites() {
+  const pdfTool = spawnSync('pdftotext', ['-v'], { stdio: 'ignore' });
+  if (pdfTool.error?.code === 'ENOENT') {
+    throw new Error('pdftotext is missing. On Ubuntu install it with: sudo apt install poppler-utils');
+  }
 }
 
 function termSlug(term) {
@@ -74,13 +105,25 @@ function updateBackendTerm(term) {
 
 async function run() {
   const config = parseArgs();
+  if (config.help) {
+    printHelp();
+    return;
+  }
   if (!config.term) {
-    console.error('Usage: npm run update-term -- --term "2026 - 2027 Guz"');
+    printHelp();
     process.exit(1);
   }
 
+  assertPrerequisites();
+  const outputDir = path.join(__dirname, 'downloads', termSlug(config.term));
+  console.log('\nUniPlanners term update');
+  console.log(`  Term: ${config.term}`);
+  console.log(`  Mode: ${config.importData ? 'download, process, and import' : 'prepare only; database unchanged'}`);
+  console.log(`  Output: ${outputDir}`);
+  console.log(`  Document bots: ${config.pdfConcurrency}`);
+
   const termArgs = ['--term', config.term];
-  console.log('\n=== Phase 1: parallel downloads ===');
+  console.log('\n[1/3] Downloading offerings and course documents');
   await Promise.all([
     runNode('scrape_offerings.js', [...termArgs, '--headless', String(config.headless)]),
     runNode('run_documents.js', [
@@ -100,7 +143,7 @@ async function run() {
     '--concurrency', String(config.pdfConcurrency)
   ]);
 
-  console.log('\n=== Phase 2: parallel processors ===');
+  console.log('\n[2/3] Processing and validating downloaded files');
   await Promise.all([
     runNode('extract_programs.js', [...termArgs, '--output', 'course_programs_pdf.json']),
     runNode('build_program_mappings.js', [...termArgs, '--output', 'course_programs_fallback.json']),
@@ -110,16 +153,17 @@ async function run() {
   validateProcessorOutputs(config.term);
 
   if (!config.importData) {
-    console.log('\nDownloads and processors completed. Database import skipped by --no-import.');
+    console.log(`\nPreparation complete. Review ${outputDir} before running the import.`);
     return;
   }
 
-  console.log('\n=== Phase 3: database import ===');
+  console.log('\n[3/3] Importing the validated term into PostgreSQL');
   await runNode('import_all_offerings.js', termArgs);
   await runNode('import_assessments.js', termArgs);
   updateBackendTerm(config.term);
 
-  console.log('\nTerm refresh complete. Restart the backend so CATALOG_TERM and its in-memory catalog refresh immediately.');
+  console.log(`\nTerm refresh complete: ${config.term}`);
+  console.log('Restart the backend so CATALOG_TERM and its in-memory catalog refresh immediately.');
 }
 
 run().catch(error => {

@@ -1,11 +1,16 @@
 {
   "name": "ozu-catalog-scraper",
   "version": "1.0.0",
-  "description": "Scrapes course details and downloads PDFs from Ozyegin Course Catalog UI",
-  "main": "scraper.js",
+  "description": "Downloads, validates, and imports one Özyeğin SIS catalog term",
+  "main": "update_term.js",
   "type": "module",
   "scripts": {
-    "update-term": "node update_term.js"
+    "help": "node update_term.js --help",
+    "term:update": "node update_term.js",
+    "term:prepare": "node update_term.js --prepare-only",
+    "scrape:offerings": "node scrape_offerings.js",
+    "scrape:documents": "node run_documents.js",
+    "check": "node --check update_term.js && node --check scrape_offerings.js && node --check run_documents.js && node --check scrape_documents.js && node --check extract_programs.js && node --check build_program_mappings.js && node --check merge_program_mappings.js && node --check parse_assessments.js && node --check import_all_offerings.js && node --check import_assessments.js"
   },
   "dependencies": {
     "pg": "^8.21.0",

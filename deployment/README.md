@@ -35,7 +35,8 @@ you out.
 
 This installs verified Node.js 24 LTS, PostgreSQL, Nginx, Certbot and UFW; creates the
 database and secrets; builds the frontend; runs Node under systemd; configures HTTPS;
-and enables daily database and curriculum-file backups.
+installs the scraper, Chromium, and PDF tools; and enables daily database and
+curriculum-file backups.
 
 CPU-heavy schedule/image work automatically uses up to four worker threads while
 leaving capacity for the API event loop. Override `HEAVY_WORKERS` in the environment
@@ -56,6 +57,16 @@ Restore a dump (this replaces database objects and requires explicit confirmatio
 sudo CONFIRM_RESTORE=ozu_schedule \
   bash deployment/ubuntu/restore-database.sh /absolute/path/ozu_schedule.dump
 ```
+
+For a new SIS term, use the guarded production wrapper. It backs up the database,
+runs the complete Excel/PDF pipeline, updates `CATALOG_TERM`, restarts the API, and
+checks its health:
+
+```bash
+sudo bash deployment/ubuntu/update-term.sh "2026 - 2027 Güz"
+```
+
+See `scraper/README.md` for the pipeline and troubleshooting commands.
 
 ## Deploy an update
 

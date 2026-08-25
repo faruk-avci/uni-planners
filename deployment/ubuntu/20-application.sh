@@ -25,6 +25,7 @@ if [[ "$source_real" != "$app_real" ]]; then
   rsync -a --delete \
     --exclude '.git/' --exclude 'node_modules/' --exclude 'dist/' \
     --exclude 'backend/.env' --exclude 'tmp/' --exclude 'archive/' \
+    --exclude 'scraper/katalog/downloads/' \
     "${SOURCE_DIR}/" "${APP_DIR}/"
 else
   echo "Source is already ${APP_DIR}; skipping repository copy."
@@ -32,6 +33,7 @@ fi
 chown -R "$SERVICE_USER:$SERVICE_USER" "$APP_DIR"
 
 install -d -m 0750 -o "$SERVICE_USER" -g "$SERVICE_USER" /var/lib/uniplanner/data/curriculums /var/lib/uniplanner/data/elective-pools
+install -d -m 0750 -o "$SERVICE_USER" -g "$SERVICE_USER" "${APP_DIR}/scraper/katalog/downloads"
 rsync -a --ignore-existing "${APP_DIR}/backend/data/" /var/lib/uniplanner/data/
 chown -R "$SERVICE_USER:$SERVICE_USER" /var/lib/uniplanner/data
 
