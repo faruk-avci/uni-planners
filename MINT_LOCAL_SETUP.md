@@ -1,38 +1,18 @@
-# Running UniPlanners locally on Linux Mint
+# Linux Mint compatibility test
 
-This guide moves the current local development environment from Windows to Linux
-Mint. Git carries the application and the curriculum/elective JSON files, but it
-does **not** carry the PostgreSQL database or secrets from `backend/.env`.
+This is a clean local smoke test for the UniPlanners code on Linux Mint. It does
+not migrate the Windows database or prepare the production server. The goal is to
+clone the repository, run every application, and find Linux-specific problems.
 
-## 1. Export the current database on Windows
-
-Before switching to Mint, open PowerShell in the project directory. The current
-Windows configuration uses PostgreSQL on port `55432`; change these values if your
-`backend/.env` is different.
-
-```powershell
-$env:PGPASSWORD = "YOUR_CURRENT_DB_PASSWORD"
-pg_dump -h 127.0.0.1 -p 55432 -U ozu_user -d ozu_schedule -Fc -f uniplanner.dump
-Remove-Item Env:PGPASSWORD
-```
-
-Keep `uniplanner.dump` on a USB drive, shared data partition, or private cloud
-storage. Database dumps and `.env` files are intentionally excluded from Git.
-
-If `pg_dump` is not in `PATH`, run the copy inside your PostgreSQL `bin` directory
-or call `pg_dump.exe` by its full path.
-
-## 2. Install the local requirements on Mint
-
-Install Git and PostgreSQL:
+## 1. Install requirements
 
 ```bash
 sudo apt update
 sudo apt install -y git postgresql postgresql-contrib build-essential
 ```
 
-Install Node.js 24 LTS using your preferred Node version manager. With `nvm` already
-installed:
+Install Node.js 24 LTS with your preferred Node version manager. If `nvm` is
+already installed:
 
 ```bash
 nvm install 24
@@ -41,52 +21,36 @@ node --version
 npm --version
 ```
 
-Do not copy `node_modules` from Windows. Some dependencies, including `sharp`, need
-Linux-specific binaries and will be installed again below.
-
-## 3. Clone and install all three applications
+## 2. Clone the current code
 
 ```bash
 git clone https://github.com/faruk-avci/uni-planner.git
 cd uni-planner
+```
+
+Do not copy the Windows `node_modules` folders. Install Linux-compatible packages:
+
+```bash
 npm ci --prefix backend
 npm ci --prefix frontend
 npm ci --prefix panel
 ```
 
-The repository includes `backend/data`, which contains the curriculum files,
-elective pools, and public site settings used by the admin panel and website.
+## 3. Create an empty local database
 
-## 4. Create the local PostgreSQL database
-
-Choose a local development password and use the same value in the next section:
+The backend requires PostgreSQL to start. For this compatibility test, create a
+fresh empty database; do not export or restore the Windows database.
 
 ```bash
-sudo -u postgres psql -c "CREATE USER ozu_user WITH PASSWORD 'CHOOSE_A_LOCAL_PASSWORD';"
+sudo -u postgres psql -c "CREATE USER ozu_user WITH PASSWORD 'local-test-password';"
 sudo -u postgres createdb --owner=ozu_user ozu_schedule
 ```
 
-If the role or database already exists, do not create it again. You can reset the
-role password with:
+The backend creates its tables when it starts. An empty database means catalog
+searches will not contain the current Windows course records, which is expected for
+this test. Curriculum and elective JSON files are already included in the repository.
 
-```bash
-sudo -u postgres psql -c "ALTER USER ozu_user WITH PASSWORD 'CHOOSE_A_LOCAL_PASSWORD';"
-```
-
-## 5. Restore the Windows database
-
-Copy `uniplanner.dump` somewhere outside the repository, then run:
-
-```bash
-PGPASSWORD='CHOOSE_A_LOCAL_PASSWORD' pg_restore \
-  -h 127.0.0.1 -p 5432 -U ozu_user -d ozu_schedule \
-  --no-owner --role=ozu_user /absolute/path/to/uniplanner.dump
-```
-
-The backend creates missing tables when it starts, but restoring the dump is what
-preserves the current courses, sections, shares, logs, baskets, and preferences.
-
-## 6. Configure local environment files
+## 4. Configure the local environment
 
 ```bash
 cp backend/.env.example backend/.env
@@ -94,51 +58,57 @@ cp frontend/.env.example frontend/.env
 nano backend/.env
 ```
 
-For ordinary local Mint development, make sure `backend/.env` contains values like:
+Use these local values in `backend/.env`:
 
 ```dotenv
 PORT=3001
 DB_HOST=127.0.0.1
 DB_PORT=5432
 DB_USER=ozu_user
-DB_PASSWORD=CHOOSE_A_LOCAL_PASSWORD
+DB_PASSWORD=local-test-password
 DB_NAME=ozu_schedule
 CORS_ORIGIN=*
 COOKIE_SECURE=0
 TRUST_PROXY=0
-ADMIN_SECRET=CHOOSE_A_LONG_RANDOM_ADMIN_SECRET
+ADMIN_SECRET=local-test-admin-secret-change-me
 ```
 
-Generate an admin secret if needed:
-
-```bash
-openssl rand -hex 48
-```
-
-Keep the frontend development proxy pointed at the local backend:
+Keep this value in `frontend/.env`:
 
 ```dotenv
 VITE_DEV_API_PROXY=http://localhost:3001
 ```
 
-Never commit either `.env` file.
+Local `.env` files are ignored by Git.
 
-## 7. Start UniPlanners
+## 5. Check production builds
 
-Open three terminals in the cloned repository:
+Run these before starting the development servers:
 
 ```bash
-# Terminal 1: API
+npm run build --prefix frontend
+npm run build --prefix panel
+node --check backend/server.js
+```
+
+All commands should finish without errors.
+
+## 6. Start all three applications
+
+Open three terminals inside the cloned repository:
+
+```bash
+# Terminal 1
 npm run dev --prefix backend
 ```
 
 ```bash
-# Terminal 2: public website
+# Terminal 2
 npm run dev --prefix frontend
 ```
 
 ```bash
-# Terminal 3: admin panel
+# Terminal 3
 npm run dev --prefix panel
 ```
 
@@ -148,13 +118,23 @@ Open:
 - Admin panel: <http://localhost:5174>
 - API health check: <http://localhost:3001/api/health>
 
-The website and panel development servers listen on `0.0.0.0`, so they can also be
-opened from another device on the same home network using the Mint laptop's local IP.
-Do not expose the development ports directly to the internet.
+## 7. What to test on Mint
+
+- The backend starts without module, worker-thread, PostgreSQL, or `sharp` errors.
+- The public website loads and switches between Planner, Curriculum, and How-To.
+- The admin panel accepts the `ADMIN_SECRET` from `backend/.env`.
+- A curriculum Excel file can be previewed and imported in the panel.
+- The frontend and panel can call `/api` through their Vite proxies.
+- Schedule image export works on Linux.
+- The website opens from a phone on the same network using
+  `http://MINT_LAPTOP_IP:5173`.
+- No file path assumes Windows drive letters or backslashes.
+
+Write down the exact terminal error and the action that caused it if anything fails.
+That gives us a clean list to fix before deploying to the real server.
 
 ## Production setup is separate
 
-The scripts in `deployment/ubuntu` are for a clean Ubuntu 24.04 production server,
-not for routine local Mint development. The production installer already installs
-and builds the backend, public frontend, and admin panel, and configures both
-`uniplanner.org` and `panel.uniplanner.org` in Nginx.
+Do not run `deployment/ubuntu/install-all.sh` for this local test. Those scripts are
+for the eventual clean Ubuntu production server and already include the backend,
+public frontend, admin panel, PostgreSQL, Nginx, TLS, firewall, and backups.
