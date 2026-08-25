@@ -52,7 +52,7 @@ function HowToPage({ language, onNavigate }) {
             </div>
 
             <div className="howto-choice-grid">
-              <div><strong>{tr('Tümünü Ekle', 'Add All')}</strong><span>{tr('Sadece o dersin tüm şubeleri eklenir.', 'Only all sections of that course are added.')}</span></div>
+              <div><strong>{tr('Tümünü Ekle', 'Add All')}</strong><span>{tr('Seçilen dersin tüm şubeleri eklenir.', 'All sections of the selected course are added.')}</span></div>
               <div><strong>{tr('Şubeleri Göster → Ekle', 'Show Sections → Add')}</strong><span>{tr('Yalnızca seçtiğin şubeler programa dahil edilir.', 'Only your selected sections are included.')}</span></div>
               <div><strong>{tr('Grup Olarak Ekle', 'Add as Group')}</strong><span>{tr('Aynı saatli şubeleri alternatif olarak birlikte ekler.', 'Adds same-time sections together as alternatives.')}</span></div>
             </div>
