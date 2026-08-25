@@ -107,6 +107,8 @@ function App() {
   const generatedSchedulesRef = useRef(null)
   const fittingCoursesRef = useRef(null)
   const fittingResultsRef = useRef(null)
+  const fittingGroupRefs = useRef(new Map())
+  const pendingFitGroupScrollRef = useRef('')
   const scrollToFittingResults = useRef(false)
   const shareCopiedTimerRef = useRef(null)
   const notifyTimerRef = useRef(null)
@@ -653,8 +655,21 @@ function App() {
   }
 
   const toggleFitGroup = (key) => {
-    setOpenFitGroups(prev => prev.has(key) ? new Set() : new Set([key]))
+    setOpenFitGroups(prev => {
+      const opening = !prev.has(key)
+      pendingFitGroupScrollRef.current = opening ? key : ''
+      return opening ? new Set([key]) : new Set()
+    })
   }
+
+  useEffect(() => {
+    const key = pendingFitGroupScrollRef.current
+    if (!key || !openFitGroups.has(key)) return
+    pendingFitGroupScrollRef.current = ''
+    window.requestAnimationFrame(() => {
+      fittingGroupRefs.current.get(key)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+  }, [openFitGroups])
 
   const handleShareSchedule = async () => {
     const schedule = schedules[currentSchedule]
@@ -663,7 +678,9 @@ function App() {
     setSharingSchedule(true)
     try {
       const result = await courseService.shareSchedule(schedule, major)
-      const url = `${window.location.origin}/share/${result.id}`
+      // The query version makes social apps refresh previews cached before the
+      // dedicated shared-schedule metadata was introduced.
+      const url = `${window.location.origin}/share/${result.id}?v=2`
       let copied = false
       try {
         await navigator.clipboard.writeText(url)
@@ -1139,7 +1156,13 @@ function App() {
                           const Group = ({ id, title, courses }) => {
                             const open = openFitGroups.has(id)
                             return (
-                              <div className={`fit-group ${open ? 'fit-group-open' : ''}`}>
+                              <div
+                                className={`fit-group ${open ? 'fit-group-open' : ''}`}
+                                ref={node => {
+                                  if (node) fittingGroupRefs.current.set(id, node)
+                                  else fittingGroupRefs.current.delete(id)
+                                }}
+                              >
                                 <button className="fit-group-header" onClick={() => toggleFitGroup(id)}>
                                   <span className="fit-group-title">{title} <span className="fit-group-count">{courses.length}</span></span>
                                   <svg className="fit-group-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9" /></svg>

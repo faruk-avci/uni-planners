@@ -195,11 +195,15 @@
 }
 
 @media (max-width: 760px) {
-  .major-prompt-backdrop { align-items: end; padding: 0; }
+  .major-prompt-backdrop {
+    align-items: end;
+    padding: var(--space-2);
+    padding-bottom: calc(var(--space-2) + env(safe-area-inset-bottom));
+  }
   .major-prompt {
     width: 100%;
-    max-height: calc(100dvh - var(--space-3));
-    border-radius: 24px 24px 0 0;
+    max-height: calc(100dvh - 2 * var(--space-2) - env(safe-area-inset-bottom));
+    border-radius: 24px;
   }
   .major-prompt-header { padding: var(--space-5) var(--space-4) var(--space-4); }
   .major-prompt h2 { font-size: var(--text-xl); }
@@ -209,7 +213,7 @@
     padding: var(--space-4);
   }
   .major-prompt-faculty { padding: var(--space-3); }
-  .major-prompt-other { margin: 0 var(--space-4) calc(var(--space-4) + env(safe-area-inset-bottom)); }
+  .major-prompt-other { margin: 0 var(--space-4) var(--space-4); }
 }
 
 @media (max-width: 420px) {

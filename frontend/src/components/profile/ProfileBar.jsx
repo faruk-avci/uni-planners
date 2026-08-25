@@ -16,15 +16,15 @@ function ProfileBar({ language, majorLabel, grade, onMajorClick, onGradeChange }
       <div className="profile-fields">
         <button className="profile-field profile-major-field" type="button" onClick={onMajorClick}>
           <span>
-            <small>{tr('Bölüm', 'Major')}</small>
-            <strong>{majorLabel || tr('Bölümünü seç', 'Select your major')}</strong>
+            <small>{tr('Bölümünüz', 'Your major')}</small>
+            <strong>{majorLabel || tr('Bölümünüzü seçin', 'Select your major')}</strong>
           </span>
           <span className="profile-field-arrow" aria-hidden="true">›</span>
         </button>
 
         <label className="profile-field profile-grade-field">
           <span>
-            <small>{tr('Sınıf', 'Year')}</small>
+            <small>{tr('Sınıfınız', 'Your year')}</small>
             <select value={grade} onChange={event => onGradeChange(event.target.value)}>
               <option value="">{tr('İsteğe bağlı', 'Optional')}</option>
               <option value="prep">{tr('Hazırlık', 'Preparatory')}</option>
