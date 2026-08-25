@@ -65,6 +65,17 @@ export const courseService = {
     return await res.json()
   },
 
+  async saveGradePreference(grade) {
+    const res = await fetch(API_BASE + '/api/preferences/grade', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ grade }),
+    })
+    if (!res.ok) throw new Error('Grade preference could not be saved')
+    return await res.json()
+  },
+
   async getCurriculums() {
     const res = await fetch(API_BASE + '/api/curriculums');
     if (!res.ok) throw new Error('Curriculum list request failed');
@@ -92,6 +103,28 @@ export const courseService = {
     } catch (err) {
       console.error('Failed to fetch course', norm, err)
       return null
+    }
+  },
+
+  /**
+   * Fetch multiple courses by exact code in a single request.
+   * Returns a map keyed by normalized code (no spaces, uppercase); codes
+   * not found in the catalog are simply absent from the result.
+   */
+  async getCoursesBatch(codes = []) {
+    const norm = [...new Set(codes.map(code => String(code || '').replace(/\s+/g, '').toUpperCase()).filter(Boolean))]
+    if (norm.length === 0) return {}
+    try {
+      const res = await fetch(API_BASE + '/api/courses/batch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ codes: norm }),
+      })
+      if (!res.ok) return {}
+      return await res.json()
+    } catch (err) {
+      console.error('Failed to fetch courses in batch', err)
+      return {}
     }
   },
 

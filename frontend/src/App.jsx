@@ -187,19 +187,26 @@ function App() {
   }, [])
 
   useEffect(() => {
-    const existing = localStorage.getItem('uniplanner_major')
-    if (existing) {
-      courseService.saveMajorPreference(existing, 'existing_browser').catch(() => {})
-      setMajorPreferenceLoaded(true)
-      return
-    }
-
+    const localMajor = canonicalProgramCode(localStorage.getItem('uniplanner_major') || '')
     courseService.getPreferences()
       .then(preferences => {
-        if (preferences?.major) {
-          const restored = canonicalProgramCode(preferences.major)
-          setMajor(restored)
-          localStorage.setItem('uniplanner_major', restored)
+        const serverMajor = preferences?.major ? canonicalProgramCode(preferences.major) : ''
+        if (serverMajor) {
+          // Server already knows the major — nothing to (re-)send.
+          setMajor(serverMajor)
+          localStorage.setItem('uniplanner_major', serverMajor)
+        } else if (localMajor) {
+          // Session has no major yet (e.g. cookie was cleared) but this
+          // browser already chose one — sync it once instead of every load.
+          setMajor(localMajor)
+          courseService.saveMajorPreference(localMajor, 'existing_browser').catch(() => {})
+        }
+        const localGrade = localStorage.getItem('uniplanner_grade') || ''
+        if (preferences?.grade) {
+          setGrade(preferences.grade)
+          localStorage.setItem('uniplanner_grade', preferences.grade)
+        } else if (localGrade) {
+          courseService.saveGradePreference(localGrade).catch(() => {})
         }
       })
       .catch(() => {})
@@ -430,6 +437,9 @@ function App() {
     setGrade(value)
     if (value) localStorage.setItem('uniplanner_grade', value)
     else localStorage.removeItem('uniplanner_grade')
+    courseService.saveGradePreference(value).catch(error => {
+      console.error('Grade preference could not be saved:', error)
+    })
   }
 
   const generateSchedules = async (overrideFreeDays = null, overrideBasket = null) => {
@@ -487,10 +497,14 @@ function App() {
 
     setCheckingCoreqs(true)
     try {
-      const courseDetails = await Promise.all(generationBasket.map(async item => {
+      const needsDetail = generationBasket.filter(item => item.coreq === undefined)
+      const fetchedDetails = needsDetail.length > 0
+        ? await courseService.getCoursesBatch(needsDetail.map(item => item.code))
+        : {}
+      const courseDetails = generationBasket.map(item => {
         if (item.coreq !== undefined) return item
-        return (await courseService.getCourse(item.code)) || item
-      }))
+        return fetchedDetails[normalizeCourseCode(item.code)] || item
+      })
       const basketCodes = new Set(generationBasket.map(item => normalizeCourseCode(item.code)))
       const missing = new Map()
 
@@ -511,13 +525,14 @@ function App() {
         return
       }
 
-      const corequisites = await Promise.all([...missing.entries()].map(async ([code, info]) => {
-        const found = await courseService.getCourse(code)
+      const fetchedCoreqs = await courseService.getCoursesBatch([...missing.keys()])
+      const corequisites = [...missing.entries()].map(([code, info]) => {
+        const found = fetchedCoreqs[code]
         return {
           ...(found || { code: info.raw, name: info.raw, credits: 0, sections: [], assessments: [] }),
           requiredBy: info.requiredBy,
         }
-      }))
+      })
       setCoreqPrompt({ corequisites, overrideFreeDays, basket: generationBasket })
     } finally {
       setCheckingCoreqs(false)

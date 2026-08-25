@@ -74,6 +74,29 @@ router.get('/courses/:code', async (req, res) => {
   }
 });
 
+router.post('/courses/batch', async (req, res) => {
+  const rawCodes = Array.isArray(req.body?.codes) ? req.body.codes : [];
+  const codes = [...new Set(
+    rawCodes.map(c => String(c || '').replace(/\s+/g, '').toUpperCase()).filter(Boolean)
+  )].slice(0, 200);
+  if (codes.length === 0) return res.json({});
+
+  try {
+    const { byCode } = await getCatalog();
+    const result = {};
+    for (const code of codes) {
+      const entry = byCode.get(code);
+      if (entry) result[code] = stripEntry(entry);
+    }
+    res.locals.activity = { ...res.locals.activity, requested: codes.length, found: Object.keys(result).length };
+    res.set('Cache-Control', 'public, max-age=300');
+    res.json(result);
+  } catch (err) {
+    console.error('POST /courses/batch error:', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 router.post('/assessments', async (req, res) => {
   const rawCodes = req.body.codes || [];
   if (rawCodes.length === 0) {

@@ -193,6 +193,26 @@ router.get('/analytics/majors', async (_req, res) => {
   }
 })
 
+router.get('/analytics/grades', async (_req, res) => {
+  try {
+    const { rows } = await pool.query(
+      `SELECT grade_level AS grade, count(*)::int AS visitors
+         FROM sessions
+        WHERE grade_level IS NOT NULL AND grade_level <> ''
+        GROUP BY grade_level
+        ORDER BY CASE grade_level
+                   WHEN 'prep' THEN 0 WHEN '1' THEN 1 WHEN '2' THEN 2
+                   WHEN '3' THEN 3 WHEN '4' THEN 4 WHEN '5+' THEN 5
+                   ELSE 6
+                 END`
+    )
+    res.json({ current: rows })
+  } catch (err) {
+    console.error('GET /admin/analytics/grades error:', err.message)
+    res.status(500).json({ error: 'Grade analytics could not be loaded' })
+  }
+})
+
 router.get('/analytics/course-add-sources', async (req, res) => {
   const parsedDays = Number.parseInt(req.query.days, 10)
   const days = Number.isFinite(parsedDays) ? Math.min(Math.max(parsedDays, 1), 365) : 30
@@ -256,6 +276,7 @@ const REQUEST_LOG_EXCLUDED_ACTIONS = [
   'preferences_load',
   'site_stats_load',
   'course_view',
+  'course_batch_load',
   'assessments_load',
   'course_add_track',
   'major_set',

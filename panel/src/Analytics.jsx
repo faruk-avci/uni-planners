@@ -5,7 +5,7 @@ const POLL_MS = 4000
 const MAX_ROWS = 200
 
 function BarList({ title, rows }) {
-  const max = rows.reduce((best, row) => Math.max(best, row.visitors || row.selections || 0), 0) || 1
+  const max = rows.reduce((best, row) => Math.max(best, row.value), 0) || 1
   return (
     <div className="bar-list">
       <h3>{title}</h3>
@@ -13,16 +13,13 @@ function BarList({ title, rows }) {
         <p className="empty-note">Henüz veri yok.</p>
       ) : (
         <div className="bar-rows">
-          {rows.map(row => {
-            const value = row.visitors ?? row.selections ?? 0
-            return (
-              <div className="bar-row" key={row.major}>
-                <span className="bar-label">{row.major}</span>
-                <span className="bar-track"><span className="bar-fill" style={{ width: `${(value / max) * 100}%` }} /></span>
-                <span className="bar-value">{value}</span>
-              </div>
-            )
-          })}
+          {rows.map(row => (
+            <div className="bar-row" key={row.label}>
+              <span className="bar-label">{row.label}</span>
+              <span className="bar-track"><span className="bar-fill" style={{ width: `${(row.value / max) * 100}%` }} /></span>
+              <span className="bar-value">{row.value}</span>
+            </div>
+          ))}
         </div>
       )}
     </div>
@@ -55,9 +52,47 @@ function MajorsChart() {
       {error && <div className="alert alert-error">{error}<button onClick={() => setError('')}>×</button></div>}
       {majors ? (
         <div className="bar-list-grid">
-          <BarList title="İlk seçilen bölüm" rows={majors.firstChoice} />
-          <BarList title="Güncel bölüm" rows={majors.current} />
+          <BarList title="İlk seçilen bölüm" rows={majors.firstChoice.map(row => ({ label: row.major, value: row.visitors }))} />
+          <BarList title="Güncel bölüm" rows={majors.current.map(row => ({ label: row.major, value: row.visitors }))} />
         </div>
+      ) : (
+        <p className="empty-note">Veriyi görmek için "Yenile" düğmesine basın.</p>
+      )}
+    </section>
+  )
+}
+
+const GRADE_LABELS = { prep: 'Hazırlık', '1': '1. sınıf', '2': '2. sınıf', '3': '3. sınıf', '4': '4. sınıf', '5+': '5. sınıf ve üzeri' }
+
+function GradesChart() {
+  const [grades, setGrades] = useState(null)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
+
+  const loadGrades = async () => {
+    setBusy(true)
+    setError('')
+    try {
+      setGrades(await request('/analytics/grades'))
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <section className="content-card analytics-card">
+      <div className="section-heading">
+        <div><span className="step-number neutral">◔</span><div><h2>Sınıf dağılımı</h2><p>Kullanıcıların seçtiği sınıf/yıl dağılımı.</p></div></div>
+        <button className="secondary-button" onClick={loadGrades} disabled={busy}>{busy ? 'Yükleniyor…' : 'Yenile'}</button>
+      </div>
+      {error && <div className="alert alert-error">{error}<button onClick={() => setError('')}>×</button></div>}
+      {grades ? (
+        <BarList
+          title="Sınıf/yıl"
+          rows={grades.current.map(row => ({ label: GRADE_LABELS[row.grade] || row.grade, value: row.visitors }))}
+        />
       ) : (
         <p className="empty-note">Veriyi görmek için "Yenile" düğmesine basın.</p>
       )}
@@ -148,6 +183,7 @@ export default function Analytics() {
   return (
     <div id="analytics">
       <MajorsChart />
+      <GradesChart />
       <EventLog />
     </div>
   )

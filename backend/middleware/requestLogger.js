@@ -9,6 +9,7 @@ function actionFor(method, path) {
   const routes = [
     [/^GET \/api\/health$/, 'health_check'],
     [/^POST \/api\/courses\/search$/, 'course_search'],
+    [/^POST \/api\/courses\/batch$/, 'course_batch_load'],
     [/^GET \/api\/courses\/[^/]+$/, 'course_view'],
     [/^POST \/api\/assessments$/, 'assessments_load'],
     [/^GET \/api\/majors$/, 'major_options_load'],
@@ -30,6 +31,7 @@ function actionFor(method, path) {
     [/^DELETE \/api\/saved-baskets\/[^/]+$/, 'saved_basket_delete'],
     [/^GET \/api\/preferences$/, 'preferences_load'],
     [/^PUT \/api\/preferences\/major$/, 'major_set'],
+    [/^PUT \/api\/preferences\/grade$/, 'grade_set'],
     [/^POST \/api\/analytics\/course-add$/, 'course_add_track'],
     [/^GET \/api\/dino\/leaderboard$/, 'dino_leaderboard_load'],
     [/^POST \/api\/dino\/score$/, 'dino_score_submit'],
@@ -91,6 +93,10 @@ function metadataFor(req, path) {
   } else if (path === '/api/preferences/major') {
     metadata.major = clean(body.major, 32)
     metadata.source = clean(body.source, 24)
+  } else if (path === '/api/preferences/grade') {
+    metadata.grade = clean(body.grade, 16)
+  } else if (path === '/api/courses/batch') {
+    metadata.courseCount = array(body.codes).length
   } else if (path === '/api/analytics/course-add') {
     metadata.courseCode = clean(body.code, 20)
     metadata.source = clean(body.source, 32)
