@@ -62,6 +62,12 @@ function App() {
     const saved = localStorage.getItem('uniplanner_color_theme')
     return PUBLIC_COLOR_THEMES.has(saved) ? saved : 'iris'
   })
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem('uniplanner_dark_mode')
+    if (saved === '1') return true
+    if (saved === '0') return false
+    return typeof window !== 'undefined' && window.matchMedia?.('(prefers-color-scheme: dark)').matches
+  })
   const logoPresses = useRef((Number(localStorage.getItem('uniplanner_logo_presses')) || 0) % 20)
   const [dinoMode, setDinoMode] = useState(() => localStorage.getItem('uniplanner_dino_mode') === 'true')
   const [dinoOpen, setDinoOpen] = useState(() => localStorage.getItem('uniplanner_dino_mode') === 'true')
@@ -114,8 +120,11 @@ function App() {
   const scrollToGenerated = useRef(false)
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', 'light')
-  }, [])
+    document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light')
+    localStorage.setItem('uniplanner_dark_mode', darkMode ? '1' : '0')
+  }, [darkMode])
+
+  const toggleDarkMode = () => setDarkMode(value => !value)
 
   useEffect(() => {
     courseService.getSiteSettings()
@@ -898,6 +907,8 @@ function App() {
           toggleLanguage={toggleLanguage}
           colorTheme={colorTheme}
           setColorTheme={selectColorTheme}
+          darkMode={darkMode}
+          onToggleDarkMode={toggleDarkMode}
           activePage={activePage}
           onNavigate={navigate}
           onLogoClick={handleLogoClick}

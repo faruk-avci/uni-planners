@@ -103,8 +103,8 @@
 }
 
 .total-complete {
-  background: rgba(16, 185, 129, 0.15);
-  color: #10b981;
+  background: var(--success-bg);
+  color: var(--success);
 }
 
 .total-incomplete {

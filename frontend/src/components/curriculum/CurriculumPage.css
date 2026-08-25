@@ -131,9 +131,9 @@
 .curriculum-add-btn:not(:disabled) { color: var(--accent-primary); background: var(--accent-soft); border-color: var(--border-accent); }
 .curriculum-add-btn:hover:not(:disabled) { background: var(--accent-primary); border-color: var(--accent-primary); color: var(--text-inverse); }
 .curriculum-add-btn:disabled { cursor: not-allowed; color: var(--text-tertiary); background: transparent; border-color: var(--border-secondary); }
-.course-status-dot { width: 8px; height: 8px; align-self: center; border-radius: 50%; background: var(--gray-300); }
+.course-status-dot { width: 8px; height: 8px; align-self: center; border-radius: 50%; background: var(--text-tertiary); }
 .course-status-open { background: var(--success); box-shadow: 0 0 0 3px color-mix(in srgb, var(--success) 14%, transparent); }
-.course-status-closed { background: var(--gray-300); }
+.course-status-closed { background: var(--text-tertiary); }
 .curriculum-requisites { display: grid; grid-column: 1 / -1; gap: 2px; margin-top: var(--space-2); padding-left: 114px; color: var(--text-tertiary); font-size: var(--text-xs); }
 .curriculum-empty { padding: var(--space-6); text-align: center; font-size: var(--text-sm); }
 .curriculum-electives { display: grid; gap: var(--space-4); }
@@ -179,7 +179,7 @@
   white-space: nowrap;
 }
 .offered-first-toggle.active { color: var(--text-primary); border-color: var(--border-accent); }
-.offered-first-switch { display: flex; width: 28px; height: 16px; align-items: center; padding: 2px; background: var(--gray-300); border-radius: var(--radius-full); transition: background var(--duration-fast); }
+.offered-first-switch { display: flex; width: 28px; height: 16px; align-items: center; padding: 2px; background: var(--border-accent); border-radius: var(--radius-full); transition: background var(--duration-fast); }
 .offered-first-switch > span { width: 12px; height: 12px; background: white; border-radius: 50%; box-shadow: var(--shadow-xs); transition: transform var(--duration-fast); }
 .offered-first-toggle.active .offered-first-switch { background: var(--success); }
 .offered-first-toggle.active .offered-first-switch > span { transform: translateX(12px); }

@@ -34,25 +34,16 @@
 }
 
 .clear-btn {
-  background: var(--gray-600);
-  color: var(--text-inverse);
-}
-
-.clear-btn:hover {
-  background: var(--gray-700);
-  transform: translateY(-1px);
-}
-
-[data-palette="iris"] .clear-btn {
   color: var(--text-secondary);
   background: var(--bg-tertiary);
   border: 1px solid var(--border-primary);
 }
 
-[data-palette="iris"] .clear-btn:hover {
+.clear-btn:hover {
   color: var(--text-primary);
   background: var(--bg-accent);
   border-color: var(--border-accent);
+  transform: translateY(-1px);
 }
 
 .search-input-wrapper {

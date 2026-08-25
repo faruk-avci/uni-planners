@@ -182,6 +182,9 @@
   --error-bg: rgba(220, 38, 38, 0.12);
   --info-bg: rgba(37, 99, 235, 0.12);
 
+  --ozu-burgundy: #e05a91;
+  --ozu-burgundy-soft: rgba(165, 0, 80, 0.16);
+
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
@@ -304,6 +307,51 @@
   --accent-gradient: linear-gradient(135deg, #d94f3d, #d97706);
   --accent-soft: #fcece8;
   --shadow-glow: 0 0 0 3px rgba(217, 79, 61, 0.18);
+}
+
+/* Iris is the only palette that customizes text/border/semantic tokens in
+   light mode (the other five only touch bg/accent/shadow-glow), so it's
+   also the only one where every one of those needs a dark equivalent here
+   — otherwise the light values leak through the equal-specificity cascade
+   from [data-palette="iris"] instead of falling back to [data-theme="dark"]. */
+[data-theme="dark"][data-palette="iris"] {
+  --bg-primary: #0a0a14;
+  --bg-secondary: #15151f;
+  --bg-tertiary: #1d1d2b;
+  --bg-elevated: #191925;
+  --bg-accent: rgba(129, 140, 248, 0.10);
+
+  --border-primary: rgba(129, 140, 248, 0.16);
+  --border-secondary: rgba(129, 140, 248, 0.09);
+  --border-accent: rgba(129, 140, 248, 0.34);
+
+  --text-primary: #f2f1fa;
+  --text-secondary: #a3a3c2;
+  --text-tertiary: #75758f;
+  --text-inverse: #fafafa;
+  --text-accent: #a5b4fc;
+
+  --accent-primary: #818cf8;
+  --accent-primary-hover: #a5b4fc;
+  --accent-secondary: #c4b5fd;
+  --accent-gradient: linear-gradient(135deg, #818cf8, #c084fc);
+  --accent-soft: rgba(129, 140, 248, 0.13);
+
+  --success: #34d399;
+  --success-bg: rgba(52, 211, 153, 0.14);
+  --warning: #fbbf24;
+  --warning-bg: rgba(251, 191, 36, 0.14);
+  --error: #f87171;
+  --error-bg: rgba(248, 113, 113, 0.14);
+  --info: #818cf8;
+  --info-bg: rgba(129, 140, 248, 0.13);
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.45);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 0 3px rgba(129, 140, 248, 0.25);
 }
 
 [data-theme="dark"][data-palette="ocean"] {
