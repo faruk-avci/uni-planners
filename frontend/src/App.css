@@ -41,7 +41,6 @@
   flex-direction: column;
   gap: var(--space-4);
   max-height: calc(100dvh - var(--header-height) - 2 * var(--space-6));
-  padding-right: 2px;
   overflow: hidden;
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
