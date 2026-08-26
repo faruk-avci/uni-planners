@@ -24,15 +24,6 @@ server {
         proxy_send_timeout 75s;
     }
 
-    location = /api/schedule/export-image {
-        limit_req zone=uniplanner_heavy burst=4 nodelay;
-        include proxy_params;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_pass http://127.0.0.1:3001;
-        proxy_read_timeout 75s;
-        proxy_send_timeout 75s;
-    }
-
     # These two carry their own real Cache-Control from the app (curriculum
     # list: 1h, course lookup: 5m) since that data barely changes -- letting
     # it through here means both browsers and Cloudflare's edge can actually

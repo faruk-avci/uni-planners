@@ -8,7 +8,7 @@ import { ensureSchema, pool } from './config/db.js';
 import { sessionMiddleware } from './middleware/session.js';
 import { requestLogger } from './middleware/requestLogger.js';
 import { drainRequestLogs, requestLogStats, stopActivityLoggerTimer } from './services/activityLogger.js';
-import { schedulePool, imagePool, heavyTaskPoolConfig, closeHeavyTaskPools } from './services/heavyTaskPool.js';
+import { schedulePool, heavyTaskPoolConfig, closeHeavyTaskPools } from './services/heavyTaskPool.js';
 
 // Routes
 import catalogRoutes from './routes/catalogRoutes.js';
@@ -50,7 +50,7 @@ app.get('/api/health', async (_req, res) => {
     res.json({
       status: 'ok',
       database: 'ok',
-      heavyTasks: { schedule: schedulePool.stats(), image: imagePool.stats() },
+      heavyTasks: schedulePool.stats(),
       requestLogs: requestLogStats(),
     });
   } catch (err) {
@@ -87,11 +87,9 @@ ensureSchema()
       console.log(JSON.stringify({
         event: 'server_started',
         port: PORT,
+        heavyWorkers: heavyTaskPoolConfig.poolSize,
         detectedCores: heavyTaskPoolConfig.detectedCores,
-        scheduleWorkers: heavyTaskPoolConfig.schedule.poolSize,
-        scheduleQueueMax: heavyTaskPoolConfig.schedule.maxQueue,
-        imageWorkers: heavyTaskPoolConfig.image.poolSize,
-        imageQueueMax: heavyTaskPoolConfig.image.maxQueue,
+        heavyQueueMax: heavyTaskPoolConfig.maxQueue,
       }));
     });
   })

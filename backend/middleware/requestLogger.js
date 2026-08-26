@@ -17,7 +17,6 @@ function actionFor(method, path) {
     [/^GET \/api\/site-settings$/, 'site_settings_load'],
     [/^POST \/api\/schedule\/generate$/, 'schedule_generate'],
     [/^POST \/api\/schedule\/fitting$/, 'schedule_fitting'],
-    [/^POST \/api\/schedule\/export-image$/, 'schedule_export_png'],
     [/^POST \/api\/schedule\/export-calendar$/, 'schedule_export_calendar'],
     [/^GET \/api\/basket$/, 'basket_load'],
     [/^PUT \/api\/basket$/, 'basket_replace'],
@@ -78,10 +77,6 @@ function metadataFor(req, path) {
     metadata.major = clean(body.major, 32)
     metadata.occupiedSlotCount = array(body.occupied).length
     metadata.excludedCourses = array(body.exclude).map(value => clean(value, 20)).slice(0, 100)
-  } else if (path === '/api/schedule/export-image') {
-    metadata.language = body.language === 'en' ? 'en' : 'tr'
-    metadata.courseCount = array(body.schedule?.lessons).length
-    metadata.totalCredits = Number(body.schedule?.totalCredits) || 0
   } else if (path === '/api/schedule/export-calendar') {
     metadata.language = body.language === 'en' ? 'en' : 'tr'
     metadata.courseCount = array(body.schedule?.lessons).length

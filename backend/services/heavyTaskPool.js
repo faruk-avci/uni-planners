@@ -138,38 +138,15 @@ class HeavyTaskPool {
   }
 }
 
-// Schedule generation (pure JS combinatorics) and PNG rendering (SVG build +
-// a native Sharp/libvips encode) have very different resource profiles and
-// used to share one small pool. Under a concurrent burst that mix let a
-// stream of higher-priority generate tasks starve PNG exports indefinitely
-// behind them, since priority ordering always dispatches generate_schedule
-// first regardless of queue order -- separate pools mean one workload can
-// never block the other out entirely.
-function sizeFromEnv(envVar, ceiling) {
-  const configured = Number.parseInt(process.env[envVar], 10)
-  if (Number.isFinite(configured)) return Math.min(Math.max(configured, 1), 32)
-  return Math.min(Math.max(detectedCores - 1, 1), ceiling)
-}
+const defaultSize = Math.min(Math.max(detectedCores - 1, 1), 4)
+const configuredSize = Number.parseInt(process.env.HEAVY_WORKERS, 10)
+const poolSize = Number.isFinite(configuredSize) ? Math.min(Math.max(configuredSize, 1), 32) : defaultSize
+const configuredQueue = Number.parseInt(process.env.HEAVY_QUEUE_MAX, 10)
+const maxQueue = Number.isFinite(configuredQueue) ? Math.min(Math.max(configuredQueue, 10), 5000) : 250
 
-function queueFromEnv(envVar, fallback) {
-  const configured = Number.parseInt(process.env[envVar], 10)
-  return Number.isFinite(configured) ? Math.min(Math.max(configured, 10), 5000) : fallback
-}
-
-const schedulePoolSize = sizeFromEnv('SCHEDULE_WORKERS', 6)
-const schedulePoolQueue = queueFromEnv('SCHEDULE_QUEUE_MAX', 250)
-const imagePoolSize = sizeFromEnv('IMAGE_WORKERS', 3)
-const imagePoolQueue = queueFromEnv('IMAGE_QUEUE_MAX', 100)
-
-export const schedulePool = new HeavyTaskPool({ poolSize: schedulePoolSize, maxQueue: schedulePoolQueue })
-export const imagePool = new HeavyTaskPool({ poolSize: imagePoolSize, maxQueue: imagePoolQueue })
-
-export const heavyTaskPoolConfig = {
-  detectedCores,
-  schedule: { poolSize: schedulePoolSize, maxQueue: schedulePoolQueue },
-  image: { poolSize: imagePoolSize, maxQueue: imagePoolQueue },
-}
+export const schedulePool = new HeavyTaskPool({ poolSize, maxQueue })
+export const heavyTaskPoolConfig = { detectedCores, poolSize, maxQueue }
 
 export async function closeHeavyTaskPools() {
-  await Promise.all([schedulePool.close(), imagePool.close()])
+  await schedulePool.close()
 }

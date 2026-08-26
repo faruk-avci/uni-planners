@@ -7,7 +7,7 @@ import {
   normalizeSharedSchedule,
   scheduleCalendarIcs
 } from '../utils/helpers.js';
-import { schedulePool, imagePool } from '../services/heavyTaskPool.js';
+import { schedulePool } from '../services/heavyTaskPool.js';
 import {
   equivalentProgramsFor,
   MAJOR_TO_CURRICULUM,
@@ -373,38 +373,6 @@ router.post('/fitting', async (req, res) => {
   } catch (err) {
     console.error('POST /schedule/fitting error:', err.message);
     res.status(500).json({ success: false, error: err.message });
-  }
-});
-
-router.post('/export-image', async (req, res) => {
-  const schedule = normalizeSharedSchedule(req.body?.schedule);
-  if (!schedule) return res.status(400).json({ error: 'A valid generated schedule is required' });
-  const language = req.body?.language === 'en' ? 'en' : 'tr';
-  const layout = req.body?.layout === 'agenda' ? 'agenda' : 'grid';
-
-  try {
-    const { result, metrics } = await imagePool.run('render_schedule_png', {
-      schedule,
-      language,
-      layout,
-    }, { priority: 0, timeoutMs: 60_000 });
-    const image = Buffer.from(result);
-    res.locals.activity = {
-      ...res.locals.activity,
-      worker: metrics,
-      imageBytes: image.length,
-      layout,
-    };
-    res.set({
-      'Content-Type': 'image/png',
-      'Content-Disposition': 'attachment; filename="uniplanners-schedule.png"',
-      'Cache-Control': 'no-store',
-    });
-    res.send(image);
-  } catch (err) {
-    console.error('POST /schedule/export-image error:', err.message);
-    const status = err.code === 'HEAVY_QUEUE_FULL' ? 503 : err.code === 'HEAVY_TASK_TIMEOUT' ? 504 : 500;
-    res.status(status).json({ error: 'Schedule image could not be created' });
   }
 });
 

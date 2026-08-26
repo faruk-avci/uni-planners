@@ -16,20 +16,6 @@ const generationBody = {
   preference: 'balanced',
 }
 
-const imageBody = {
-  language: 'tr',
-  schedule: {
-    totalCredits: 24,
-    lessons: [
-      { code: 'ENG 101', name: 'English I', section: 'ENG 101A', lecturer: 'Instructor', credits: 4, times: [{ day: 'Pazartesi', start: '10:40', end: '12:30' }] },
-      { code: 'CS 201', name: 'Data Structures', section: 'CS 201A', lecturer: 'Instructor', credits: 6, times: [{ day: 'Salı', start: '08:40', end: '10:30' }] },
-      { code: 'MATH 101', name: 'Calculus I', section: 'MATH 101A', lecturer: 'Instructor', credits: 6, times: [{ day: 'Çarşamba', start: '12:40', end: '14:30' }] },
-      { code: 'SEC 201', name: 'University Course', section: 'SEC 201A', lecturer: 'Instructor', credits: 2, times: [{ day: 'Perşembe', start: '14:40', end: '16:30' }] },
-      { code: 'EE 201', name: 'Circuits', section: 'EE 201A', lecturer: 'Instructor', credits: 6, times: [{ day: 'Cuma', start: '09:40', end: '11:30' }] },
-    ],
-  },
-}
-
 const percentile = (sorted, ratio) => sorted[Math.min(sorted.length - 1, Math.floor(sorted.length * ratio))] || 0
 const summary = (name, concurrency, elapsedMs, samples, failures) => {
   const sorted = [...samples].sort((a, b) => a - b)
@@ -106,32 +92,6 @@ async function burst(name, concurrency, action) {
   return summary(name, concurrency, performance.now() - started, samples, failures)
 }
 
-async function priorityProbe() {
-  const pngSamples = []
-  let pngFailures = 0
-  const started = performance.now()
-  const pngRequests = Array.from({ length: 100 }, async (_, index) => {
-    const requestStarted = performance.now()
-    try {
-      await request('/api/schedule/export-image', index, post(imageBody))
-      pngSamples.push(performance.now() - requestStarted)
-    } catch {
-      pngFailures += 1
-    }
-  })
-
-  await new Promise(resolve => setTimeout(resolve, 150))
-  const scheduleStarted = performance.now()
-  await request('/api/schedule/generate', 0, post(generationBody))
-  const priorityScheduleMs = performance.now() - scheduleStarted
-  await Promise.all(pngRequests)
-
-  return {
-    ...summary('png-queue-with-priority-generation', 100, performance.now() - started, pngSamples, pngFailures),
-    priorityScheduleMs: Number(priorityScheduleMs.toFixed(1)),
-  }
-}
-
 async function cleanup() {
   if (!/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/i.test(API)) return
   // Give the server's batched request logger time to flush before removing
@@ -158,16 +118,10 @@ try {
   await initializeUsers()
   console.log(JSON.stringify({ initializedUsers: cookies.length }))
   const results = []
-  if (process.env.LOAD_TEST_PROFILE === 'priority') {
-    results.push(await priorityProbe())
-  } else {
-    results.push(await sustained('stats-read', 100, 8_000, index => request('/api/stats', index)))
-    results.push(await sustained('course-search', 100, 10_000, index => request('/api/courses/search', index, post({ query: 'ENG' }))))
-    results.push(await sustained('schedule-generation', 25, 10_000, index => request('/api/schedule/generate', index, post(generationBody))))
-    results.push(await burst('schedule-generation-burst', 100, index => request('/api/schedule/generate', index, post(generationBody))))
-    results.push(await sustained('png-export', 10, 10_000, index => request('/api/schedule/export-image', index, post(imageBody))))
-    results.push(await burst('png-export-burst', 100, index => request('/api/schedule/export-image', index, post(imageBody))))
-  }
+  results.push(await sustained('stats-read', 100, 8_000, index => request('/api/stats', index)))
+  results.push(await sustained('course-search', 100, 10_000, index => request('/api/courses/search', index, post({ query: 'ENG' }))))
+  results.push(await sustained('schedule-generation', 25, 10_000, index => request('/api/schedule/generate', index, post(generationBody))))
+  results.push(await burst('schedule-generation-burst', 100, index => request('/api/schedule/generate', index, post(generationBody))))
   results.forEach(result => console.log(JSON.stringify(result)))
 } finally {
   await cleanup()
