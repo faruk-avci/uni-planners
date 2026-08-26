@@ -692,34 +692,48 @@
 
 .conflict-pair-list li {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-3);
-  padding: var(--space-2) var(--space-3);
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-3) var(--space-4);
   background: var(--bg-secondary);
   border: 1px solid var(--border-secondary);
+  border-left: 3px solid var(--error);
   border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xs);
 }
 
 .conflict-pair-list li > div {
   display: grid;
   min-width: 0;
-  gap: 2px;
+  gap: 6px;
 }
 
-.conflict-pair-list span {
+.conflict-pair-list li > div > span:first-child {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
   font-weight: var(--weight-semibold);
 }
 
 .conflict-pair-list small {
+  display: block;
   min-width: 0;
-  color: var(--text-tertiary);
+  color: var(--text-secondary);
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  line-height: 1.4;
   overflow-wrap: anywhere;
 }
 
 .conflict-pair-list em {
   flex: 0 1 auto;
+  padding: 3px 9px;
   color: var(--error);
+  background: var(--error-bg);
+  border-radius: var(--radius-full);
   font-size: var(--text-xs);
   font-style: normal;
   font-weight: var(--weight-semibold);
@@ -744,19 +758,26 @@
 .conflict-solution-option {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: var(--space-2) var(--space-3);
-  color: var(--text-primary);
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-primary);
-  border-radius: var(--radius-full);
-  font-weight: var(--weight-semibold);
+  gap: 6px;
+  padding: var(--space-1) 0;
 }
 
 .conflict-course-chip {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
+  padding: 5px 6px 5px 12px;
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-full);
+  font-weight: var(--weight-semibold);
+  transition: border-color var(--duration-fast), background var(--duration-fast);
+}
+
+.conflict-course-chip:hover {
+  background: var(--bg-accent);
+  border-color: var(--border-accent);
 }
 
 .conflict-course-remove {
@@ -764,18 +785,19 @@
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
-  color: var(--text-tertiary);
+  width: 20px;
+  height: 20px;
+  color: var(--text-secondary);
   border-radius: var(--radius-full);
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1;
-  transition: color var(--duration-fast), background var(--duration-fast);
+  transition: color var(--duration-fast), background var(--duration-fast), transform var(--duration-fast);
 }
 
 .conflict-course-remove:hover {
-  color: var(--error);
-  background: var(--error-bg);
+  color: var(--text-inverse);
+  background: var(--error);
+  transform: scale(1.08);
 }
 
 /* Mobile basket controls are enabled only at the phone/tablet breakpoint. */
