@@ -64,14 +64,44 @@ async function getOrCreateSession(req) {
   return promise;
 }
 
+// last_seen only feeds one coarse admin metric ("active in the last 24h"),
+// so it doesn't need per-request precision. Writing it on every single API
+// call added a write query (with real WAL/MVCC cost, not just a read) to
+// every search, generate, export, etc., for every user. Throttle to at most
+// once per window per session -- a cache hit skips the DB round trip
+// entirely, at the cost of a brief window where a session deleted directly
+// in the DB would still be treated as valid until the entry expires.
+const lastSeenCache = new Map();
+const LAST_SEEN_MIN_INTERVAL_MS = 5 * 60 * 1000;
+
+function pruneStaleLastSeen(now) {
+  for (const [id, writtenAt] of lastSeenCache) {
+    if (now - writtenAt > LAST_SEEN_MIN_INTERVAL_MS) lastSeenCache.delete(id);
+  }
+}
+
+async function touchSession(sid) {
+  const now = Date.now();
+  const writtenAt = lastSeenCache.get(sid);
+  if (writtenAt && now - writtenAt < LAST_SEEN_MIN_INTERVAL_MS) return true;
+
+  const { rowCount } = await pool.query('UPDATE sessions SET last_seen = now() WHERE id = $1', [sid]);
+  if (rowCount > 0) {
+    if (lastSeenCache.size > 200) pruneStaleLastSeen(now);
+    lastSeenCache.set(sid, now);
+    return true;
+  }
+  lastSeenCache.delete(sid);
+  return false;
+}
+
 export async function sessionMiddleware(req, res, next) {
   try {
     let sid = parseCookies(req.headers.cookie)[COOKIE_NAME];
     let valid = false;
     let created = false;
     if (sid && UUID_RE.test(sid)) {
-      const { rowCount } = await pool.query('UPDATE sessions SET last_seen = now() WHERE id = $1', [sid]);
-      valid = rowCount > 0;
+      valid = await touchSession(sid);
     }
     if (!valid) {
       sid = await getOrCreateSession(req);
