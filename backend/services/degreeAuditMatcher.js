@@ -134,6 +134,15 @@ export async function matchDegreeAudit({ degreeCode, areaThresholds, takenCourse
       key,
       label,
       required,
+      // The semester-plan template usually lists more slot instances of a type
+      // than the degree actually requires (e.g. 6 program-elective slots worth
+      // 36 credits when only 12 are needed) since students only have to pick
+      // some of them. Cap allocation at that wider slot capacity rather than
+      // the bare requirement, so a student who took more matching electives
+      // than the minimum still gets them attributed here instead of being
+      // bumped into a lower-priority type (or "couldn't be placed") just
+      // because this type's strict minimum was already satisfied by others.
+      slotCapacity: Math.max(sumSlotCredits(curriculum, key), required),
       estimated: !threshold,
       filled: 0,
       remaining: required,
@@ -179,8 +188,8 @@ export async function matchDegreeAudit({ degreeCode, areaThresholds, takenCourse
     chunks.push({ code, creditsRemaining: credits, eligibleTypes });
   }
 
-  for (const type of electiveTypes) {
-    let remaining = type.required;
+  function fillType(type, cap) {
+    let remaining = cap - type.filled;
     while (remaining > EPSILON) {
       const candidates = chunks.filter(c => c.creditsRemaining > EPSILON && c.eligibleTypes.includes(type.key));
       if (candidates.length === 0) break;
@@ -192,9 +201,29 @@ export async function matchDegreeAudit({ degreeCode, areaThresholds, takenCourse
       best.creditsRemaining -= used;
       remaining -= used;
     }
+  }
+
+  // Pass 1: give every type a fair shot at its own real requirement first, in
+  // priority order. Capping at `required` here (not the wider slot capacity)
+  // stops an earlier-priority type like program-electives from greedily
+  // absorbing every multi-eligible course before a later type (free electives)
+  // ever gets a turn — that would leave the later type's own real requirement
+  // unmet even though the student took plenty of qualifying coursework overall.
+  for (const type of electiveTypes) {
+    fillType(type, type.required);
     type.remaining = Math.max(type.required - type.filled, 0);
     type.status = type.remaining <= EPSILON ? 'complete' : 'incomplete';
+  }
+
+  // Pass 2: every type has now had its fair shot. Whatever's genuinely left
+  // over (a student took more matching electives than the minimum) can spill
+  // into the wider template slot capacity of higher-priority types instead of
+  // being reported as unplaceable, without having robbed a lower-priority
+  // type's own requirement to get there.
+  for (const type of electiveTypes) {
+    fillType(type, type.slotCapacity);
     delete type.priority;
+    delete type.slotCapacity;
   }
 
   for (const chunk of chunks) {

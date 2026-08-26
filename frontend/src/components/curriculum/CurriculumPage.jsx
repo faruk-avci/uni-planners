@@ -416,7 +416,7 @@ function CurriculumPage({ language, onAddCourse, major, auditResult }) {
                   <div key={type.key} className={`curriculum-audit-type curriculum-audit-type-${type.status}`}>
                     <div className="curriculum-audit-type-head">
                       <strong>{type.label}</strong>
-                      <span>{type.filled} / {type.required} ECTS{type.estimated ? ` (${tr('tahmini', 'estimated')})` : ''}</span>
+                      <span>{Math.min(type.filled, type.required)} / {type.required} ECTS{type.filled > type.required ? ` (+${(type.filled - type.required).toFixed(1).replace(/\.0$/, '')} ${tr('ekstra', 'extra')})` : ''}{type.estimated ? ` (${tr('tahmini', 'estimated')})` : ''}</span>
                     </div>
                     {type.courses.length > 0 && (
                       <div className="curriculum-audit-type-courses">
