@@ -48,25 +48,45 @@ export function listCurriculumData() {
     .filter(Boolean)
 }
 
+// readCurriculumData (always called with the default resolveElectives=true
+// in practice) is on nearly every hot path: schedule generation, fitting
+// suggestions, degree-audit matching, curriculum detail views. It's just a
+// JSON file re-read and re-parsed from disk every single call otherwise.
+// Cached here, invalidated directly in the two write functions below since
+// they're the only places this data ever changes.
+const curriculumCache = new Map()
+const poolCache = new Map()
+
 export function readCurriculumData(id, { resolveElectives = true } = {}) {
   const key = safeKey(id, 'curriculum id')
+  if (resolveElectives && curriculumCache.has(key)) return curriculumCache.get(key)
+
   const file = path.join(CURRICULUM_DIR, `${key}.json`)
-  if (!existsSync(file)) return null
+  if (!existsSync(file)) {
+    if (resolveElectives) curriculumCache.set(key, null)
+    return null
+  }
   const data = readJson(file)
-  if (!resolveElectives || !data.electivePoolRefs) return data
+  if (!resolveElectives || !data.electivePoolRefs) {
+    if (resolveElectives) curriculumCache.set(key, data)
+    return data
+  }
 
   const electives = { ...(data.electives || {}) }
   for (const [type, poolKey] of Object.entries(data.electivePoolRefs)) {
     const pool = readElectivePool(poolKey)
     electives[type] = pool?.courses || []
   }
-  return { ...data, electives }
+  const resolved = { ...data, electives }
+  curriculumCache.set(key, resolved)
+  return resolved
 }
 
 export function writeCurriculumData(data) {
   const id = safeKey(data?.id, 'curriculum id')
   const saved = { ...data, id, updatedAt: new Date().toISOString() }
   atomicWrite(path.join(CURRICULUM_DIR, `${id}.json`), saved)
+  curriculumCache.delete(id)
   return saved
 }
 
@@ -86,14 +106,23 @@ export function listElectivePools() {
 
 export function readElectivePool(key) {
   const safe = safeKey(key, 'elective pool key')
+  if (poolCache.has(safe)) return poolCache.get(safe)
   const file = path.join(ELECTIVE_DIR, `${safe}.json`)
-  return existsSync(file) ? readJson(file) : null
+  const pool = existsSync(file) ? readJson(file) : null
+  poolCache.set(safe, pool)
+  return pool
 }
 
 export function writeElectivePool(pool) {
   const key = safeKey(pool?.key, 'elective pool key')
   const saved = { ...pool, key, updatedAt: new Date().toISOString() }
   atomicWrite(path.join(ELECTIVE_DIR, `${key}.json`), saved)
+  poolCache.delete(key)
+  // A pool's courses feed into every curriculum that embeds it via
+  // electivePoolRefs. Rather than tracking that reverse mapping, just clear
+  // every cached curriculum too -- pool edits are a rare admin action, so
+  // the cost of re-resolving on the next read is negligible.
+  curriculumCache.clear()
   return saved
 }
 
