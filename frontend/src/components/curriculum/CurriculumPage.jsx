@@ -48,7 +48,9 @@ function electiveTypeForSlot(course, availableTypes) {
   return candidates.find(([pattern, type]) => pattern.test(text) && available.has(type))?.[1] || null
 }
 
-function CurriculumPage({ language, onAddCourse, major }) {
+const normalizeCode = code => String(code || '').replace(/\s+/g, '').toUpperCase()
+
+function CurriculumPage({ language, onAddCourse, major, auditResult }) {
   const [programs, setPrograms] = useState([])
   const [selected, setSelected] = useState(() => curriculumIdForProgramCode(major))
   const [curriculum, setCurriculum] = useState(null)
@@ -62,6 +64,16 @@ function CurriculumPage({ language, onAddCourse, major }) {
   const [error, setError] = useState('')
   const tr = (trText, enText) => language === 'tr' ? trText : enText
   const programGroups = groupCurriculumOptions(programs, language)
+
+  const auditActive = Boolean(auditResult && !auditResult.error && auditResult.curriculumId === selected)
+  const auditTakenSet = useMemo(
+    () => new Set(auditActive ? auditResult.requiredTaken.map(c => normalizeCode(c.code)) : []),
+    [auditActive, auditResult]
+  )
+  const auditMissingSet = useMemo(
+    () => new Set(auditActive ? auditResult.requiredMissing.map(c => normalizeCode(c.code)) : []),
+    [auditActive, auditResult]
+  )
 
   useEffect(() => {
     courseService.getCurriculums()
@@ -197,24 +209,35 @@ function CurriculumPage({ language, onAddCourse, major }) {
       )
     }
 
+    const taken = auditActive && auditTakenSet.has(normalizeCode(course.code))
+    const missing = auditActive && auditMissingSet.has(normalizeCode(course.code))
+
     return (
-      <li className={`curriculum-course ${course.offered ? 'curriculum-course-offered' : 'curriculum-course-not-offered'}`}>
+      <li className={[
+        'curriculum-course',
+        course.offered ? 'curriculum-course-offered' : 'curriculum-course-not-offered',
+        taken ? 'curriculum-course-taken' : '',
+        missing ? 'curriculum-course-missing' : '',
+      ].filter(Boolean).join(' ')}>
         <div className="curriculum-course-main">
           <span className={`course-status-dot ${course.offered ? 'course-status-open' : 'course-status-closed'}`} role="img" aria-label={course.offered ? tr('Bu dönem açıldı', 'Offered this term') : tr('Bu dönem açılmadı', 'Not offered this term')} />
           <span className="curriculum-code">{course.code || '—'}</span>
           <span className="curriculum-title">{language === 'tr' ? course.title_tr : (course.title_en || course.title_tr)}</span>
+          {taken && <span className="curriculum-audit-badge curriculum-audit-badge-taken">{tr('Tamamlandı', 'Completed')}</span>}
         </div>
         <div className="curriculum-course-meta">
           <span>{course.credits} ECTS</span>
-          <button
-            type="button"
-            className="curriculum-add-btn"
-            disabled={!course.offered}
-            onClick={() => addCurriculumCourse(course, source)}
-            aria-label={`${course.code} ${tr('dersini sepete ekle', 'add course to basket')}`}
-          >
-            {tr('Ekle', 'Add')}
-          </button>
+          {taken ? null : (
+            <button
+              type="button"
+              className="curriculum-add-btn"
+              disabled={!course.offered}
+              onClick={() => addCurriculumCourse(course, source)}
+              aria-label={`${course.code} ${tr('dersini sepete ekle', 'add course to basket')}`}
+            >
+              {tr('Ekle', 'Add')}
+            </button>
+          )}
         </div>
         {(course.prereq || course.coreq) && (
           <div className="curriculum-requisites">
@@ -309,6 +332,42 @@ function CurriculumPage({ language, onAddCourse, major }) {
 
       {!loading && curriculum && (
         <>
+          {auditActive && (
+            <section className="curriculum-audit-summary">
+              <header>
+                <span className="curriculum-audit-eyebrow">{tr('Mezuniyet denetimi', 'Degree audit')}</span>
+                <h3>{tr('Seçmeli ilerlemesi', 'Elective progress')}</h3>
+              </header>
+              <div className="curriculum-audit-types">
+                {auditResult.electiveTypes.map(type => (
+                  <div key={type.key} className={`curriculum-audit-type curriculum-audit-type-${type.status}`}>
+                    <div className="curriculum-audit-type-head">
+                      <strong>{type.label}</strong>
+                      <span>{type.filled} / {type.required} ECTS{type.estimated ? ` (${tr('tahmini', 'estimated')})` : ''}</span>
+                    </div>
+                    {type.courses.length > 0 && (
+                      <div className="curriculum-audit-type-courses">
+                        {type.courses.map(c => (
+                          <span key={c.code} className="curriculum-audit-chip">{c.code} · {c.creditsUsed} ECTS</span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+              {auditResult.unplaced.length > 0 && (
+                <div className="curriculum-audit-unplaced">
+                  <strong>{tr('Yerleştirilemeyen dersler', "Courses that couldn't be placed")}</strong>
+                  <div className="curriculum-audit-type-courses">
+                    {auditResult.unplaced.map(c => (
+                      <span key={c.code} className="curriculum-audit-chip curriculum-audit-chip-unplaced">{c.code} · {c.credits} ECTS</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </section>
+          )}
+
           <section className="curriculum-content" id="curriculum-results">
             <div className="curriculum-toolbar">
               <div className="curriculum-tabs" role="tablist">

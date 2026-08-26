@@ -7,6 +7,25 @@
 const API_BASE = import.meta.env.VITE_API_URL || ''
 
 export const courseService = {
+  /**
+   * Uploads a degree-audit PDF for server-side parsing against the current
+   * curriculum data. Purely stateless on the backend — nothing is persisted
+   * there; the caller decides whether to keep the result (e.g. localStorage).
+   */
+  async parseDegreeAudit(arrayBuffer, fileName) {
+    const res = await fetch(API_BASE + '/api/degree-audit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/octet-stream',
+        'X-File-Name': encodeURIComponent(fileName || 'audit.pdf'),
+      },
+      body: arrayBuffer,
+    })
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok) throw new Error(data.error || 'The PDF could not be parsed')
+    return data
+  },
+
   async getSiteSettings() {
     const res = await fetch(API_BASE + '/api/site-settings', { cache: 'no-store' })
     if (!res.ok) throw new Error('Site settings could not be loaded')

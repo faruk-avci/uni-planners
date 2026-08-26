@@ -15,6 +15,7 @@ import MajorPrompt from './components/onboarding/MajorPrompt'
 import HowToPage from './components/howto/HowToPage'
 import SharedSchedulePage from './components/shared/SharedSchedulePage'
 import CorequisitePrompt from './components/coreq/CorequisitePrompt'
+import DegreeAuditUpload from './components/audit/DegreeAuditUpload'
 import { courseService } from './services/courseService'
 import { canonicalProgramCode, groupMajorOptions } from './data/programs'
 
@@ -71,6 +72,14 @@ function App() {
   const logoPresses = useRef((Number(localStorage.getItem('uniplanner_logo_presses')) || 0) % 20)
   const [dinoMode, setDinoMode] = useState(() => localStorage.getItem('uniplanner_dino_mode') === 'true')
   const [dinoOpen, setDinoOpen] = useState(() => localStorage.getItem('uniplanner_dino_mode') === 'true')
+  // Independent, unrelated easter egg — a different press count than Dino's,
+  // never reset by Dino's own counter/toggle.
+  const auditLogoPresses = useRef((Number(localStorage.getItem('uniplanner_audit_logo_presses')) || 0) % 25)
+  const [auditUnlocked, setAuditUnlocked] = useState(() => localStorage.getItem('uniplanner_audit_unlocked') === 'true')
+  const [auditOpen, setAuditOpen] = useState(false)
+  const [auditResult, setAuditResult] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('uniplanner_degree_audit') || 'null') } catch { return null }
+  })
   const [activePage, setActivePage] = useState(initialRoute.page)
   const [sharedScheduleId, setSharedScheduleId] = useState(initialRoute.sharedId)
   // Basket model: each item is a course. `sections: []` = whole course (all
@@ -304,6 +313,20 @@ function App() {
         return next
       })
     }
+
+    auditLogoPresses.current += 1
+    localStorage.setItem('uniplanner_audit_logo_presses', String(auditLogoPresses.current))
+    if (auditLogoPresses.current === 25) {
+      auditLogoPresses.current = 0
+      localStorage.setItem('uniplanner_audit_logo_presses', '0')
+      localStorage.setItem('uniplanner_audit_unlocked', 'true')
+      setAuditUnlocked(true)
+      setAuditOpen(open => {
+        const next = !open
+        if (next) notify('success', tr('Mezuniyet denetimi yüklemesi açıldı.', 'Degree audit upload unlocked.'))
+        return next
+      })
+    }
   }
 
   const normalizeCourseCode = code => String(code || '').replace(/\s+/g, '').toUpperCase()
@@ -428,6 +451,12 @@ function App() {
       const remaining = item.sections.filter(s => s !== sectionName)
       return remaining.length === 0 ? [] : [{ ...item, sections: remaining }]
     }))
+  }
+
+  const handleAuditResult = result => {
+    setAuditResult(result)
+    if (result) localStorage.setItem('uniplanner_degree_audit', JSON.stringify(result))
+    else localStorage.removeItem('uniplanner_degree_audit')
   }
 
   const removeCourseFromBasket = code => {
@@ -895,6 +924,14 @@ function App() {
           onAddCorequisite={addCorequisiteAndGenerate}
         />
       )}
+      {auditOpen && (
+        <DegreeAuditUpload
+          language={language}
+          result={auditResult}
+          onResult={handleAuditResult}
+          onClose={() => setAuditOpen(false)}
+        />
+      )}
       {activePage !== 'shared' && (
         <Header
           language={language}
@@ -947,6 +984,7 @@ function App() {
           language={language}
           onAddCourse={addCourseToBasket}
           major={major}
+          auditResult={auditResult}
         />
       ) : activePage === 'howto' ? (
         <HowToPage language={language} onNavigate={navigate} />
