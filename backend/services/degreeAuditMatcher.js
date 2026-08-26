@@ -31,6 +31,11 @@ function priorityRank(key, label) {
   return 7; // unrecognized/other
 }
 
+function isFreeElectiveType(key, label) {
+  const text = `${key} ${label}`.toLocaleLowerCase('tr-TR');
+  return text.includes('serbest') || text === 'free' || text.includes(' free');
+}
+
 function findThreshold(label, areaThresholds) {
   const target = normalizeLabel(label);
   const exact = areaThresholds.find(a => normalizeLabel(a.label) === target);
@@ -151,11 +156,22 @@ export async function matchDegreeAudit({ degreeCode, areaThresholds, takenCourse
     }
   }
 
+  // Free electives are conventionally open to almost any course. A taken
+  // course that isn't curated into any specific pool file (a graduate-level
+  // course, a PE course, anything the pool JSON files just don't happen to
+  // list) should still count toward free-elective capacity instead of being
+  // reported as unplaceable, as long as we actually know its credit value.
+  const freeElectiveKey = Object.keys(curriculum.electivePoolRefs || {})
+    .find(key => isFreeElectiveType(key, curriculum.electiveLabels?.[key] || key)) || null;
+
   const chunks = [];
   const unplaced = [];
   for (const code of poolCodes) {
-    const eligibleTypes = etMap.get(code) || [];
+    let eligibleTypes = etMap.get(code) || [];
     const credits = catalogByCode.get(code)?.credits ?? poolCreditsByCode.get(code) ?? null;
+    if (eligibleTypes.length === 0 && credits !== null && freeElectiveKey) {
+      eligibleTypes = [freeElectiveKey];
+    }
     if (eligibleTypes.length === 0 || credits === null) {
       unplaced.push({ code, credits: credits ?? 0 });
       continue;

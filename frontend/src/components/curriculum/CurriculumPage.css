@@ -348,6 +348,20 @@
   background: color-mix(in srgb, var(--warning) 7%, var(--bg-secondary));
 }
 
+.curriculum-elective-slot-filled {
+  background: color-mix(in srgb, var(--success) 8%, var(--bg-secondary));
+}
+
+.elective-slot-marker-filled {
+  border-color: var(--success);
+  background: var(--success);
+}
+
+.elective-slot-filled-courses {
+  color: var(--success) !important;
+  font-weight: var(--weight-semibold);
+}
+
 .curriculum-audit-badge {
   flex: 0 0 auto;
   padding: 2px 8px;

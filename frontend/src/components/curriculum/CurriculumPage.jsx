@@ -82,6 +82,52 @@ function CurriculumPage({ language, onAddCourse, major, auditResult }) {
     return new Set(codes)
   }, [auditActive, auditResult])
 
+  // The semester-plan grid shows generic "SEÇMELİ" placeholder slots — usually
+  // more of them per type than a student actually needs, since the template
+  // just lists every semester the elective could be taken in. We don't know
+  // which specific slot instance a taken course was meant to fill (term/year
+  // was intentionally not tracked from the audit PDF), so instead: walk the
+  // slots of a type in document order and fill as many of them as the type's
+  // allocated courses cover, splitting a course across a slot boundary when
+  // credits don't line up exactly. Remaining, uncovered slots stay as plain
+  // open placeholders.
+  const auditSlotAssignments = useMemo(() => {
+    const assignments = new Map()
+    if (!auditActive || !curriculum) return assignments
+    const availableTypes = Object.keys(curriculum.electives || {})
+    const slotsByType = new Map()
+    for (const [year, terms] of Object.entries(curriculum.semesters || {})) {
+      for (const term of ['fall', 'spring']) {
+        (terms[term] || []).forEach((course, index) => {
+          const type = electiveTypeForSlot(course, availableTypes)
+          if (!type) return
+          if (!slotsByType.has(type)) slotsByType.set(type, [])
+          slotsByType.get(type).push({ slotId: `${year}-${term}-${index}`, credits: Number(course.credits) || 0 })
+        })
+      }
+    }
+    for (const type of auditResult.electiveTypes || []) {
+      const slots = slotsByType.get(type.key) || []
+      const queue = (type.courses || []).map(c => ({ code: c.code, remaining: c.creditsUsed }))
+      let qi = 0
+      for (const slot of slots) {
+        if (qi >= queue.length) break
+        let need = slot.credits
+        const used = []
+        while (need > 0.01 && qi < queue.length) {
+          const chunk = queue[qi]
+          const take = Math.min(chunk.remaining, need)
+          if (take > 0.01) used.push({ code: chunk.code, creditsUsed: take })
+          chunk.remaining -= take
+          need -= take
+          if (chunk.remaining <= 0.01) qi += 1
+        }
+        if (used.length) assignments.set(slot.slotId, used)
+      }
+    }
+    return assignments
+  }, [auditActive, auditResult, curriculum])
+
   useEffect(() => {
     courseService.getCurriculums()
       .then(data => {
@@ -193,9 +239,29 @@ function CurriculumPage({ language, onAddCourse, major, auditResult }) {
       .sort(sortElectiveCourses)
   }, [curriculum, modalElectiveType, matchesElectiveCredit, sortElectiveCourses])
 
-  const CourseRow = ({ course, source = 'curriculum' }) => {
+  const CourseRow = ({ course, source = 'curriculum', slotId }) => {
     const electiveType = electiveTypeForSlot(course, Object.keys(curriculum.electives || {}))
     if (electiveType) {
+      const filledBy = slotId ? auditSlotAssignments.get(slotId) : null
+      if (filledBy) {
+        return (
+          <li className="curriculum-course curriculum-elective-slot curriculum-elective-slot-filled">
+            <div className="elective-slot-button">
+              <span className="elective-slot-marker elective-slot-marker-filled" />
+              <span className="curriculum-code elective-slot-code">{tr('SEÇMELİ', 'ELECTIVE')}</span>
+              <span className="elective-slot-copy">
+                <strong>{language === 'tr' ? course.title_tr : (course.title_en || course.title_tr)}</strong>
+                <span className="elective-slot-filled-courses">
+                  {filledBy.map(c => `${c.code} · ${c.creditsUsed} ECTS`).join(', ')}
+                </span>
+              </span>
+              <span className="elective-slot-action">
+                <span className="curriculum-audit-badge curriculum-audit-badge-taken">{tr('Tamamlandı', 'Completed')}</span>
+              </span>
+            </div>
+          </li>
+        )
+      }
       return (
         <li className="curriculum-course curriculum-elective-slot">
           <div className="elective-slot-button">
@@ -410,7 +476,7 @@ function CurriculumPage({ language, onAddCourse, major, auditResult }) {
                         const courses = terms[term].filter(matches)
                         return <section className="curriculum-semester" key={term}>
                           <header><h4>{term === 'fall' ? tr('Güz', 'Fall') : tr('Bahar', 'Spring')}</h4><span>{courses.reduce((sum, course) => sum + (Number(course.credits) || 0), 0)} ECTS</span></header>
-                          {courses.length ? <ul>{courses.map((course, index) => <CourseRow key={`${term}-${course.code}-${index}`} course={course} />)}</ul> : <p className="curriculum-empty">{tr('Eşleşen ders yok.', 'No matching courses.')}</p>}
+                          {courses.length ? <ul>{courses.map((course, index) => <CourseRow key={`${term}-${course.code}-${index}`} course={course} slotId={`${year}-${term}-${terms[term].indexOf(course)}`} />)}</ul> : <p className="curriculum-empty">{tr('Eşleşen ders yok.', 'No matching courses.')}</p>}
                         </section>
                       })}
                     </div>
