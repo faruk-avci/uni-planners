@@ -18,6 +18,42 @@ function parseCookies(header) {
   return out;
 }
 
+// A first-time visitor's browser fires several API calls in parallel on page
+// load, all before any of them can come back with a Set-Cookie -- without
+// this, each one independently sees "no valid session" and creates its own
+// row, leaving a real visitor with several orphaned session rows instead of
+// one. Coalesce concurrent creations from the same client (by IP + user
+// agent, the only correlator available before a cookie exists) within a
+// short window into a single insert, so they all get the same session id.
+const pendingSessionCreates = new Map();
+const PENDING_CREATE_TTL_MS = 5000;
+
+function creationKeyFor(req) {
+  return `${req.ip || req.socket?.remoteAddress || ''}|${req.headers['user-agent'] || ''}`;
+}
+
+async function insertSession(req) {
+  const { rows } = await pool.query(
+    'INSERT INTO sessions (user_agent) VALUES ($1) RETURNING id',
+    [req.headers['user-agent'] || null]
+  );
+  return rows[0].id;
+}
+
+async function getOrCreateSession(req) {
+  const key = creationKeyFor(req);
+  const now = Date.now();
+  const pending = pendingSessionCreates.get(key);
+  if (pending && pending.expiresAt > now) return pending.promise;
+
+  const promise = insertSession(req);
+  pendingSessionCreates.set(key, { promise, expiresAt: now + PENDING_CREATE_TTL_MS });
+  promise.finally(() => {
+    if (pendingSessionCreates.get(key)?.promise === promise) pendingSessionCreates.delete(key);
+  });
+  return promise;
+}
+
 export async function sessionMiddleware(req, res, next) {
   try {
     let sid = parseCookies(req.headers.cookie)[COOKIE_NAME];
@@ -28,11 +64,7 @@ export async function sessionMiddleware(req, res, next) {
       valid = rowCount > 0;
     }
     if (!valid) {
-      const { rows } = await pool.query(
-        'INSERT INTO sessions (user_agent) VALUES ($1) RETURNING id',
-        [req.headers['user-agent'] || null]
-      );
-      sid = rows[0].id;
+      sid = await getOrCreateSession(req);
       created = true;
       res.cookie(COOKIE_NAME, sid, {
         httpOnly: true, sameSite: 'lax', secure: COOKIE_SECURE, maxAge: ONE_YEAR_MS, path: '/',
