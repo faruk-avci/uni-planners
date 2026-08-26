@@ -7,7 +7,7 @@ import {
   normalizeSharedSchedule,
   scheduleCalendarIcs
 } from '../utils/helpers.js';
-import { heavyTaskPool } from '../services/heavyTaskPool.js';
+import { schedulePool, imagePool } from '../services/heavyTaskPool.js';
 import {
   equivalentProgramsFor,
   MAJOR_TO_CURRICULUM,
@@ -156,7 +156,7 @@ router.post('/generate', async (req, res) => {
       freeDays.map(d => DAY_INDEX[d]).filter(i => i !== undefined)
     );
 
-    const primaryRun = await heavyTaskPool.run('generate_schedule', {
+    const primaryRun = await schedulePool.run('generate_schedule', {
       coursesSections,
       options: { freeDayIndexes: [...freeDayIdxs], preference: 'balanced', limit },
     }, { priority: 10, timeoutMs: 20_000 });
@@ -165,7 +165,7 @@ router.post('/generate', async (req, res) => {
     let freeDayFallback = false;
 
     if (freeDayIdxs.size > 0 && (result.emptyCourses.length > 0 || result.totalGenerated === 0)) {
-      const fallbackRun = await heavyTaskPool.run('generate_schedule', {
+      const fallbackRun = await schedulePool.run('generate_schedule', {
         coursesSections,
         options: { freeDayIndexes: [], preference: 'balanced', limit },
       }, { priority: 10, timeoutMs: 20_000 });
@@ -383,7 +383,7 @@ router.post('/export-image', async (req, res) => {
   const layout = req.body?.layout === 'agenda' ? 'agenda' : 'grid';
 
   try {
-    const { result, metrics } = await heavyTaskPool.run('render_schedule_png', {
+    const { result, metrics } = await imagePool.run('render_schedule_png', {
       schedule,
       language,
       layout,

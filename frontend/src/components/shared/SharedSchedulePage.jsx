@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import SchedulePreview from '../schedule/SchedulePreview'
 import { courseService } from '../../services/courseService'
+import { scheduleImagePng } from '../../utils/scheduleImageSvg'
 import './SharedSchedulePage.css'
 
 function SharedSchedulePage({ id, language, onHome }) {
@@ -33,7 +34,7 @@ function SharedSchedulePage({ id, language, onHome }) {
     setExporting(true)
     try {
       const layout = window.matchMedia('(max-width: 768px)').matches ? 'agenda' : 'grid'
-      const blob = await courseService.exportScheduleImage(share.schedule, language, layout)
+      const blob = await scheduleImagePng(share.schedule, language, layout)
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.href = url

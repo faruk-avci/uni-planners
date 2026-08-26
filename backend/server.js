@@ -8,7 +8,7 @@ import { ensureSchema, pool } from './config/db.js';
 import { sessionMiddleware } from './middleware/session.js';
 import { requestLogger } from './middleware/requestLogger.js';
 import { drainRequestLogs, requestLogStats, stopActivityLoggerTimer } from './services/activityLogger.js';
-import { heavyTaskPool, heavyTaskPoolConfig } from './services/heavyTaskPool.js';
+import { schedulePool, imagePool, heavyTaskPoolConfig, closeHeavyTaskPools } from './services/heavyTaskPool.js';
 
 // Routes
 import catalogRoutes from './routes/catalogRoutes.js';
@@ -50,7 +50,7 @@ app.get('/api/health', async (_req, res) => {
     res.json({
       status: 'ok',
       database: 'ok',
-      heavyTasks: heavyTaskPool.stats(),
+      heavyTasks: { schedule: schedulePool.stats(), image: imagePool.stats() },
       requestLogs: requestLogStats(),
     });
   } catch (err) {
@@ -87,9 +87,11 @@ ensureSchema()
       console.log(JSON.stringify({
         event: 'server_started',
         port: PORT,
-        heavyWorkers: heavyTaskPoolConfig.poolSize,
         detectedCores: heavyTaskPoolConfig.detectedCores,
-        heavyQueueMax: heavyTaskPoolConfig.maxQueue,
+        scheduleWorkers: heavyTaskPoolConfig.schedule.poolSize,
+        scheduleQueueMax: heavyTaskPoolConfig.schedule.maxQueue,
+        imageWorkers: heavyTaskPoolConfig.image.poolSize,
+        imageQueueMax: heavyTaskPoolConfig.image.maxQueue,
       }));
     });
   })
@@ -103,7 +105,7 @@ async function shutdown(signal) {
   server?.close();
   stopActivityLoggerTimer();
   await drainRequestLogs().catch(() => {});
-  await heavyTaskPool.close().catch(() => {});
+  await closeHeavyTaskPools().catch(() => {});
   await pool.end().catch(() => {});
   process.exit(0);
 }

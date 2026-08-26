@@ -289,19 +289,6 @@ export const courseService = {
     return data
   },
 
-  async exportScheduleImage(schedule, language = 'tr', layout = 'grid') {
-    const res = await fetch(API_BASE + '/api/schedule/export-image', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ schedule, language, layout }),
-    })
-    if (!res.ok) {
-      const data = await res.json().catch(() => ({}))
-      throw new Error(data.error || 'Schedule image could not be created')
-    }
-    return await res.blob()
-  },
-
   async exportScheduleCalendar(schedule, language = 'tr') {
     const res = await fetch(API_BASE + '/api/schedule/export-calendar', {
       method: 'POST',

@@ -17,6 +17,7 @@ import SharedSchedulePage from './components/shared/SharedSchedulePage'
 import CorequisitePrompt from './components/coreq/CorequisitePrompt'
 import DegreeAuditUpload from './components/audit/DegreeAuditUpload'
 import { courseService } from './services/courseService'
+import { scheduleImagePng } from './utils/scheduleImageSvg'
 import { canonicalProgramCode, groupMajorOptions } from './data/programs'
 
 const isUndergraduateMajor = value => Boolean(value && !['none', 'master', 'doctorate'].includes(value))
@@ -762,7 +763,7 @@ function App() {
       const layout = ['agenda', 'grid'].includes(preferredLayout)
         ? preferredLayout
         : (window.matchMedia('(max-width: 768px)').matches ? 'agenda' : 'grid')
-      const blob = await courseService.exportScheduleImage(schedule, language, layout)
+      const blob = await scheduleImagePng(schedule, language, layout)
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.href = url
