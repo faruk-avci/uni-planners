@@ -41,7 +41,12 @@
   flex-direction: column;
   gap: var(--space-4);
   max-height: calc(100dvh - var(--header-height) - 2 * var(--space-6));
-  overflow: hidden;
+  /* auto, not hidden: the basket list scrolls internally in the common case,
+     but if the sidebar's total content (free-day picker, generate button,
+     basket chrome) doesn't fit a shorter viewport, the sidebar itself needs
+     to scroll too -- otherwise whatever overflows is unreachable, since the
+     page's own scroll only moves .main-content, not this sticky sidebar. */
+  overflow-y: auto;
   overscroll-behavior: contain;
 }
 
@@ -49,7 +54,11 @@
   flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
-  overscroll-behavior: contain;
+  /* No overscroll-behavior here: this wrapper has no scrollbox of its own
+     (the real scrollable course list is nested inside BasketPanel and
+     already contains its own overscroll) -- containing it here as well
+     blocked scroll-wheel input from ever chaining up to .sidebar's own
+     overflow when the sidebar itself needed to scroll. */
 }
 
 .schedule-controls {
