@@ -25,28 +25,46 @@
     <text x="0" y="191" fill="#71717a" font-family="Arial, Helvetica, sans-serif" font-size="25">Dersleri, şubeleri ve haftalık tabloyu görüntüle.</text>
   </g>
 
+  <!-- Weekly schedule grid mockup, mirroring the app's own calendar view -->
   <g transform="translate(762 135)" filter="url(#shadow)">
     <rect width="360" height="380" rx="30" fill="#ffffff" stroke="#dedbe9" stroke-width="2"/>
-    <g transform="translate(40 38)">
-      <rect width="280" height="52" rx="14" fill="#f4f2ff"/>
-      <circle cx="27" cy="26" r="8" fill="#6658e8"/>
-      <rect x="49" y="17" width="91" height="8" rx="4" fill="#6658e8" opacity=".82"/>
-      <rect x="49" y="31" width="151" height="6" rx="3" fill="#a1a1aa" opacity=".55"/>
 
-      <rect y="70" width="280" height="52" rx="14" fill="#eefbf3"/>
-      <circle cx="27" cy="96" r="8" fill="#16a34a"/>
-      <rect x="49" y="87" width="118" height="8" rx="4" fill="#15803d" opacity=".82"/>
-      <rect x="49" y="101" width="175" height="6" rx="3" fill="#a1a1aa" opacity=".55"/>
+    <g transform="translate(30 32)">
+      <!-- Day headers -->
+      <g font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700" fill="#71717a" text-anchor="middle">
+        <text x="30" y="12">Pzt</text>
+        <text x="90" y="12">Sal</text>
+        <text x="150" y="12">Çar</text>
+        <text x="210" y="12">Per</text>
+        <text x="270" y="12">Cum</text>
+      </g>
 
-      <rect y="140" width="280" height="52" rx="14" fill="#eef6ff"/>
-      <circle cx="27" cy="166" r="8" fill="#2563eb"/>
-      <rect x="49" y="157" width="78" height="8" rx="4" fill="#1d4ed8" opacity=".82"/>
-      <rect x="49" y="171" width="132" height="6" rx="3" fill="#a1a1aa" opacity=".55"/>
+      <g transform="translate(0 26)">
+        <!-- Grid background lines -->
+        <g stroke="#eeedf3" stroke-width="1.5">
+          <line x1="0" y1="0" x2="300" y2="0"/>
+          <line x1="0" y1="45" x2="300" y2="45"/>
+          <line x1="0" y1="90" x2="300" y2="90"/>
+          <line x1="0" y1="135" x2="300" y2="135"/>
+          <line x1="0" y1="180" x2="300" y2="180"/>
+          <line x1="0" y1="225" x2="300" y2="225"/>
+          <line x1="0" y1="270" x2="300" y2="270"/>
+          <line x1="60" y1="0" x2="60" y2="270"/>
+          <line x1="120" y1="0" x2="120" y2="270"/>
+          <line x1="180" y1="0" x2="180" y2="270"/>
+          <line x1="240" y1="0" x2="240" y2="270"/>
+        </g>
 
-      <line x1="0" y1="225" x2="280" y2="225" stroke="#e4e4e7" stroke-width="2"/>
-      <rect x="0" y="246" width="86" height="56" rx="12" fill="#f4f2ff"/>
-      <rect x="97" y="246" width="86" height="56" rx="12" fill="#eefbf3"/>
-      <rect x="194" y="246" width="86" height="56" rx="12" fill="#fff1f5"/>
+        <!-- Course blocks, colored like the real schedule grid -->
+        <rect x="4" y="4" width="52" height="82" rx="9" fill="#2563eb"/>
+        <rect x="64" y="49" width="52" height="37" rx="9" fill="#16a34a"/>
+        <rect x="124" y="4" width="52" height="82" rx="9" fill="#7c3aed"/>
+        <rect x="184" y="94" width="52" height="37" rx="9" fill="#db2777"/>
+        <rect x="244" y="49" width="52" height="82" rx="9" fill="#d97706"/>
+        <rect x="4" y="139" width="52" height="82" rx="9" fill="#0891b2"/>
+        <rect x="124" y="139" width="52" height="37" rx="9" fill="#dc2626"/>
+        <rect x="244" y="184" width="52" height="41" rx="9" fill="#4f46e5"/>
+      </g>
     </g>
   </g>
 

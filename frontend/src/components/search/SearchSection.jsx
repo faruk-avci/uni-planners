@@ -25,8 +25,8 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
     noResults: language === 'tr' ? 'Aramanıza uygun ders bulunamadı.' : 'No courses found matching your search.',
     loading: language === 'tr' ? 'Veritabanı aranıyor...' : 'Querying database...',
     sectionInBasketHint: language === 'tr'
-      ? 'Bu dersin bir şubesi sepette. Tümünü eklemek için önce şubeyi çıkarın.'
-      : 'A section of this course is in your basket. Remove it first to add the whole course.',
+      ? 'Bu dersin bir şubesi sepette. Tümünü eklemek, o şubeyi kaldırıp dersin tamamını ekler.'
+      : 'A section of this course is in your basket. Adding all will replace it with the whole course.',
     remove: language === 'tr' ? 'Çıkar' : 'Remove',
   }
 
@@ -150,7 +150,6 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
                       <button
                         className="btn btn-sm btn-secondary"
                         onClick={(e) => { e.stopPropagation(); onAddCourse(course) }}
-                        disabled={pinnedSections.size > 0}
                         title={pinnedSections.size > 0 ? t.sectionInBasketHint : undefined}
                       >
                         {t.addAll}

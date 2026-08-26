@@ -342,12 +342,6 @@ function App() {
       notify('error', tr(`${course.code} zaten sepetinizde.`, `${course.code} is already in your basket.`))
       return false
     }
-    if (sections.length === 0 && existing?.sections?.length > 0) {
-      notify('error', tr(
-        `${course.code} dersinin bir şubesi sepette. Önce şubeyi kaldırın.`,
-        `A section of ${course.code} is already in your basket. Remove it first.`))
-      return false
-    }
     if (sections.length > 0 && existing?.sections?.length === 0) {
       notify('error', tr(
         `${course.code} dersinin tamamı sepette. Tek şube eklenemez.`,
@@ -369,10 +363,13 @@ function App() {
     let mainMsg = null
 
     if (sections.length === 0) {
-      setBasket(prev => [...prev, {
-        code: course.code, name: course.name, credits: course.credits,
-        sections: [], assessments: course.assessments || [], source
-      }])
+      // If some individual sections of this course were already pinned,
+      // "Add All" replaces that partial pin with the whole-course entry
+      // instead of being blocked or creating a duplicate basket item.
+      setBasket(prev => [
+        ...prev.filter(item => normalizeCourseCode(item.code) !== normalizeCourseCode(course.code)),
+        { code: course.code, name: course.name, credits: course.credits, sections: [], assessments: course.assessments || [], source }
+      ])
       mainMsg = tr(`${course.code} eklendi`, `${course.code} added`)
     } else {
       const toAdd = sections.filter(section => !(existing?.sections || []).includes(section))
@@ -497,14 +494,20 @@ function App() {
 
   // Renders a course code with a small × to remove it from the basket, used
   // inside the schedule-conflict diagnostics so a listed course can be
-  // dropped without hunting for it in the basket panel.
+  // dropped without hunting for it in the basket panel. Removing a conflicting
+  // course re-generates immediately with the updated basket instead of making
+  // the user click "Generate" again.
   const conflictCourseChip = code => (
     <span className="conflict-course-chip" key={code}>
       {code}
       <button
         type="button"
         className="conflict-course-remove"
-        onClick={() => removeCourseFromBasket(code)}
+        onClick={() => {
+          const nextBasket = basket.filter(item => normalizeCourseCode(item.code) !== normalizeCourseCode(code))
+          setBasket(nextBasket)
+          generateSchedules(null, nextBasket)
+        }}
         aria-label={tr(`${code} dersini sepetten çıkar`, `Remove ${code} from basket`)}
         title={tr('Sepetten çıkar', 'Remove from basket')}
       >×</button>
