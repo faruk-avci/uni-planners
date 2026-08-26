@@ -66,14 +66,21 @@ function CurriculumPage({ language, onAddCourse, major, auditResult }) {
   const programGroups = groupCurriculumOptions(programs, language)
 
   const auditActive = Boolean(auditResult && !auditResult.error && auditResult.curriculumId === selected)
-  const auditTakenSet = useMemo(
-    () => new Set(auditActive ? auditResult.requiredTaken.map(c => normalizeCode(c.code)) : []),
-    [auditActive, auditResult]
-  )
   const auditMissingSet = useMemo(
     () => new Set(auditActive ? auditResult.requiredMissing.map(c => normalizeCode(c.code)) : []),
     [auditActive, auditResult]
   )
+  // Required-course matches plus any elective course the audit actually allocated
+  // to a pool (electiveTypes[].courses) — a course can satisfy an elective slot
+  // without ever appearing in requiredTaken, so both sources are needed here.
+  const auditCompletedSet = useMemo(() => {
+    if (!auditActive) return new Set()
+    const codes = auditResult.requiredTaken.map(c => normalizeCode(c.code))
+    for (const type of auditResult.electiveTypes || []) {
+      for (const course of type.courses || []) codes.push(normalizeCode(course.code))
+    }
+    return new Set(codes)
+  }, [auditActive, auditResult])
 
   useEffect(() => {
     courseService.getCurriculums()
@@ -209,7 +216,7 @@ function CurriculumPage({ language, onAddCourse, major, auditResult }) {
       )
     }
 
-    const taken = auditActive && auditTakenSet.has(normalizeCode(course.code))
+    const taken = auditActive && auditCompletedSet.has(normalizeCode(course.code))
     const missing = auditActive && auditMissingSet.has(normalizeCode(course.code))
 
     return (

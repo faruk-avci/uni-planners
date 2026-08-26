@@ -612,6 +612,12 @@
   border-color: var(--error);
 }
 
+.toast-info {
+  background: var(--info-bg);
+  color: var(--info);
+  border-color: var(--info);
+}
+
 /* ── Schedule generation message ── */
 .schedule-message {
   display: grid;

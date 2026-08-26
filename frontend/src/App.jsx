@@ -316,7 +316,10 @@ function App() {
 
     auditLogoPresses.current += 1
     localStorage.setItem('uniplanner_audit_logo_presses', String(auditLogoPresses.current))
-    if (auditLogoPresses.current === 25) {
+    // >= rather than === so a double-fired click event (or a click missed
+    // earlier and caught up on a later render) can't skip past the exact
+    // trigger count and leave the counter stuck above threshold forever.
+    if (auditLogoPresses.current >= 25) {
       auditLogoPresses.current = 0
       localStorage.setItem('uniplanner_audit_logo_presses', '0')
       localStorage.setItem('uniplanner_audit_unlocked', 'true')
@@ -326,6 +329,8 @@ function App() {
         if (next) notify('success', tr('Mezuniyet denetimi yüklemesi açıldı.', 'Degree audit upload unlocked.'))
         return next
       })
+    } else if (auditLogoPresses.current >= 20) {
+      notify('info', `${auditLogoPresses.current}/25`, 1200)
     }
   }
 
@@ -455,8 +460,15 @@ function App() {
 
   const handleAuditResult = result => {
     setAuditResult(result)
-    if (result) localStorage.setItem('uniplanner_degree_audit', JSON.stringify(result))
-    else localStorage.removeItem('uniplanner_degree_audit')
+    if (result) {
+      localStorage.setItem('uniplanner_degree_audit', JSON.stringify(result))
+      if (!result.error) {
+        setAuditOpen(false)
+        navigate('curriculum')
+      }
+    } else {
+      localStorage.removeItem('uniplanner_degree_audit')
+    }
   }
 
   const removeCourseFromBasket = code => {

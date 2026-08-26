@@ -5,11 +5,12 @@ const normalizeLabel = str => String(str || '').toLocaleLowerCase('tr-TR').repla
 const EPSILON = 0.01;
 
 // The curriculum was restructured this year for some course sequences: the
-// old two-course pair is now taught/required as a single merged course.
-// A student who took any one of the old codes should have the new required
-// code counted as satisfied. Not derived from any parsed data — this is
-// institutional knowledge about the specific renumbering, not a per-student
-// personalization, so it applies regardless of what's in the audit PDF.
+// old two-course pair is now taught/required as a single merged course. A
+// student must have taken BOTH old codes for the merged requirement to count
+// as satisfied — taking only one half (e.g. HIST 201 without HIST 202) does
+// not complete it. Not derived from any parsed data — this is institutional
+// knowledge about the specific renumbering, not a per-student personalization,
+// so it applies regardless of what's in the audit PDF.
 const LEGACY_COURSE_MERGES = [
   { newCode: 'TLL100', oldCodes: ['TLL101', 'TLL102'] },
   { newCode: 'HIST200', oldCodes: ['HIST201', 'HIST202'] },
@@ -98,9 +99,12 @@ export async function matchDegreeAudit({ degreeCode, areaThresholds, takenCourse
 
   for (const { newCode, oldCodes } of LEGACY_COURSE_MERGES) {
     if (!requiredCodes.has(newCode) || !requiredMissing.has(newCode)) continue;
-    const matchedOld = oldCodes.find(code => takenSet.has(code) && !consumedBySubstitution.has(code));
-    if (!matchedOld) continue;
-    requiredTaken.push({ code: newCode, via: matchedOld });
+    // The merge is a genuine combination of both halves, not an either/or
+    // equivalency - taking only one part (e.g. HIST 201 without HIST 202)
+    // does not satisfy the merged requirement.
+    const allTaken = oldCodes.every(code => takenSet.has(code) && !consumedBySubstitution.has(code));
+    if (!allTaken) continue;
+    requiredTaken.push({ code: newCode, via: oldCodes.join('+') });
     requiredMissing.delete(newCode);
     for (const code of oldCodes) consumedBySubstitution.add(code);
   }
@@ -134,11 +138,24 @@ export async function matchDegreeAudit({ degreeCode, areaThresholds, takenCourse
     };
   }).sort((a, b) => a.priority - b.priority);
 
+  // Some courses eligible for an elective pool (e.g. specially-numbered
+  // certificate electives) aren't in the live catalog_courses table at all —
+  // falling back to null there previously forced them into "unplaced" with
+  // 0 credits even when we already know which pool they belong to. The pool
+  // file itself carries each course's own credit value, so use that first.
+  const poolCreditsByCode = new Map();
+  for (const list of Object.values(curriculum.electives || {})) {
+    for (const c of list) {
+      const code = normalize(c.code);
+      if (code && !poolCreditsByCode.has(code)) poolCreditsByCode.set(code, Number(c.credits) || 0);
+    }
+  }
+
   const chunks = [];
   const unplaced = [];
   for (const code of poolCodes) {
     const eligibleTypes = etMap.get(code) || [];
-    const credits = catalogByCode.get(code)?.credits ?? null;
+    const credits = catalogByCode.get(code)?.credits ?? poolCreditsByCode.get(code) ?? null;
     if (eligibleTypes.length === 0 || credits === null) {
       unplaced.push({ code, credits: credits ?? 0 });
       continue;
