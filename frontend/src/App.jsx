@@ -434,6 +434,26 @@ function App() {
     setBasket(prev => prev.filter(item => normalizeCourseCode(item.code) !== normalizeCourseCode(code)))
   }
 
+  // Course is fully in the basket (any section); user wants to exclude one or
+  // more specific sections. Converts the whole-course entry into a pinned
+  // list of every other section instead of just dropping the course.
+  const excludeSectionFromBasket = (course, excludedSectionNames) => {
+    const excluded = new Set(excludedSectionNames)
+    const remaining = (course.sections || []).map(s => s.name).filter(name => !excluded.has(name))
+    setBasket(prev => {
+      const withoutCourse = prev.filter(item => normalizeCourseCode(item.code) !== normalizeCourseCode(course.code))
+      if (remaining.length === 0) return withoutCourse
+      return [...withoutCourse, {
+        code: course.code,
+        name: course.name,
+        credits: course.credits,
+        sections: remaining,
+        assessments: course.assessments || [],
+        source: 'search',
+      }]
+    })
+  }
+
   // Renders a course code with a small × to remove it from the basket, used
   // inside the schedule-conflict diagnostics so a listed course can be
   // dropped without hunting for it in the basket panel.
@@ -942,6 +962,7 @@ function App() {
               basket={basket}
               onRemoveCourse={removeCourseFromBasket}
               onRemoveSection={removeSection}
+              onExcludeSection={excludeSectionFromBasket}
             />
 
             {(schedules.length > 0 || genMessage) && (

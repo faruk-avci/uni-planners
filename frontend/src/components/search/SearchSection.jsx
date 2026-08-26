@@ -4,7 +4,7 @@ import './SearchSection.css'
 
 const normalizeCode = code => String(code || '').replace(/\s+/g, '').toUpperCase()
 
-function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemoveCourse, onRemoveSection }) {
+function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemoveCourse, onRemoveSection, onExcludeSection }) {
   const [searchQuery, setSearchQuery] = useState('')
   const [expandedCourse, setExpandedCourse] = useState(null)
 
@@ -24,9 +24,6 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
     hideSections: language === 'tr' ? 'Şubeleri Gizle' : 'Hide Sections',
     noResults: language === 'tr' ? 'Aramanıza uygun ders bulunamadı.' : 'No courses found matching your search.',
     loading: language === 'tr' ? 'Veritabanı aranıyor...' : 'Querying database...',
-    wholeCourseAddedHint: language === 'tr'
-      ? 'Dersin tamamı sepette. Tek şube eklemek için önce dersi çıkarın.'
-      : 'The whole course is in your basket. Remove it first to add individual sections.',
     sectionInBasketHint: language === 'tr'
       ? 'Bu dersin bir şubesi sepette. Tümünü eklemek için önce şubeyi çıkarın.'
       : 'A section of this course is in your basket. Remove it first to add the whole course.',
@@ -207,28 +204,38 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
                                     </span>
                                   ))}
                                 </div>
-                                <button
-                                  className="btn btn-sm btn-secondary same-time-add"
-                                  onClick={() => onAddCourse(course, group.map(section => section.name))}
-                                  disabled={wholeCourseAdded || groupFullyAdded}
-                                  title={wholeCourseAdded ? t.wholeCourseAddedHint : undefined}
-                                >
-                                  {language === 'tr' ? 'Grup Olarak Ekle' : 'Add as Group'}
-                                </button>
+                                {wholeCourseAdded ? (
+                                  <button
+                                    className="btn btn-sm btn-danger-ghost same-time-add"
+                                    onClick={() => onExcludeSection(course, group.map(section => section.name))}
+                                  >
+                                    {language === 'tr' ? 'Grubu Çıkar' : 'Remove Group'}
+                                  </button>
+                                ) : (
+                                  <button
+                                    className="btn btn-sm btn-secondary same-time-add"
+                                    onClick={() => onAddCourse(course, group.map(section => section.name))}
+                                    disabled={groupFullyAdded}
+                                  >
+                                    {language === 'tr' ? 'Grup Olarak Ekle' : 'Add as Group'}
+                                  </button>
+                                )}
                               </div>
                               <div className="same-time-options">
                                 {group.map(section => {
-                                  const sectionAdded = pinnedSections.has(section.name)
+                                  const sectionRemovable = wholeCourseAdded || pinnedSections.has(section.name)
                                   return (
                                     <div key={section.name} className="same-time-option">
                                       <div className="section-info">
                                         <span className="section-name">{section.name}</span>
                                         <span className="section-lecturer">{section.lecturer}</span>
                                       </div>
-                                      {sectionAdded ? (
+                                      {sectionRemovable ? (
                                         <button
                                           className="btn btn-sm btn-danger-ghost section-add-btn"
-                                          onClick={() => onRemoveSection(course.code, section.name)}
+                                          onClick={() => wholeCourseAdded
+                                            ? onExcludeSection(course, [section.name])
+                                            : onRemoveSection(course.code, section.name)}
                                         >
                                           {t.remove}
                                         </button>
@@ -236,8 +243,6 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
                                         <button
                                           className="btn btn-sm btn-ghost section-add-btn"
                                           onClick={() => onAddCourse(course, [section.name])}
-                                          disabled={wholeCourseAdded}
-                                          title={wholeCourseAdded ? t.wholeCourseAddedHint : undefined}
                                         >
                                           {language === 'tr' ? 'Ekle' : 'Add'}
                                         </button>
@@ -251,7 +256,7 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
                         }
 
                         const section = group[0]
-                        const sectionAdded = pinnedSections.has(section.name)
+                        const sectionRemovable = wholeCourseAdded || pinnedSections.has(section.name)
                         return (
                           <div key={section.name} className="section-row section-row-simple">
                             <div className="section-info">
@@ -267,10 +272,12 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
                                 </span>
                               ))}
                             </div>
-                            {sectionAdded ? (
+                            {sectionRemovable ? (
                               <button
                                 className="btn btn-sm btn-danger-ghost section-add-btn"
-                                onClick={() => onRemoveSection(course.code, section.name)}
+                                onClick={() => wholeCourseAdded
+                                  ? onExcludeSection(course, [section.name])
+                                  : onRemoveSection(course.code, section.name)}
                               >
                                 {t.remove}
                               </button>
@@ -278,8 +285,6 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
                               <button
                                 className="btn btn-sm btn-ghost section-add-btn"
                                 onClick={() => onAddCourse(course, [section.name])}
-                                disabled={wholeCourseAdded}
-                                title={wholeCourseAdded ? t.wholeCourseAddedHint : undefined}
                               >
                                 {language === 'tr' ? 'Ekle' : 'Add'}
                               </button>
