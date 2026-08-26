@@ -47,6 +47,12 @@ export function sharedPageHtml(indexHtml, { id, row, siteOrigin }) {
   html = replaceMeta(html, 'property="og:image"', image);
   html = replaceMeta(html, 'property="og:image:secure_url"', image);
   html = replaceMeta(html, 'property="og:image:alt"', 'UniPlanners üzerinden paylaşılan haftalık ders programı');
+  // Set explicitly rather than relying on the base template's values already
+  // matching this image by coincidence — a mismatch here is a common reason
+  // crawlers (LinkedIn in particular) silently refuse to render a preview.
+  html = replaceMeta(html, 'property="og:image:type"', 'image/png');
+  html = replaceMeta(html, 'property="og:image:width"', '1200');
+  html = replaceMeta(html, 'property="og:image:height"', '630');
   html = replaceMeta(html, 'name="twitter:title"', title);
   html = replaceMeta(html, 'name="twitter:description"', description);
   html = replaceMeta(html, 'name="twitter:image"', image);
