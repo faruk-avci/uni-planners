@@ -18,6 +18,15 @@ router.get('/site-settings', (_req, res) => {
   res.json({ mainFont, catalogTerm, surveyUrl });
 });
 
+// Many different students search the same handful of popular course codes.
+// The catalog itself is already in-memory (see getCatalog), so this isn't
+// about avoiding a DB hit -- it's about skipping the repeated filter/sort/
+// serialize work for an identical query. Keyed on the catalog's own
+// loadedAt so a reload (new term data) invalidates everything at once
+// instead of needing a separate TTL to reason about.
+const searchCache = { generation: 0, entries: new Map() };
+const SEARCH_CACHE_MAX_ENTRIES = 500;
+
 router.post('/courses/search', async (req, res) => {
   const query = (req.body.query || '').trim().toUpperCase();
   const major = (req.body.major || '').trim().toUpperCase();
@@ -29,7 +38,18 @@ router.post('/courses/search', async (req, res) => {
   }
 
   try {
-    const { all } = await getCatalog();
+    const { all, loadedAt } = await getCatalog();
+    if (searchCache.generation !== loadedAt) {
+      searchCache.generation = loadedAt;
+      searchCache.entries.clear();
+    }
+    const cacheKey = `${query}|${major}|${type}`;
+    const cached = searchCache.entries.get(cacheKey);
+    if (cached) {
+      res.locals.activity = { ...res.locals.activity, resultCount: cached.length, cacheHit: true };
+      return res.json(cached);
+    }
+
     const q = query.replace(/\s+/g, '');
 
     const matches = all.filter(c => {
@@ -50,8 +70,13 @@ router.post('/courses/search', async (req, res) => {
       return ra - rb || a.normCode.localeCompare(b.normCode);
     });
 
-    res.locals.activity = { ...res.locals.activity, resultCount: matches.length };
-    res.json(matches.map(stripEntry));
+    const result = matches.map(stripEntry);
+    if (searchCache.entries.size < SEARCH_CACHE_MAX_ENTRIES) {
+      searchCache.entries.set(cacheKey, result);
+    }
+
+    res.locals.activity = { ...res.locals.activity, resultCount: result.length };
+    res.json(result);
   } catch (err) {
     console.error('POST /courses/search error:', err.message);
     res.status(500).json({ error: err.message });
