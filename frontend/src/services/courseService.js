@@ -107,28 +107,6 @@ export const courseService = {
   },
 
   /**
-   * Fetch multiple courses by exact code in a single request.
-   * Returns a map keyed by normalized code (no spaces, uppercase); codes
-   * not found in the catalog are simply absent from the result.
-   */
-  async getCoursesBatch(codes = []) {
-    const norm = [...new Set(codes.map(code => String(code || '').replace(/\s+/g, '').toUpperCase()).filter(Boolean))]
-    if (norm.length === 0) return {}
-    try {
-      const res = await fetch(API_BASE + '/api/courses/batch', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ codes: norm }),
-      })
-      if (!res.ok) return {}
-      return await res.json()
-    } catch (err) {
-      console.error('Failed to fetch courses in batch', err)
-      return {}
-    }
-  },
-
-  /**
    * Load the current session's saved basket from the server.
    * Relies on the HttpOnly session cookie (credentials: 'include').
    */
@@ -238,7 +216,7 @@ export const courseService = {
    * @param {Array} basket  items with { code, selectedSection }
    * @param {Array} freeDays  full Turkish day names, e.g. ["Cuma"]
    */
-  async generateSchedule(basket = [], freeDays = []) {
+  async generateSchedule(basket = [], freeDays = [], options = {}) {
     const courses = basket.map(item => ({
       code: item.code,
       sections: item.sections || [], // [] = all sections of the course
@@ -248,7 +226,7 @@ export const courseService = {
       const res = await fetch(API_BASE + '/api/schedule/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ courses, freeDays }),
+        body: JSON.stringify({ courses, freeDays, ignoreCoreqs: Boolean(options.ignoreCoreqs) }),
       });
       if (!res.ok) throw new Error('Schedule generation failed');
 

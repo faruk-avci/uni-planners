@@ -276,7 +276,6 @@ const REQUEST_LOG_EXCLUDED_ACTIONS = [
   'preferences_load',
   'site_stats_load',
   'course_view',
-  'course_batch_load',
   'assessments_load',
   'course_add_track',
   'major_set',

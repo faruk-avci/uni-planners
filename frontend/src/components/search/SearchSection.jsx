@@ -2,7 +2,9 @@ import { useState } from 'react'
 import { courseService } from '../../services/courseService'
 import './SearchSection.css'
 
-function SearchSection({ language, onAddCourse, catalogTerm }) {
+const normalizeCode = code => String(code || '').replace(/\s+/g, '').toUpperCase()
+
+function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemoveCourse, onRemoveSection }) {
   const [searchQuery, setSearchQuery] = useState('')
   const [expandedCourse, setExpandedCourse] = useState(null)
 
@@ -16,11 +18,19 @@ function SearchSection({ language, onAddCourse, catalogTerm }) {
     search: language === 'tr' ? 'Ara' : 'Search',
     term: catalogTerm || '2025-2026 Yaz',
     addAll: language === 'tr' ? 'Tümünü Ekle' : 'Add All',
+    removeCourse: language === 'tr' ? 'Dersi Çıkar' : 'Remove Course',
     showSections: language === 'tr' ? 'Şubeleri Göster' : 'Show Sections',
     addSection: language === 'tr' ? 'Şube Ekle' : 'Add Section',
     hideSections: language === 'tr' ? 'Şubeleri Gizle' : 'Hide Sections',
     noResults: language === 'tr' ? 'Aramanıza uygun ders bulunamadı.' : 'No courses found matching your search.',
     loading: language === 'tr' ? 'Veritabanı aranıyor...' : 'Querying database...',
+    wholeCourseAddedHint: language === 'tr'
+      ? 'Dersin tamamı sepette. Tek şube eklemek için önce dersi çıkarın.'
+      : 'The whole course is in your basket. Remove it first to add individual sections.',
+    sectionInBasketHint: language === 'tr'
+      ? 'Bu dersin bir şubesi sepette. Tümünü eklemek için önce şubeyi çıkarın.'
+      : 'A section of this course is in your basket. Remove it first to add the whole course.',
+    remove: language === 'tr' ? 'Çıkar' : 'Remove',
   }
 
   // Search function — only called on button click or Enter
@@ -109,6 +119,9 @@ function SearchSection({ language, onAddCourse, catalogTerm }) {
         ) : (
           searchResults.map(course => {
             const isExpanded = expandedCourse === course.code
+            const existing = basket.find(item => normalizeCode(item.code) === normalizeCode(course.code))
+            const wholeCourseAdded = Boolean(existing && (!existing.sections || existing.sections.length === 0))
+            const pinnedSections = new Set(wholeCourseAdded ? [] : existing?.sections || [])
             return (
               <div key={course.code} className="course-card">
                 <div
@@ -129,12 +142,23 @@ function SearchSection({ language, onAddCourse, catalogTerm }) {
                     </p>
                   </div>
                   <div className="course-actions">
-                    <button
-                      className="btn btn-sm btn-secondary"
-                      onClick={(e) => { e.stopPropagation(); onAddCourse(course) }}
-                    >
-                      {t.addAll}
-                    </button>
+                    {wholeCourseAdded ? (
+                      <button
+                        className="btn btn-sm btn-danger"
+                        onClick={(e) => { e.stopPropagation(); onRemoveCourse(course.code) }}
+                      >
+                        {t.removeCourse}
+                      </button>
+                    ) : (
+                      <button
+                        className="btn btn-sm btn-secondary"
+                        onClick={(e) => { e.stopPropagation(); onAddCourse(course) }}
+                        disabled={pinnedSections.size > 0}
+                        title={pinnedSections.size > 0 ? t.sectionInBasketHint : undefined}
+                      >
+                        {t.addAll}
+                      </button>
+                    )}
                     <button
                       className={`btn btn-sm btn-ghost sections-toggle ${isExpanded ? 'sections-toggle-active' : ''}`}
                       onClick={(e) => { e.stopPropagation(); toggleSections(course.code) }}
@@ -168,6 +192,7 @@ function SearchSection({ language, onAddCourse, catalogTerm }) {
                     <div className="sections-list">
                       {groupSectionsByTime(course.sections).map(group => {
                         if (group.length > 1) {
+                          const groupFullyAdded = group.every(section => pinnedSections.has(section.name))
                           return (
                             <div key={group.map(section => section.name).join('-')} className="same-time-group">
                               <div className="same-time-summary">
@@ -185,31 +210,48 @@ function SearchSection({ language, onAddCourse, catalogTerm }) {
                                 <button
                                   className="btn btn-sm btn-secondary same-time-add"
                                   onClick={() => onAddCourse(course, group.map(section => section.name))}
+                                  disabled={wholeCourseAdded || groupFullyAdded}
+                                  title={wholeCourseAdded ? t.wholeCourseAddedHint : undefined}
                                 >
                                   {language === 'tr' ? 'Grup Olarak Ekle' : 'Add as Group'}
                                 </button>
                               </div>
                               <div className="same-time-options">
-                                {group.map(section => (
-                                  <div key={section.name} className="same-time-option">
-                                    <div className="section-info">
-                                      <span className="section-name">{section.name}</span>
-                                      <span className="section-lecturer">{section.lecturer}</span>
+                                {group.map(section => {
+                                  const sectionAdded = pinnedSections.has(section.name)
+                                  return (
+                                    <div key={section.name} className="same-time-option">
+                                      <div className="section-info">
+                                        <span className="section-name">{section.name}</span>
+                                        <span className="section-lecturer">{section.lecturer}</span>
+                                      </div>
+                                      {sectionAdded ? (
+                                        <button
+                                          className="btn btn-sm btn-danger-ghost section-add-btn"
+                                          onClick={() => onRemoveSection(course.code, section.name)}
+                                        >
+                                          {t.remove}
+                                        </button>
+                                      ) : (
+                                        <button
+                                          className="btn btn-sm btn-ghost section-add-btn"
+                                          onClick={() => onAddCourse(course, [section.name])}
+                                          disabled={wholeCourseAdded}
+                                          title={wholeCourseAdded ? t.wholeCourseAddedHint : undefined}
+                                        >
+                                          {language === 'tr' ? 'Ekle' : 'Add'}
+                                        </button>
+                                      )}
                                     </div>
-                                    <button
-                                      className="btn btn-sm btn-ghost section-add-btn"
-                                      onClick={() => onAddCourse(course, [section.name])}
-                                    >
-                                      {language === 'tr' ? 'Ekle' : 'Add'}
-                                    </button>
-                                  </div>
-                                ))}
+                                  )
+                                })}
                               </div>
                             </div>
                           )
                         }
 
                         const section = group[0]
+                        const sectionAdded = pinnedSections.has(section.name)
                         return (
                           <div key={section.name} className="section-row section-row-simple">
                             <div className="section-info">
@@ -225,12 +267,23 @@ function SearchSection({ language, onAddCourse, catalogTerm }) {
                                 </span>
                               ))}
                             </div>
-                            <button
-                              className="btn btn-sm btn-ghost section-add-btn"
-                              onClick={() => onAddCourse(course, [section.name])}
-                            >
-                              {language === 'tr' ? 'Ekle' : 'Add'}
-                            </button>
+                            {sectionAdded ? (
+                              <button
+                                className="btn btn-sm btn-danger-ghost section-add-btn"
+                                onClick={() => onRemoveSection(course.code, section.name)}
+                              >
+                                {t.remove}
+                              </button>
+                            ) : (
+                              <button
+                                className="btn btn-sm btn-ghost section-add-btn"
+                                onClick={() => onAddCourse(course, [section.name])}
+                                disabled={wholeCourseAdded}
+                                title={wholeCourseAdded ? t.wholeCourseAddedHint : undefined}
+                              >
+                                {language === 'tr' ? 'Ekle' : 'Add'}
+                              </button>
+                            )}
                           </div>
                         )
                       })}

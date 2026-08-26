@@ -163,6 +163,27 @@
   color: var(--text-primary);
 }
 
+.btn-danger-ghost {
+  color: var(--text-tertiary);
+}
+
+.btn-danger-ghost:hover {
+  color: var(--error);
+  background: var(--error-bg);
+}
+
+.btn-danger {
+  color: var(--error);
+  background: var(--error-bg);
+  border: 1px solid color-mix(in srgb, var(--error), transparent 70%);
+}
+
+.btn-danger:hover {
+  color: var(--text-inverse);
+  background: var(--error);
+  border-color: var(--error);
+}
+
 .btn-sm {
   padding: var(--space-1) var(--space-3);
   font-size: var(--text-sm);
@@ -720,13 +741,41 @@
   gap: var(--space-2);
 }
 
-.conflict-solution-list span {
+.conflict-solution-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   padding: var(--space-2) var(--space-3);
   color: var(--text-primary);
   background: var(--bg-secondary);
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-full);
   font-weight: var(--weight-semibold);
+}
+
+.conflict-course-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.conflict-course-remove {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: var(--text-tertiary);
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  line-height: 1;
+  transition: color var(--duration-fast), background var(--duration-fast);
+}
+
+.conflict-course-remove:hover {
+  color: var(--error);
+  background: var(--error-bg);
 }
 
 /* Mobile basket controls are enabled only at the phone/tablet breakpoint. */

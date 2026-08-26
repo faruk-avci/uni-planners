@@ -163,13 +163,6 @@
 .basket-save-trigger:hover {
   color: var(--accent-primary); background: var(--accent-soft);
 }
-.btn-danger-ghost {
-  color: var(--text-tertiary);
-}
-.btn-danger-ghost:hover {
-  color: var(--error); background: var(--error-bg);
-}
-
 /* Save Form */
 .basket-save-form {
   display: flex; gap: var(--space-2); margin-top: var(--space-3);

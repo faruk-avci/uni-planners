@@ -82,7 +82,6 @@ function App() {
   const [savedBaskets, setSavedBaskets] = useState([])
   const [mobileBasketOpen, setMobileBasketOpen] = useState(false)
   const [coreqPrompt, setCoreqPrompt] = useState(null)
-  const [checkingCoreqs, setCheckingCoreqs] = useState(false)
   const [notice, setNotice] = useState(null) // { type: 'error'|'success', text }
   const [freeDays, setFreeDays] = useState([])
   const [freeDayFallback, setFreeDayFallback] = useState(null)
@@ -431,6 +430,26 @@ function App() {
     }))
   }
 
+  const removeCourseFromBasket = code => {
+    setBasket(prev => prev.filter(item => normalizeCourseCode(item.code) !== normalizeCourseCode(code)))
+  }
+
+  // Renders a course code with a small × to remove it from the basket, used
+  // inside the schedule-conflict diagnostics so a listed course can be
+  // dropped without hunting for it in the basket panel.
+  const conflictCourseChip = code => (
+    <span className="conflict-course-chip" key={code}>
+      {code}
+      <button
+        type="button"
+        className="conflict-course-remove"
+        onClick={() => removeCourseFromBasket(code)}
+        aria-label={tr(`${code} dersini sepetten çıkar`, `Remove ${code} from basket`)}
+        title={tr('Sepetten çıkar', 'Remove from basket')}
+      >×</button>
+    </span>
+  )
+
   const saveMajorPreference = (value, source = 'curriculum') => {
     setMajor(value)
     localStorage.setItem('uniplanner_major', value)
@@ -451,27 +470,34 @@ function App() {
     })
   }
 
-  const generateSchedules = async (overrideFreeDays = null, overrideBasket = null) => {
+  const generateSchedules = async (overrideFreeDays = null, overrideBasket = null, options = {}) => {
     const generationFreeDays = Array.isArray(overrideFreeDays) ? overrideFreeDays : freeDays
     const generationBasket = Array.isArray(overrideBasket) ? overrideBasket : basket
-    scrollToGenerated.current = true
-    setFreeDayFallback(null)
-    setGenerationInsights(null)
     if (generationBasket.length === 0) {
+      scrollToGenerated.current = true
       setGenMessage(language === 'tr' ? 'Sepetiniz boş.' : 'Your basket is empty.')
       setSchedules([])
       return
     }
     setGenerating(true)
+    const result = await courseService.generateSchedule(generationBasket, generationFreeDays, options)
+    setGenerating(false)
+
+    if (result.error === 'MISSING_COREQUISITES') {
+      setCoreqPrompt({ corequisites: result.corequisites || [], overrideFreeDays: generationFreeDays, basket: generationBasket })
+      return
+    }
+
+    scrollToGenerated.current = true
+    setFreeDayFallback(null)
+    setGenerationInsights(null)
+    setCurrentSchedule(0)
     setGenMessage(null)
     setScheduleShareCopied(false)
     window.clearTimeout(shareCopiedTimerRef.current)
     setFittingShown(false)
     setFittingCourses([])
     setFittingElectiveLabels({})
-    const result = await courseService.generateSchedule(generationBasket, generationFreeDays)
-    setGenerating(false)
-    setCurrentSchedule(0)
 
     if (result.freeDayFallback) {
       const requested = result.requestedFreeDays || generationFreeDays
@@ -496,63 +522,11 @@ function App() {
     }
   }
 
-  const checkCorequisitesAndGenerate = async (overrideFreeDays = null, overrideBasket = null) => {
-    if (checkingCoreqs || generating) return
-    const generationBasket = Array.isArray(overrideBasket) ? overrideBasket : basket
-    if (generationBasket.length === 0) {
-      generateSchedules(overrideFreeDays, generationBasket)
-      return
-    }
-
-    setCheckingCoreqs(true)
-    try {
-      const needsDetail = generationBasket.filter(item => item.coreq === undefined)
-      const fetchedDetails = needsDetail.length > 0
-        ? await courseService.getCoursesBatch(needsDetail.map(item => item.code))
-        : {}
-      const courseDetails = generationBasket.map(item => {
-        if (item.coreq !== undefined) return item
-        return fetchedDetails[normalizeCourseCode(item.code)] || item
-      })
-      const basketCodes = new Set(generationBasket.map(item => normalizeCourseCode(item.code)))
-      const missing = new Map()
-
-      for (const course of courseDetails) {
-        const seenForCourse = new Set()
-        for (const raw of String(course.coreq || '').split(/[,;]+/).map(value => value.trim()).filter(Boolean)) {
-          const code = normalizeCourseCode(raw)
-          if (!code || basketCodes.has(code) || seenForCourse.has(code)) continue
-          seenForCourse.add(code)
-          const entry = missing.get(code) || { raw, requiredBy: [] }
-          if (!entry.requiredBy.includes(course.code)) entry.requiredBy.push(course.code)
-          missing.set(code, entry)
-        }
-      }
-
-      if (missing.size === 0) {
-        generateSchedules(overrideFreeDays, generationBasket)
-        return
-      }
-
-      const fetchedCoreqs = await courseService.getCoursesBatch([...missing.keys()])
-      const corequisites = [...missing.entries()].map(([code, info]) => {
-        const found = fetchedCoreqs[code]
-        return {
-          ...(found || { code: info.raw, name: info.raw, credits: 0, sections: [], assessments: [] }),
-          requiredBy: info.requiredBy,
-        }
-      })
-      setCoreqPrompt({ corequisites, overrideFreeDays, basket: generationBasket })
-    } finally {
-      setCheckingCoreqs(false)
-    }
-  }
-
   const continueWithoutCorequisite = () => {
     if (!coreqPrompt) return
     const pending = coreqPrompt
     setCoreqPrompt(null)
-    generateSchedules(pending.overrideFreeDays, pending.basket)
+    generateSchedules(pending.overrideFreeDays, pending.basket, { ignoreCoreqs: true })
   }
 
   const cancelCorequisiteWarning = () => {
@@ -577,7 +551,7 @@ function App() {
     notify('success', tr(
       `Yan koşul ${corequisite.code} eklendi. Program oluşturuluyor.`,
       `Corequisite ${corequisite.code} added. Generating schedules.`))
-    checkCorequisitesAndGenerate(pending.overrideFreeDays, nextBasket)
+    generateSchedules(pending.overrideFreeDays, nextBasket)
   }
 
   const handleGenerate = () => {
@@ -585,7 +559,7 @@ function App() {
       setMajorPromptReason('generate')
       return
     }
-    checkCorequisitesAndGenerate()
+    generateSchedules()
   }
 
   const handleMajorPromptSelect = value => {
@@ -593,7 +567,7 @@ function App() {
     saveMajorPreference(value, pendingReason || 'curriculum')
     setMajorPromptReason(null)
     if (pendingReason === 'generate') {
-      window.requestAnimationFrame(() => checkCorequisitesAndGenerate())
+      window.requestAnimationFrame(() => generateSchedules())
     }
   }
 
@@ -961,7 +935,14 @@ function App() {
         <div className="main-layout">
           {/* Left: Search + Results */}
           <div className="main-content">
-            <SearchSection language={language} onAddCourse={addCourseToBasket} catalogTerm={siteSettings.catalogTerm} />
+            <SearchSection
+              language={language}
+              onAddCourse={addCourseToBasket}
+              catalogTerm={siteSettings.catalogTerm}
+              basket={basket}
+              onRemoveCourse={removeCourseFromBasket}
+              onRemoveSection={removeSection}
+            />
 
             {(schedules.length > 0 || genMessage) && (
               <section className="section generated-schedules" ref={generatedSchedulesRef}>
@@ -991,7 +972,7 @@ function App() {
                               type="button"
                               onClick={() => {
                                 setFreeDays([day])
-                                checkCorequisitesAndGenerate([day])
+                                generateSchedules([day])
                               }}
                             >
                               {language === 'tr' ? day : (ENGLISH_DAY_NAMES[day] || day)}
@@ -1015,7 +996,7 @@ function App() {
                               {generationInsights.hardConflicts.map(pair => (
                                 <li key={`${pair.courseA}-${pair.courseB}`}>
                                   <div>
-                                    <span>{pair.courseA} <b aria-hidden="true">↔</b> {pair.courseB}</span>
+                                    <span>{conflictCourseChip(pair.courseA)} <b aria-hidden="true">↔</b> {conflictCourseChip(pair.courseB)}</span>
                                     <small>
                                       {pair.sectionsA.join(', ')} <b aria-hidden="true">·</b> {pair.sectionsB.join(', ')}
                                     </small>
@@ -1047,7 +1028,14 @@ function App() {
                             </strong>
                             <div className="conflict-solution-list">
                               {generationInsights.removalOptions.map(option => (
-                                <span key={option.courses.join('-')}>{option.courses.join(' + ')}</span>
+                                <span className="conflict-solution-option" key={option.courses.join('-')}>
+                                  {option.courses.map((code, index) => (
+                                    <span key={code}>
+                                      {index > 0 && <b aria-hidden="true"> + </b>}
+                                      {conflictCourseChip(code)}
+                                    </span>
+                                  ))}
+                                </span>
                               ))}
                             </div>
                           </div>
@@ -1271,12 +1259,8 @@ function App() {
                 language={language}
               />
 
-              <button className="btn btn-primary btn-generate" onClick={handleGenerate} disabled={generating || checkingCoreqs}>
-                {checkingCoreqs
-                  ? tr('Yan koşullar kontrol ediliyor…', 'Checking corequisites…')
-                  : generating
-                    ? tr('Oluşturuluyor…', 'Generating…')
-                    : tr('Program Oluştur', 'Generate Schedules')}
+              <button className="btn btn-primary btn-generate" onClick={handleGenerate} disabled={generating}>
+                {generating ? tr('Oluşturuluyor…', 'Generating…') : tr('Program Oluştur', 'Generate Schedules')}
               </button>
             </div>
           </aside>
@@ -1350,13 +1334,9 @@ function App() {
                       handleGenerate()
                       setMobileBasketOpen(false)
                     }}
-                    disabled={generating || checkingCoreqs}
+                    disabled={generating}
                   >
-                    {checkingCoreqs
-                      ? tr('Yan koşullar kontrol ediliyor…', 'Checking corequisites…')
-                      : generating
-                        ? tr('Oluşturuluyor…', 'Generating…')
-                        : tr('Program Oluştur', 'Generate Schedules')}
+                    {generating ? tr('Oluşturuluyor…', 'Generating…') : tr('Program Oluştur', 'Generate Schedules')}
                   </button>
                 </div>
               </section>

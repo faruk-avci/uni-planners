@@ -47,12 +47,54 @@ router.post('/generate', async (req, res) => {
 
   try {
     const { rows: courseRows } = await pool.query(
-      `SELECT course_code, title, credits FROM catalog_courses WHERE course_code = ANY($1)`,
+      `SELECT course_code, title, credits, corequisites FROM catalog_courses WHERE course_code = ANY($1)`,
       [codes]
     );
     const courseMeta = {};
     for (const c of courseRows) {
-      courseMeta[c.course_code] = { name: c.title, credits: parseFloat(c.credits) || 0 };
+      courseMeta[c.course_code] = { name: c.title, credits: parseFloat(c.credits) || 0, coreq: c.corequisites || '' };
+    }
+
+    if (!req.body.ignoreCoreqs) {
+      const basketCodes = new Set(codes);
+      const missing = new Map();
+      for (const norm of codes) {
+        const meta = courseMeta[norm];
+        if (!meta) continue;
+        const formattedCode = formatCourseCode(norm);
+        const seenForCourse = new Set();
+        for (const raw of String(meta.coreq || '').split(/[,;]+/).map(v => v.trim()).filter(Boolean)) {
+          const coreqCode = normalize(raw);
+          if (!coreqCode || basketCodes.has(coreqCode) || seenForCourse.has(coreqCode)) continue;
+          seenForCourse.add(coreqCode);
+          const entry = missing.get(coreqCode) || { raw, requiredBy: [] };
+          if (!entry.requiredBy.includes(formattedCode)) entry.requiredBy.push(formattedCode);
+          missing.set(coreqCode, entry);
+        }
+      }
+
+      if (missing.size > 0) {
+        const missingCodes = [...missing.keys()];
+        const { rows: missingRows } = await pool.query(
+          `SELECT course_code, title, credits FROM catalog_courses WHERE course_code = ANY($1)`,
+          [missingCodes]
+        );
+        const missingMeta = {};
+        for (const c of missingRows) missingMeta[c.course_code] = { name: c.title, credits: parseFloat(c.credits) || 0 };
+
+        const corequisites = [...missing.entries()].map(([code, info]) => {
+          const found = missingMeta[code];
+          return {
+            code: formatCourseCode(code),
+            name: found?.name || info.raw,
+            credits: found?.credits ?? 0,
+            requiredBy: info.requiredBy,
+          };
+        });
+
+        res.locals.activity = { ...res.locals.activity, missingCorequisites: corequisites.map(c => c.code) };
+        return res.json({ success: false, error: 'MISSING_COREQUISITES', corequisites, totalSchedules: 0, schedules: [] });
+      }
     }
 
     const { rows: secRows } = await pool.query(

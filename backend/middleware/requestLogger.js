@@ -9,7 +9,6 @@ function actionFor(method, path) {
   const routes = [
     [/^GET \/api\/health$/, 'health_check'],
     [/^POST \/api\/courses\/search$/, 'course_search'],
-    [/^POST \/api\/courses\/batch$/, 'course_batch_load'],
     [/^GET \/api\/courses\/[^/]+$/, 'course_view'],
     [/^POST \/api\/assessments$/, 'assessments_load'],
     [/^GET \/api\/majors$/, 'major_options_load'],
@@ -73,6 +72,7 @@ function metadataFor(req, path) {
     })).slice(0, 100)
     metadata.freeDays = array(body.freeDays).map(value => clean(value, 20)).slice(0, 7)
     metadata.preference = clean(body.preference || 'balanced', 20)
+    metadata.ignoreCoreqs = Boolean(body.ignoreCoreqs)
   } else if (path === '/api/schedule/fitting') {
     metadata.major = clean(body.major, 32)
     metadata.occupiedSlotCount = array(body.occupied).length
@@ -95,8 +95,6 @@ function metadataFor(req, path) {
     metadata.source = clean(body.source, 24)
   } else if (path === '/api/preferences/grade') {
     metadata.grade = clean(body.grade, 16)
-  } else if (path === '/api/courses/batch') {
-    metadata.courseCount = array(body.codes).length
   } else if (path === '/api/analytics/course-add') {
     metadata.courseCode = clean(body.code, 20)
     metadata.source = clean(body.source, 32)
