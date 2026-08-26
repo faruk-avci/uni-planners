@@ -40,17 +40,27 @@ async function insertSession(req) {
   return rows[0].id;
 }
 
+function pruneExpiredCreates(now) {
+  for (const [key, entry] of pendingSessionCreates) {
+    if (entry.expiresAt <= now) pendingSessionCreates.delete(key);
+  }
+}
+
 async function getOrCreateSession(req) {
   const key = creationKeyFor(req);
   const now = Date.now();
   const pending = pendingSessionCreates.get(key);
   if (pending && pending.expiresAt > now) return pending.promise;
 
+  pruneExpiredCreates(now);
   const promise = insertSession(req);
+  // Deliberately kept until it expires rather than cleared once the insert
+  // settles: the insert itself finishes in a few ms, but a browser can fire
+  // several more uncookied requests over the following hundreds of ms before
+  // it's actually received and started using the Set-Cookie from the first
+  // one's response -- those later requests still need to land on this same
+  // session, not just ones that happen to overlap the insert itself.
   pendingSessionCreates.set(key, { promise, expiresAt: now + PENDING_CREATE_TTL_MS });
-  promise.finally(() => {
-    if (pendingSessionCreates.get(key)?.promise === promise) pendingSessionCreates.delete(key);
-  });
   return promise;
 }
 
