@@ -70,12 +70,17 @@ function App() {
     const saved = localStorage.getItem('uniplanner_dark_mode')
     return saved === '1'
   })
-  const logoPresses = useRef((Number(localStorage.getItem('uniplanner_logo_presses')) || 0) % 20)
+  // The logo also navigates home, so normal browsing (curriculum -> home,
+  // curriculum -> home, ...) clicks it too -- these counters must only track
+  // a rapid burst of clicks, not a lifetime total, or an ordinary user would
+  // eventually stumble into the easter eggs by accident over many visits.
+  const logoPresses = useRef(0)
+  const auditLogoPresses = useRef(0)
+  const lastLogoPressAt = useRef(0)
   const [dinoMode, setDinoMode] = useState(() => localStorage.getItem('uniplanner_dino_mode') === 'true')
   const [dinoOpen, setDinoOpen] = useState(() => localStorage.getItem('uniplanner_dino_mode') === 'true')
   // Independent, unrelated easter egg — a different press count than Dino's,
   // never reset by Dino's own counter/toggle.
-  const auditLogoPresses = useRef((Number(localStorage.getItem('uniplanner_audit_logo_presses')) || 0) % 25)
   const [auditUnlocked, setAuditUnlocked] = useState(() => localStorage.getItem('uniplanner_audit_unlocked') === 'true')
   const [auditOpen, setAuditOpen] = useState(false)
   const [auditResult, setAuditResult] = useState(() => {
@@ -346,14 +351,21 @@ function App() {
 
   const tr = (a, b) => (language === 'tr' ? a : b)
 
+  const LOGO_COMBO_WINDOW_MS = 2000
+
   const handleLogoClick = () => {
     navigate('planner')
-    logoPresses.current += 1
-    localStorage.setItem('uniplanner_logo_presses', String(logoPresses.current))
 
+    const now = Date.now()
+    if (now - lastLogoPressAt.current > LOGO_COMBO_WINDOW_MS) {
+      logoPresses.current = 0
+      auditLogoPresses.current = 0
+    }
+    lastLogoPressAt.current = now
+
+    logoPresses.current += 1
     if (logoPresses.current === 20) {
       logoPresses.current = 0
-      localStorage.setItem('uniplanner_logo_presses', '0')
 
       setDinoMode(current => {
         const next = !current
@@ -367,13 +379,11 @@ function App() {
     }
 
     auditLogoPresses.current += 1
-    localStorage.setItem('uniplanner_audit_logo_presses', String(auditLogoPresses.current))
     // >= rather than === so a double-fired click event (or a click missed
     // earlier and caught up on a later render) can't skip past the exact
     // trigger count and leave the counter stuck above threshold forever.
     if (auditLogoPresses.current >= 25) {
       auditLogoPresses.current = 0
-      localStorage.setItem('uniplanner_audit_logo_presses', '0')
       localStorage.setItem('uniplanner_audit_unlocked', 'true')
       setAuditUnlocked(true)
       setAuditOpen(open => {

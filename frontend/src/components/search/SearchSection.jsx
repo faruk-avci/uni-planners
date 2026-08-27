@@ -4,6 +4,8 @@ import './SearchSection.css'
 
 const normalizeCode = code => String(code || '').replace(/\s+/g, '').toUpperCase()
 
+const MIN_QUERY_LENGTH = 2
+
 function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemoveCourse, onRemoveSection, onExcludeSection }) {
   const [searchQuery, setSearchQuery] = useState('')
   const [expandedCourse, setExpandedCourse] = useState(null)
@@ -11,6 +13,7 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
   // Asynchronous API states
   const [searchResults, setSearchResults] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+  const [queryTooShort, setQueryTooShort] = useState(false)
 
   const t = {
     title: language === 'tr' ? 'Ders Ara' : 'Search Courses',
@@ -23,6 +26,7 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
     addSection: language === 'tr' ? 'Şube Ekle' : 'Add Section',
     hideSections: language === 'tr' ? 'Şubeleri Gizle' : 'Hide Sections',
     noResults: language === 'tr' ? 'Aramanıza uygun ders bulunamadı.' : 'No courses found matching your search.',
+    tooShort: language === 'tr' ? 'Aramak için en az 2 karakter yazın.' : 'Type at least 2 characters to search.',
     loading: language === 'tr' ? 'Veritabanı aranıyor...' : 'Querying database...',
     sectionInBasketHint: language === 'tr'
       ? 'Bu dersin bir şubesi sepette. Tümünü eklemek, o şubeyi kaldırıp dersin tamamını ekler.'
@@ -32,8 +36,15 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
 
   // Search function — only called on button click or Enter
   const doSearch = () => {
+    const trimmed = searchQuery.trim()
+    if (trimmed.length < MIN_QUERY_LENGTH) {
+      setQueryTooShort(true)
+      setSearchResults([])
+      return
+    }
+    setQueryTooShort(false)
     setIsLoading(true)
-    courseService.searchCourses(searchQuery).then(results => {
+    courseService.searchCourses(trimmed).then(results => {
       setSearchResults(results || [])
       setIsLoading(false)
     })
@@ -59,6 +70,7 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
   const handleClear = () => {
     setSearchQuery('');
     setSearchResults([]);
+    setQueryTooShort(false);
   }
 
   const groupSectionsByTime = sections => {
@@ -99,7 +111,7 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
               className="search-input"
               placeholder={t.placeholder}
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => { setSearchQuery(e.target.value); setQueryTooShort(false) }}
             />
           </div>
           <button type="submit" className="search-btn">{t.search}</button>
@@ -111,6 +123,8 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
       <div className="search-results stagger-enter">
         {isLoading ? (
           <p className="no-results-msg">{t.loading}</p>
+        ) : queryTooShort ? (
+          <p className="no-results-msg">{t.tooShort}</p>
         ) : searchResults.length === 0 ? (
           <p className="no-results-msg">{t.noResults}</p>
         ) : (
