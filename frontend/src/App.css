@@ -325,6 +325,13 @@
   gap: var(--space-2);
 }
 
+.fits-results {
+  /* The header is sticky at top: var(--space-6), not top: 0, so its real
+     footprint is --header-height + that offset -- account for both or the
+     content lands partly hidden behind it. */
+  scroll-margin-top: calc(var(--header-height) + var(--space-6) + var(--space-2));
+}
+
 .fits-empty {
   margin-top: var(--space-4);
   font-size: var(--text-sm);

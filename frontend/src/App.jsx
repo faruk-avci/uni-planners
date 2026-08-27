@@ -739,7 +739,7 @@ function App() {
     if (!scrollToFittingResults.current || !fittingShown || fittingLoading) return
     scrollToFittingResults.current = false
     window.requestAnimationFrame(() => {
-      ;(fittingResultsRef.current || fittingCoursesRef.current)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      fittingResultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     })
   }, [fittingShown, fittingLoading, fittingCourses])
 
@@ -1222,7 +1222,9 @@ function App() {
                       <span className="badge badge-new">{language === 'tr' ? 'Yeni' : 'New'}</span>
                     </button>
 
-                    {fittingShown && !isUndergraduateMajor(major) && (
+                    {fittingShown && (
+                    <div className="fits-results" ref={fittingResultsRef}>
+                    {!isUndergraduateMajor(major) && (
                       <div className="fits-major-prompt">
                         <p>
                           {major === 'none'
@@ -1251,7 +1253,7 @@ function App() {
                       </div>
                     )}
 
-                    {fittingShown && isUndergraduateMajor(major) && (
+                    {isUndergraduateMajor(major) && (
                       <>
                         <div className="fits-major-bar">
                           {language === 'tr' ? 'Bölüm:' : 'Major:'} <strong>{selectedMajorLabel}</strong>
@@ -1367,7 +1369,7 @@ function App() {
                               {shown.length === 0 ? (
                                 <p className="fits-empty">{tr('Seçilen filtreye uyan ders yok.', 'No courses match the selected filter.')}</p>
                               ) : (
-                                <div className="fit-groups" ref={fittingResultsRef}>
+                                <div className="fit-groups">
                                   {required.length > 0 && (
                                     <Group id="required" title={tr('Zorunlu Dersler', 'Required Courses')} courses={required} />
                                   )}
@@ -1382,6 +1384,8 @@ function App() {
                           )
                         })()}
                       </>
+                    )}
+                    </div>
                     )}
                   </div>
                 )}
