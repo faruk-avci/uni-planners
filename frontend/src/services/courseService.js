@@ -211,6 +211,21 @@ export const courseService = {
     }
   },
 
+  async trackSiteEvent(category, action, label) {
+    try {
+      const res = await fetch(API_BASE + '/api/analytics/site-event', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        keepalive: true,
+        body: JSON.stringify({ category, action, label }),
+      })
+      return res.ok
+    } catch {
+      return false
+    }
+  },
+
   /**
    * Fetch grading/assessment breakdown for a list of course codes.
    */

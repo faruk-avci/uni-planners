@@ -68,9 +68,7 @@ function App() {
   })
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem('uniplanner_dark_mode')
-    if (saved === '1') return true
-    if (saved === '0') return false
-    return typeof window !== 'undefined' && window.matchMedia?.('(prefers-color-scheme: dark)').matches
+    return saved === '1'
   })
   const logoPresses = useRef((Number(localStorage.getItem('uniplanner_logo_presses')) || 0) % 20)
   const [dinoMode, setDinoMode] = useState(() => localStorage.getItem('uniplanner_dino_mode') === 'true')
@@ -156,9 +154,18 @@ function App() {
   }
 
   const handleFillSurvey = () => {
+    courseService.trackSiteEvent('survey', 'popup_click')
     markSurveyNudgeDone()
     setSurveyNudgeVisible(false)
     surveyNudgeQueuedRef.current = false
+  }
+
+  const trackGithubClick = () => {
+    courseService.trackSiteEvent('link', 'github_click')
+  }
+
+  const trackSurveyHeaderClick = () => {
+    courseService.trackSiteEvent('survey', 'header_click')
   }
 
   useEffect(() => {
@@ -166,7 +173,13 @@ function App() {
     localStorage.setItem('uniplanner_dark_mode', darkMode ? '1' : '0')
   }, [darkMode])
 
-  const toggleDarkMode = () => setDarkMode(value => !value)
+  const toggleDarkMode = () => {
+    setDarkMode(value => {
+      const next = !value
+      courseService.trackSiteEvent('preference', 'theme_change', next ? 'dark' : 'light')
+      return next
+    })
+  }
 
   useEffect(() => {
     courseService.getSiteSettings()
@@ -314,10 +327,15 @@ function App() {
 
   const selectColorTheme = nextTheme => {
     setColorTheme(nextTheme)
+    courseService.trackSiteEvent('preference', 'palette_change', nextTheme)
   }
 
   const toggleLanguage = () => {
-    setLanguage(prev => prev === 'tr' ? 'en' : 'tr')
+    setLanguage(prev => {
+      const next = prev === 'tr' ? 'en' : 'tr'
+      courseService.trackSiteEvent('preference', 'language_change', next)
+      return next
+    })
   }
 
   const notify = (type, text, duration = 3500) => {
@@ -1006,6 +1024,7 @@ function App() {
           onNavigate={navigate}
           onLogoClick={handleLogoClick}
           surveyUrl={siteSettings.surveyUrl}
+          onSurveyLinkClick={trackSurveyHeaderClick}
         />
       )}
 
@@ -1406,7 +1425,7 @@ function App() {
           </button>
           <p className="mobile-basket-footer">
             Designed and coded with <span>❤️</span> by{' '}
-            <a href="https://github.com/faruk-avci" target="_blank" rel="noopener noreferrer">@omer-faruk-avci</a>
+            <a href="https://github.com/faruk-avci" target="_blank" rel="noopener noreferrer" onClick={trackGithubClick}>@omer-faruk-avci</a>
           </p>
 
           {mobileBasketOpen && (
@@ -1470,7 +1489,7 @@ function App() {
         <div className="container footer-content">
           <p className="footer-credit">
             UniPlanners · Designed and coded with <span>❤️</span> by{' '}
-            <a href="https://github.com/faruk-avci" target="_blank" rel="noopener noreferrer" className="footer-link">
+            <a href="https://github.com/faruk-avci" target="_blank" rel="noopener noreferrer" className="footer-link" onClick={trackGithubClick}>
               @omer-faruk-avci
             </a>
           </p>

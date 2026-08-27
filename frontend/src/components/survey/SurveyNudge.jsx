@@ -6,8 +6,8 @@ function SurveyNudge({ language, surveyUrl, onFillSurvey, onDismiss }) {
   return (
     <div className="survey-nudge" role="status">
       <button type="button" className="survey-nudge-close" onClick={onDismiss} aria-label={tr('Kapat', 'Close')}>×</button>
-      <strong>{tr('Nasıl gidiyor?', 'How’s it going?')}</strong>
-      <span>{tr('30 saniyeni ayırıp kısa anketimizi doldurur musun?', 'Got 30 seconds for a quick survey?')}</span>
+      <strong>{tr('Deneyiminiz nasıldı?', 'How’s it going?')}</strong>
+      <span>{tr('30 saniyenizi ayırıp kısa anketimizi doldurabilir misiniz?', 'Got 30 seconds for a quick survey?')}</span>
       <div className="survey-nudge-actions">
         <a
           href={surveyUrl}

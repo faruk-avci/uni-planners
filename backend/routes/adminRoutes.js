@@ -278,6 +278,7 @@ const REQUEST_LOG_EXCLUDED_ACTIONS = [
   'course_view',
   'assessments_load',
   'course_add_track',
+  'site_event_track',
   'major_set',
   'admin_login',
   'admin_logout',

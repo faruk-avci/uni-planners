@@ -22,6 +22,7 @@ function Header({
   onNavigate,
   onLogoClick,
   surveyUrl,
+  onSurveyLinkClick,
 }) {
   const [paletteOpen, setPaletteOpen] = useState(false)
   const paletteRef = useRef(null)
@@ -65,7 +66,7 @@ function Header({
               {language === 'tr' ? 'Nasıl Kullanılır' : 'How to Use'}
             </button>
             {surveyUrl && (
-              <a href={surveyUrl} target="_blank" rel="noopener noreferrer" className="nav-link nav-link-secondary">
+              <a href={surveyUrl} target="_blank" rel="noopener noreferrer" className="nav-link nav-link-secondary" onClick={onSurveyLinkClick}>
                 {language === 'tr' ? 'Anket' : 'Survey'}
               </a>
             )}
@@ -84,7 +85,7 @@ function Header({
             {language === 'tr' ? 'Nasıl?' : 'How to'}
           </button>
           {surveyUrl && (
-            <a href={surveyUrl} target="_blank" rel="noopener noreferrer" className="action-btn howto-mobile">
+            <a href={surveyUrl} target="_blank" rel="noopener noreferrer" className="action-btn howto-mobile" onClick={onSurveyLinkClick}>
               {language === 'tr' ? 'Anket' : 'Survey'}
             </a>
           )}

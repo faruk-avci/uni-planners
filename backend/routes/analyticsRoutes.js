@@ -39,6 +39,41 @@ router.post('/analytics/course-add', async (req, res) => {
   }
 });
 
+// Whitelisted rather than accepting any category/action pair -- these are
+// specifically for client-side actions with no server request of their own
+// to log (link clicks, theme/language/palette changes), not a general
+// catch-all (that was the old /track endpoint, removed because it
+// duplicated what course_add_events/major_selection_events already cover).
+const ALLOWED_SITE_EVENTS = new Set([
+  'survey:header_click',
+  'survey:popup_click',
+  'link:github_click',
+  'preference:theme_change',
+  'preference:palette_change',
+  'preference:language_change',
+]);
+
+router.post('/analytics/site-event', async (req, res) => {
+  const category = String(req.body?.category || '').trim().slice(0, 32);
+  const action = String(req.body?.action || '').trim().slice(0, 64);
+  const label = req.body?.label != null ? String(req.body.label).trim().slice(0, 100) : null;
+  if (!ALLOWED_SITE_EVENTS.has(`${category}:${action}`)) {
+    return res.status(400).json({ success: false, error: 'Unknown event' });
+  }
+
+  try {
+    await pool.query(
+      `INSERT INTO site_events (session_id, event_category, event_action, event_label)
+       VALUES ($1, $2, $3, $4)`,
+      [req.sessionId, category, action, label]
+    );
+    res.status(201).json({ success: true });
+  } catch (err) {
+    console.error('POST /analytics/site-event error:', err.message);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 router.get('/stats', async (_req, res) => {
   try {
     const courses  = await pool.query('SELECT count(*) FROM catalog_courses');
