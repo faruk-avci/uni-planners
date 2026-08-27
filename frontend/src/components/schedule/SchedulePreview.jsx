@@ -158,7 +158,7 @@ function SchedulePreview({ language, schedules = [], current = 0, onPrev, onNext
             ? (language === 'tr' ? 'Takvim hazırlanıyor…' : 'Creating calendar…')
             : (language === 'tr' ? 'Takvime Ekle' : 'Add to Calendar')}
         </button>
-        <button className="btn btn-ghost btn-sm" onClick={() => onExportImage(viewMode)} disabled={!hasData || exportingImage}>
+        <button className="btn btn-secondary btn-sm" onClick={() => onExportImage(viewMode)} disabled={!hasData || exportingImage}>
           {exportingImage
             ? (language === 'tr' ? 'Görsel hazırlanıyor…' : 'Creating image…')
             : (language === 'tr' ? 'PNG Olarak İndir' : 'Download PNG')}

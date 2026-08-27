@@ -16,8 +16,10 @@ import HowToPage from './components/howto/HowToPage'
 import SharedSchedulePage from './components/shared/SharedSchedulePage'
 import CorequisitePrompt from './components/coreq/CorequisitePrompt'
 import DegreeAuditUpload from './components/audit/DegreeAuditUpload'
+import SurveyNudge from './components/survey/SurveyNudge'
 import { courseService } from './services/courseService'
 import { scheduleImagePng } from './utils/scheduleImageSvg'
+import { recordGenerateSuccess, shouldQueueSurveyNudge, markSurveyNudgeShown, markSurveyNudgeDone } from './utils/surveyNudge'
 import { canonicalProgramCode, groupMajorOptions } from './data/programs'
 
 const isUndergraduateMajor = value => Boolean(value && !['none', 'master', 'doctorate'].includes(value))
@@ -127,6 +129,37 @@ function App() {
   const shareCopiedTimerRef = useRef(null)
   const notifyTimerRef = useRef(null)
   const scrollToGenerated = useRef(false)
+  const [surveyNudgeVisible, setSurveyNudgeVisible] = useState(false)
+  const surveyNudgeTimerRef = useRef(null)
+  const surveyNudgeQueuedRef = useRef(false)
+
+  useEffect(() => () => window.clearTimeout(surveyNudgeTimerRef.current), [])
+
+  // Queued after a generate/share/export that went well, shown only after a
+  // delay so it never interrupts the moment someone actually wants to look
+  // at what they just did. shouldQueueSurveyNudge caps how often this can
+  // ever fire; surveyNudgeQueuedRef just stops two triggers close together
+  // (e.g. generate then share) from stacking two separate timers.
+  const queueSurveyNudge = reason => {
+    if (!siteSettings.surveyUrl || surveyNudgeQueuedRef.current) return
+    if (!shouldQueueSurveyNudge(reason)) return
+    surveyNudgeQueuedRef.current = true
+    surveyNudgeTimerRef.current = window.setTimeout(() => {
+      markSurveyNudgeShown()
+      setSurveyNudgeVisible(true)
+    }, 12_000)
+  }
+
+  const dismissSurveyNudge = () => {
+    setSurveyNudgeVisible(false)
+    surveyNudgeQueuedRef.current = false
+  }
+
+  const handleFillSurvey = () => {
+    markSurveyNudgeDone()
+    setSurveyNudgeVisible(false)
+    surveyNudgeQueuedRef.current = false
+  }
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light')
@@ -575,6 +608,8 @@ function App() {
     } else if (result.success && result.schedules.length > 0) {
       setSchedules(result.schedules)
       setGenMessage(null)
+      recordGenerateSuccess()
+      queueSurveyNudge('generate')
     } else {
       setSchedules([])
       setGenerationInsights(result.diagnostics || null)
@@ -747,6 +782,7 @@ function App() {
       notify('success', copied
         ? tr('Program bağlantısı panoya kopyalandı. Artık istediğin yerde paylaşabilirsin.', 'Schedule link copied to your clipboard. You can now share it anywhere.')
         : tr('Program paylaşım bağlantısı oluşturuldu.', 'Schedule share link created.'), 6000)
+      queueSurveyNudge('share')
     } catch (error) {
       notify('error', tr('Program paylaşılamadı.', 'Schedule could not be shared.'))
       console.error('Schedule share failed:', error)
@@ -773,6 +809,7 @@ function App() {
       link.remove()
       window.setTimeout(() => URL.revokeObjectURL(url), 1000)
       notify('success', tr('Program görseli indirildi.', 'Schedule image downloaded.'))
+      queueSurveyNudge('export')
     } catch (error) {
       notify('error', tr('Program görseli oluşturulamadı.', 'Schedule image could not be created.'))
       console.error('Schedule image export failed:', error)
@@ -796,6 +833,7 @@ function App() {
       link.remove()
       window.setTimeout(() => URL.revokeObjectURL(url), 1000)
       notify('success', tr('Takvim dosyası hazırlandı.', 'Calendar file created.'))
+      queueSurveyNudge('export')
     } catch (error) {
       notify('error', tr('Takvim dosyası oluşturulamadı.', 'Calendar file could not be created.'))
       console.error('Schedule calendar export failed:', error)
@@ -930,6 +968,14 @@ function App() {
     <div className="app">
       {notice && (
         <div className={`toast toast-${notice.type}`} role="status">{notice.text}</div>
+      )}
+      {surveyNudgeVisible && (
+        <SurveyNudge
+          language={language}
+          surveyUrl={siteSettings.surveyUrl}
+          onFillSurvey={handleFillSurvey}
+          onDismiss={dismissSurveyNudge}
+        />
       )}
       {coreqPrompt && (
         <CorequisitePrompt
