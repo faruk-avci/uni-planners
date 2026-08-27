@@ -24,6 +24,13 @@ function minutesFromTime(value) {
   return Number.isFinite(hour) && Number.isFinite(minute) ? hour * 60 + minute : null
 }
 
+// Shared "card" look for both export layouts: a bordered white card with a
+// soft drop shadow, sitting on a tinted canvas -- rather than the content
+// just floating on a flat background with no frame.
+function cardShadowDefs() {
+  return '<defs><filter id="cardShadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#18181b" flood-opacity=".12"/></filter></defs>'
+}
+
 function scheduleAgendaImageSvg(schedule, language = 'tr') {
   const tr = language === 'tr'
   const days = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma']
@@ -47,13 +54,19 @@ function scheduleAgendaImageSvg(schedule, language = 'tr') {
   })).filter(group => group.lessons.length > 0)
   const contentHeight = groups.reduce((sum, group) => sum + dayHeaderHeight + group.lessons.length * lessonHeight + dayGap, 0)
   const height = titleHeight + contentHeight + padding
+  const cardMargin = 28
+  const canvasWidth = width + cardMargin * 2
+  const canvasHeight = height + cardMargin * 2
   const lines = []
 
-  lines.push(`<svg xmlns="http://www.w3.org/2000/svg" width="${width * scale}" height="${height * scale}" viewBox="0 0 ${width} ${height}">`)
-  // Same page background as the grid layout's export (#ffffff) -- these two
-  // used to differ, so switching layout before exporting changed the PNG's
-  // background color for no reason.
-  lines.push('<rect width="100%" height="100%" fill="#ffffff"/>')
+  lines.push(`<svg xmlns="http://www.w3.org/2000/svg" width="${canvasWidth * scale}" height="${canvasHeight * scale}" viewBox="0 0 ${canvasWidth} ${canvasHeight}">`)
+  lines.push(cardShadowDefs())
+  // Soft tinted canvas behind a bordered, shadowed white card -- same
+  // "framed" look as the grid layout's export, instead of the content
+  // sitting flat with no boundary.
+  lines.push('<rect width="100%" height="100%" fill="#f1f1f4"/>')
+  lines.push(`<rect x="${cardMargin / 2}" y="${cardMargin / 2}" width="${width + cardMargin}" height="${height + cardMargin}" rx="24" fill="#ffffff" stroke="#e4e4e7" filter="url(#cardShadow)"/>`)
+  lines.push(`<g transform="translate(${cardMargin} ${cardMargin})">`)
   lines.push(`<style>text{font-family:Arial,Helvetica,sans-serif}.muted{fill:#71717a}.mono{font-family:'Courier New',monospace}</style>`)
   lines.push(`<text x="${padding}" y="54" fill="#18181b" font-size="32" font-weight="700">${tr ? 'Ders Programı' : 'Course Schedule'}</text>`)
   lines.push(`<text x="${padding}" y="82" class="muted" font-size="17" font-weight="600">${schedule.lessons.length} ${tr ? 'ders' : 'courses'} · ${escapeSvg(schedule.totalCredits)} ${tr ? 'AKTS' : 'ECTS'}</text>`)
@@ -81,6 +94,7 @@ function scheduleAgendaImageSvg(schedule, language = 'tr') {
     y += cardHeight + dayGap
   }
 
+  lines.push('</g>')
   lines.push('</svg>')
   return lines.join('')
 }
@@ -104,11 +118,17 @@ export function scheduleImageSvg(schedule, language = 'tr', layout = 'grid') {
   const height = gridTop + gridHeight + padding
   const exportScale = 3
   const baseMinutes = 8 * 60 + 40
+  const cardMargin = 28
+  const canvasWidth = width + cardMargin * 2
+  const canvasHeight = height + cardMargin * 2
 
   const courseColor = new Map(schedule.lessons.map((lesson, index) => [lesson.code, SCHEDULE_COLORS[index % SCHEDULE_COLORS.length]]))
   const lines = []
-  lines.push(`<svg xmlns="http://www.w3.org/2000/svg" width="${width * exportScale}" height="${height * exportScale}" viewBox="0 0 ${width} ${height}">`)
-  lines.push(`<rect width="100%" height="100%" fill="#ffffff"/>`)
+  lines.push(`<svg xmlns="http://www.w3.org/2000/svg" width="${canvasWidth * exportScale}" height="${canvasHeight * exportScale}" viewBox="0 0 ${canvasWidth} ${canvasHeight}">`)
+  lines.push(cardShadowDefs())
+  lines.push(`<rect width="100%" height="100%" fill="#f1f1f4"/>`)
+  lines.push(`<rect x="${cardMargin / 2}" y="${cardMargin / 2}" width="${width + cardMargin}" height="${height + cardMargin}" rx="24" fill="#ffffff" stroke="#e4e4e7" filter="url(#cardShadow)"/>`)
+  lines.push(`<g transform="translate(${cardMargin} ${cardMargin})">`)
   lines.push(`<style>text{font-family:Arial,Helvetica,sans-serif}.muted{fill:#71717a}.mono{font-family:'Courier New',monospace}</style>`)
   lines.push(`<text x="${padding}" y="68" fill="#18181b" font-size="30" font-weight="700">${tr ? 'Ders Programı' : 'Course Schedule'}</text>`)
   lines.push(`<text x="${width - padding}" y="68" class="muted" font-size="16" text-anchor="end">${schedule.lessons.length} ${tr ? 'ders' : 'courses'} · ${escapeSvg(schedule.totalCredits)} ${tr ? 'AKTS' : 'ECTS'}</text>`)
@@ -149,6 +169,7 @@ export function scheduleImageSvg(schedule, language = 'tr', layout = 'grid') {
     }
   }
 
+  lines.push('</g>')
   lines.push('</svg>')
   return lines.join('')
 }
