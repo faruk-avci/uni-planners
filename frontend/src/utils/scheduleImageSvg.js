@@ -50,7 +50,10 @@ function scheduleAgendaImageSvg(schedule, language = 'tr') {
   const lines = []
 
   lines.push(`<svg xmlns="http://www.w3.org/2000/svg" width="${width * scale}" height="${height * scale}" viewBox="0 0 ${width} ${height}">`)
-  lines.push('<rect width="100%" height="100%" fill="#f7f7f9"/>')
+  // Same page background as the grid layout's export (#ffffff) -- these two
+  // used to differ, so switching layout before exporting changed the PNG's
+  // background color for no reason.
+  lines.push('<rect width="100%" height="100%" fill="#ffffff"/>')
   lines.push(`<style>text{font-family:Arial,Helvetica,sans-serif}.muted{fill:#71717a}.mono{font-family:'Courier New',monospace}</style>`)
   lines.push(`<text x="${padding}" y="54" fill="#18181b" font-size="32" font-weight="700">${tr ? 'Ders Programı' : 'Course Schedule'}</text>`)
   lines.push(`<text x="${padding}" y="82" class="muted" font-size="17" font-weight="600">${schedule.lessons.length} ${tr ? 'ders' : 'courses'} · ${escapeSvg(schedule.totalCredits)} ${tr ? 'AKTS' : 'ECTS'}</text>`)

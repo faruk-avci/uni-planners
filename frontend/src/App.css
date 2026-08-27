@@ -297,6 +297,15 @@
   font-weight: var(--weight-semibold);
 }
 
+/* The burgundy accent doesn't read well against dark surfaces -- green
+   (reusing the theme's own success token, already dark-mode-tuned) shows
+   up much more clearly. */
+[data-theme="dark"] .badge-new {
+  background: var(--success-bg);
+  color: var(--success);
+  border-color: var(--success);
+}
+
 /* New-feature panels: normal surface with an ozu-burgundy border. */
 .section-new {
   background: var(--bg-secondary);

@@ -76,7 +76,7 @@ function buildBlocks(schedule, changedCourses = new Set(), colorByCourse = new M
 }
 
 function SchedulePreview({ language, schedules = [], current = 0, onPrev, onNext, onShowFits, onShare, sharing = false, shareCopied = false, onExportImage, exportingImage = false, onExportCalendar, exportingCalendar = false, readOnly = false }) {
-  const [viewMode, setViewMode] = useState(() => window.matchMedia('(max-width: 768px)').matches ? 'agenda' : 'grid')
+  const [viewMode, setViewMode] = useState('grid')
   const previousViewedIndex = useRef(current)
   const hasData = schedules.length > 0
   const schedule = hasData ? schedules[current] : null
@@ -106,23 +106,31 @@ function SchedulePreview({ language, schedules = [], current = 0, onPrev, onNext
     ).sort((a, b) => a.start.localeCompare(b.start)),
   })).filter(group => group.items.length > 0)
 
+  // Rendered both above and below the schedule content: on a long page
+  // (especially on mobile, once you've scrolled down into the grid/agenda),
+  // having Previous/Next only at the very top means scrolling all the way
+  // back up just to switch schedules.
+  const renderNav = position => (
+    <div className={`schedule-nav schedule-nav-${position}`}>
+      <button className="btn btn-ghost btn-sm" onClick={onPrev} disabled={!hasData || current === 0}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
+        <span className="schedule-nav-label">{language === 'tr' ? 'Önceki' : 'Previous'}</span>
+      </button>
+      <span className="schedule-counter">
+        {language === 'tr' ? 'Program' : 'Schedule'}{' '}
+        <strong>{hasData ? current + 1 : 0}</strong> / {schedules.length}
+        {schedule ? ` · ${schedule.totalCredits} ${language === 'tr' ? 'AKTS' : 'ECTS'}` : ''}
+      </span>
+      <button className="btn btn-ghost btn-sm" onClick={onNext} disabled={!hasData || current >= schedules.length - 1}>
+        <span className="schedule-nav-label">{language === 'tr' ? 'Sonraki' : 'Next'}</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
+      </button>
+    </div>
+  )
+
   return (
     <div className="schedule-wrapper">
-      {!readOnly && <div className="schedule-nav">
-        <button className="btn btn-ghost btn-sm" onClick={onPrev} disabled={!hasData || current === 0}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
-          <span className="schedule-nav-label">{language === 'tr' ? 'Önceki' : 'Previous'}</span>
-        </button>
-        <span className="schedule-counter">
-          {language === 'tr' ? 'Program' : 'Schedule'}{' '}
-          <strong>{hasData ? current + 1 : 0}</strong> / {schedules.length}
-          {schedule ? ` · ${schedule.totalCredits} ${language === 'tr' ? 'AKTS' : 'ECTS'}` : ''}
-        </span>
-        <button className="btn btn-ghost btn-sm" onClick={onNext} disabled={!hasData || current >= schedules.length - 1}>
-          <span className="schedule-nav-label">{language === 'tr' ? 'Sonraki' : 'Next'}</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
-        </button>
-      </div>}
+      {!readOnly && renderNav('top')}
 
       <div className="schedule-view-toggle" aria-label={language === 'tr' ? 'Program görünümü' : 'Schedule view'}>
         <button type="button" className={viewMode === 'agenda' ? 'active' : ''} onClick={() => setViewMode('agenda')}>
@@ -215,6 +223,7 @@ function SchedulePreview({ language, schedules = [], current = 0, onPrev, onNext
         ))}
       </div>
 
+      {!readOnly && renderNav('bottom')}
     </div>
   )
 }
