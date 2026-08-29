@@ -1092,6 +1092,7 @@ function App() {
               onRemoveCourse={removeCourseFromBasket}
               onRemoveSection={removeSection}
               onExcludeSection={excludeSectionFromBasket}
+              major={major}
             />
 
             {(schedules.length > 0 || genMessage) && (

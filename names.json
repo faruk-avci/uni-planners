@@ -1,0 +1,857 @@
+{
+  "RC": 0,
+  "DATA": {
+    "name": "PRM_SIS_SUBJECT_CODE",
+    "version": "218",
+    "type": 5,
+    "rows": [
+      {
+        "NAME": "ACCT",
+        "DESCRIPTION": "Muhasebe",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "AI",
+        "DESCRIPTION": "Yapay Zeka",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "AIC",
+        "DESCRIPTION": "Yapay Zeka Sertifika",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "Alan SeÃ§meli (EE)",
+        "DESCRIPTION": "EE Alan SeÃ§meli",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ANTH",
+        "DESCRIPTION": "Antropoloji",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "AP",
+        "DESCRIPTION": "Akademik Pratik",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ARB",
+        "DESCRIPTION": "ArapÃ§a",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "1",
+        "PROGRAM": "BAIB,BAIR"
+      },
+      {
+        "NAME": "ARCH",
+        "DESCRIPTION": "MimarlÄ±k",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ART",
+        "DESCRIPTION": "Sanat",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "AVM",
+        "DESCRIPTION": "Sivil Hava YÃ¶netimi",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "AVS",
+        "DESCRIPTION": "HavacÄ±lÄ±k Bilimi",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "AVT",
+        "DESCRIPTION": "HavacÄ±lÄ±k",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "BE",
+        "DESCRIPTION": "Beden EÄŸitimi",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "BINT",
+        "DESCRIPTION": "Bilgi Teknolojileri",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "BIO",
+        "DESCRIPTION": "Biyoloji",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "BUS",
+        "DESCRIPTION": "Ä°ÅŸletme",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "CE",
+        "DESCRIPTION": "Ä°nÅŸaat MÃ¼hendisliÄŸi",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "CEC",
+        "DESCRIPTION": "Ä°nÅŸaat MÃ¼hendisliÄŸi Sertifika",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "CEEE",
+        "DESCRIPTION": "Ã‡evre, Enerji ve Ekonomi",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "CHEM",
+        "DESCRIPTION": "Kimya",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "CHN",
+        "DESCRIPTION": "Ã‡ince",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "1",
+        "PROGRAM": "BSHMAN,BAIB,BAIR"
+      },
+      {
+        "NAME": "CINE",
+        "DESCRIPTION": "Sinema",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "COD",
+        "DESCRIPTION": "Ä°letiÅŸim TasarÄ±mÄ±",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "CS",
+        "DESCRIPTION": "Bilgisayar MÃ¼hendisliÄŸi",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "CSC",
+        "DESCRIPTION": "Bilgisayar MÃ¼hendisliÄŸi Sertifika",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "DANCE",
+        "DESCRIPTION": "Dans",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "DIS",
+        "DESCRIPTION": "TasarÄ±m",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "DRO",
+        "DESCRIPTION": "Droit",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "DS",
+        "DESCRIPTION": "Veri Bilimi",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ECON",
+        "DESCRIPTION": "Ekonomi",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "EDU",
+        "DESCRIPTION": "EÄŸitim",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "EE",
+        "DESCRIPTION": "Elektrik-Elektronik MÃ¼hendisliÄŸi",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "EEC",
+        "DESCRIPTION": "Elektrik-Elektronik MÃ¼hendisliÄŸi Sertifika",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "EEE",
+        "DESCRIPTION": "SeÃ§meli Elektrik-Elektronik MÃ¼hendisliÄŸi",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "EEST",
+        "DESCRIPTION": "SeÃ§me Konular",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELA",
+        "DESCRIPTION": "SeÃ§meli MimarlÄ±k",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELAV",
+        "DESCRIPTION": "HavacÄ±lÄ±k SeÃ§meli",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELB",
+        "DESCRIPTION": "SeÃ§meli Ä°ÅŸletme",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELC",
+        "DESCRIPTION": "SeÃ§meli Sertifika",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELCE",
+        "DESCRIPTION": "SeÃ§meli (Alan CE)",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELCIE",
+        "DESCRIPTION": "SeÃ§meli IE",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELCS",
+        "DESCRIPTION": "SeÃ§meli CS (Yandal)",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELDIS",
+        "DESCRIPTION": "SeÃ§meli TasarÄ±m",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELE",
+        "DESCRIPTION": "SeÃ§meli MÃ¼hendislik",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELEC",
+        "DESCRIPTION": "SeÃ§meli Ä°ktisat",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELEE",
+        "DESCRIPTION": "Alan SeÃ§meli (EE)",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELF",
+        "DESCRIPTION": "SeÃ§meli FakÃ¼lte Ä°Ã§i",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELFM",
+        "DESCRIPTION": "SeÃ§meli Finans-UzmanlÄ±k AlanÄ±",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELFR",
+        "DESCRIPTION": "SeÃ§meli Serbest",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELIB",
+        "DESCRIPTION": "SeÃ§meli UluslararasÄ± Ä°ÅŸletmecilik",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELIE",
+        "DESCRIPTION": "IE KÄ±sÄ±tlÄ± SeÃ§meli",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELL",
+        "DESCRIPTION": "SeÃ§meli Hukuk",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELM",
+        "DESCRIPTION": "SeÃ§meli UzmanlÄ±k AlanÄ±",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELMBA",
+        "DESCRIPTION": "SeÃ§meli MBA",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELMISM",
+        "DESCRIPTION": "SeÃ§meli YÃ¶netim BiliÅŸim Sistemleri-UzmanlÄ±k AlanÄ±",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELMM",
+        "DESCRIPTION": "SeÃ§meli Pazarlama-UzmanlÄ±k AlanÄ±",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELMNM",
+        "DESCRIPTION": "SeÃ§meli YÃ¶netim-UzmanlÄ±k AlanÄ±",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELNAV",
+        "DESCRIPTION": "HavacÄ±lÄ±k DÄ±ÅŸÄ± SeÃ§meli",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELNB",
+        "DESCRIPTION": "SeÃ§meli Ä°ÅŸletme-DÄ±ÅŸÄ±",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELND",
+        "DESCRIPTION": "SeÃ§meli Derece DÄ±ÅŸÄ±",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELNE",
+        "DESCRIPTION": "SeÃ§meli MÃ¼hendislik DÄ±ÅŸÄ±",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELNF",
+        "DESCRIPTION": "SeÃ§meli FakÃ¼lte DÄ±ÅŸÄ±",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELNP",
+        "DESCRIPTION": "SeÃ§meli Program DÄ±ÅŸÄ±",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELOMM",
+        "DESCRIPTION": "SeÃ§meli Operasyon YÃ¶netimi-UzmanlÄ±k AlanÄ±",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELP",
+        "DESCRIPTION": "SeÃ§meli (Program Ä°Ã§i)",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELPSY",
+        "DESCRIPTION": "SeÃ§meli Psikoloji",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELPSYC",
+        "DESCRIPTION": "SeÃ§meli Psikoloji",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELSEC",
+        "DESCRIPTION": "SeÃ§meli SektÃ¶rel Ã‡Ã¶zÃ¼mler",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELSS",
+        "DESCRIPTION": "SeÃ§meli Sosyal Bilimler",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ELST",
+        "DESCRIPTION": "SeÃ§me Konular",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ENG",
+        "DESCRIPTION": "Ä°ngilizce",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ENT",
+        "DESCRIPTION": "GiriÅŸimcilik",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ENTR",
+        "DESCRIPTION": "GiriÅŸimcilik",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ERSMP",
+        "DESCRIPTION": "Erasmus ProgramÄ±",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "FE",
+        "DESCRIPTION": "MÃ¼hendislik FakÃ¼ltesi",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "FERM",
+        "DESCRIPTION": "Finans MÃ¼hendisliÄŸi ve Risk YÃ¶netimi",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "FIN",
+        "DESCRIPTION": "Finans",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "FRE",
+        "DESCRIPTION": "FransÄ±zca",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "1",
+        "PROGRAM": "BAIB,BAIR"
+      },
+      {
+        "NAME": "GARM",
+        "DESCRIPTION": "Gastronomi ve Restoran YÃ¶netimi",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "GC",
+        "DESCRIPTION": "Mezuniyet TÃ¶reni",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "GE",
+        "DESCRIPTION": "Genel EÄŸitim",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "GER",
+        "DESCRIPTION": "Almanca",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "1",
+        "PROGRAM": "BSHMAN,BAIB,BAIR"
+      },
+      {
+        "NAME": "GSE",
+        "DESCRIPTION": "GSSE",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "HGMN",
+        "DESCRIPTION": "Golf YÃ¶netimi",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "HIFC",
+        "DESCRIPTION": "Havayolu Ä°kram YÃ¶netimi",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "HIST",
+        "DESCRIPTION": "Tarih",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "HMAN",
+        "DESCRIPTION": "Otel YÃ¶netimi",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "HMYO",
+        "DESCRIPTION": "Yat ve Marina YÃ¶netimi",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "HSWO",
+        "DESCRIPTION": "Spa ve SaÄŸlÄ±klÄ± YaÅŸam YÃ¶netimi",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "HT",
+        "DESCRIPTION": "SaÄŸlÄ±k Testi",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "HUK",
+        "DESCRIPTION": "Hukuk",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "HUM",
+        "DESCRIPTION": "BeÅŸeri Bilimler",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "IBUS",
+        "DESCRIPTION": "UluslararasÄ± Ä°ÅŸletme",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "IDE",
+        "DESCRIPTION": "EndÃ¼stri ÃœrÃ¼nleri TasarÄ±mÄ±",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "IE",
+        "DESCRIPTION": "EndÃ¼stri MÃ¼hendisliÄŸi",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "IEC",
+        "DESCRIPTION": "EndÃ¼stri MÃ¼hendisliÄŸi Sertifika",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "INAR",
+        "DESCRIPTION": "Ä°Ã§ MimarlÄ±k ve Ã‡evre TasarÄ±mÄ±",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "INT-LAT",
+        "DESCRIPTION": "Orta DÃ¼zey LAT SÄ±navÄ±",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "IR",
+        "DESCRIPTION": "UluslararasÄ± Ä°liÅŸkiler",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ISTB",
+        "DESCRIPTION": "Ä°stanbul",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ITA",
+        "DESCRIPTION": "Ä°talyanca",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "1",
+        "PROGRAM": "BAIB,BAIR"
+      },
+      {
+        "NAME": "Ä°TB",
+        "DESCRIPTION": "Ä°nsan ve Toplum Bilimleri",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "JAP",
+        "DESCRIPTION": "Japonca",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "JUR",
+        "DESCRIPTION": "YargÄ±",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "KMI",
+        "DESCRIPTION": "Kent ve MimarlÄ±k",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "KOR",
+        "DESCRIPTION": "Korece",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "LAW",
+        "DESCRIPTION": "Hukuk",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "LHOM",
+        "DESCRIPTION": "LÃ¼ks Konaklama Operasyon YÃ¶netimi",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "MAN",
+        "DESCRIPTION": "YÃ¶netim",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "MATH",
+        "DESCRIPTION": "Matematik",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "ME",
+        "DESCRIPTION": "Makina MÃ¼hendisliÄŸi",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "MEC",
+        "DESCRIPTION": "Makina MÃ¼hendisliÄŸi Sertifika",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "MGMT",
+        "DESCRIPTION": "YÃ¶netim",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "MIS",
+        "DESCRIPTION": "YÃ¶netim BiliÅŸim Sistemleri",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "MÄ°M",
+        "DESCRIPTION": "MimarlÄ±k",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "MKTG",
+        "DESCRIPTION": "Pazarlama",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "MUSIC",
+        "DESCRIPTION": "MÃ¼zik",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "OP",
+        "DESCRIPTION": "Ã–zel Program (SELI)",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "OPER",
+        "DESCRIPTION": "Operasyon YÃ¶netimi",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "OPM",
+        "DESCRIPTION": "Operasyon YÃ¶netimi",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "PE",
+        "DESCRIPTION": "Fiziksel EÄŸitim",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "PHIL",
+        "DESCRIPTION": "Felsefe",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "PHYS",
+        "DESCRIPTION": "Fizik",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "PLT",
+        "DESCRIPTION": "Pilot EÄŸitimi",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "POLS",
+        "DESCRIPTION": "Siyaset Bilimi",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "PROJ",
+        "DESCRIPTION": "Proje",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "PSY",
+        "DESCRIPTION": "Psikoloji",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "PSYC",
+        "DESCRIPTION": "Psikoloji",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "RUS",
+        "DESCRIPTION": "RusÃ§a",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "1",
+        "PROGRAM": "BSHMAN,BAIB,BAIR"
+      },
+      {
+        "NAME": "SAS",
+        "DESCRIPTION": "UygulamalÄ± Bilimler YÃ¼ksekokulu",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "SEC",
+        "DESCRIPTION": "SektÃ¶rel Ã‡Ã¶zÃ¼mler",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "SELISUM",
+        "DESCRIPTION": "SELI Yaz Dersi",
+        "SUBJECTTYPE": "2",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "SEN",
+        "DESCRIPTION": "Sosyal GiriÅŸimcilik",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "SIAC",
+        "DESCRIPTION": "SÃ¼rdÃ¼rÃ¼lebilirlik Inisiyatifleri DanÄ±ÅŸmanlÄ±k ve Koord.",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "SOC",
+        "DESCRIPTION": "Sosyoloji",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "SPA",
+        "DESCRIPTION": "Ä°spanyolca",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "1",
+        "PROGRAM": "BSHMAN,BAIB,BAIR"
+      },
+      {
+        "NAME": "TLL",
+        "DESCRIPTION": "TÃ¼rk Dili ve EdebiyatÄ±",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "TRL",
+        "DESCRIPTION": "DÃ¶nÃ¼ÅŸtÃ¼rÃ¼cÃ¼ EÄŸitim ProgramÄ±",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "TURK",
+        "DESCRIPTION": "TÃ¼rkÃ§e",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      },
+      {
+        "NAME": "UNV",
+        "DESCRIPTION": "Ãœniversite",
+        "SUBJECTTYPE": "1",
+        "LANGUAGESERIES": "0"
+      }
+    ]
+  }
+}

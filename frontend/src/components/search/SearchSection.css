@@ -47,6 +47,7 @@
 }
 
 .search-input-wrapper {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--space-3);
@@ -56,6 +57,63 @@
   padding: var(--space-3) var(--space-4);
   transition: all var(--duration-fast) var(--ease-out);
   flex: 1;
+}
+
+.search-suggestions-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  left: 0;
+  z-index: 40;
+  overflow: hidden;
+  padding: var(--space-1);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+}
+
+.suggestions-header {
+  padding: 6px var(--space-2);
+  color: var(--text-tertiary);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.suggestion-item {
+  display: grid;
+  width: 100%;
+  grid-template-columns: minmax(55px, auto) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-3);
+  padding: 8px var(--space-2);
+  color: var(--text-primary);
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-align: left;
+}
+
+.suggestion-item:hover,
+.suggestion-item-active {
+  background: var(--accent-soft);
+}
+
+.suggestion-item strong {
+  color: var(--accent-primary);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+.suggestion-item span {
+  overflow: hidden;
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 [data-theme="dark"] .search-input-wrapper {
@@ -137,6 +195,7 @@
 
 .course-code-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2);
   margin-bottom: var(--space-1);
@@ -313,6 +372,88 @@
   color: var(--text-primary);
   font-family: var(--font-mono);
   font-size: var(--text-sm);
+}
+
+.time-option-summary {
+  grid-template-columns: minmax(0, 1fr) 150px;
+  gap: var(--space-2);
+}
+
+.time-option-toggle {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 24px minmax(170px, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-2) var(--space-3);
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  text-align: left;
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.time-option-toggle:hover,
+.time-option-toggle:focus-visible {
+  background: var(--bg-tertiary);
+  outline: none;
+}
+
+.time-option-chevron {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-full);
+  font-size: 20px;
+  line-height: 1;
+  transition: transform var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+}
+
+.time-option-chevron-open {
+  border-color: var(--accent-primary);
+  transform: rotate(90deg);
+}
+
+.time-option-copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.time-option-eyebrow {
+  color: var(--text-tertiary);
+  font-size: 10px;
+  font-weight: var(--weight-semibold);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.time-option-toggle .section-times {
+  justify-self: start;
+}
+
+.time-option-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.time-option-badges > span {
+  padding: 3px 8px;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-full);
+  font-size: 10px;
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
 }
 
 .same-time-add {
@@ -512,6 +653,26 @@
   .same-time-summary .section-times {
     grid-column: 1 / -1;
     grid-row: 2;
+  }
+
+  .time-option-summary {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .time-option-toggle {
+    grid-template-columns: 24px minmax(0, 1fr);
+    gap: var(--space-2);
+    padding-right: var(--space-1);
+    padding-left: var(--space-1);
+  }
+
+  .time-option-toggle .section-times {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .time-option-badges {
+    grid-column: 2;
   }
 
   .same-time-add {

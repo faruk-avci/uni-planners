@@ -54,6 +54,11 @@ export function canonicalProgramCode(code) {
   return programByCode.get(code)?.codes[0] || code
 }
 
+export function equivalentProgramCodes(code) {
+  if (!code || ['none', 'master', 'doctorate'].includes(code)) return []
+  return programByCode.get(code)?.codes || [code]
+}
+
 export function curriculumIdForProgramCode(code) {
   if (!code || code === 'none') return ''
   return programByCode.get(code)?.id || ''
