@@ -49,7 +49,7 @@ const repairSubjectText = value => {
 const SUBJECT_SUGGESTIONS = (subjectNamesData?.DATA?.rows || [])
   .filter(row => String(row.SUBJECTTYPE) === '1' && String(row.NAME || '').trim())
   .map(row => ({
-    code: String(row.NAME).trim(),
+    code: repairSubjectText(row.NAME),
     description: repairSubjectText(row.DESCRIPTION),
   }))
   .sort((left, right) => left.code.localeCompare(right.code, 'en'))
