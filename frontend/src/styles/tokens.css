@@ -4,6 +4,8 @@
    ============================================ */
 
 :root {
+  color-scheme: light;
+
   /* ── Accent (Ink — near-black neutral) ── */
   --ink-50: #f4f4f5;
   --ink-100: #e4e4e7;
@@ -155,6 +157,8 @@
 
 /* ── Dark Mode Overrides (neutral charcoal) ── */
 [data-theme="dark"] {
+  color-scheme: dark;
+
   --bg-primary: #0a0a0b;
   --bg-secondary: #18181b;
   --bg-tertiary: #232327;

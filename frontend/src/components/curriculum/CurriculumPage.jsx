@@ -334,8 +334,8 @@ function CurriculumPage({ language, onAddCourse, major, auditResult }) {
 
   const renderElectiveControls = () => (
     <div className="elective-control-set">
-      <div className="elective-credit-filter" role="group" aria-label={tr('AKTS filtresi', 'ECTS filter')}>
-        <span className="elective-control-label">{tr('AKTS', 'ECTS')}</span>
+      <div className="elective-credit-filter" role="group" aria-label={tr('Kredi filtresi', 'ECTS filter')}>
+        <span className="elective-control-label">{tr('Kredi', 'ECTS')}</span>
         <div className="elective-credit-chips">
           <button
             type="button"

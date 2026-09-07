@@ -36,6 +36,18 @@
 .shared-card-heading { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); margin-bottom: var(--space-4); }
 .shared-card-heading h2 { font-size: var(--text-lg); }
 .shared-card-heading > span { color: var(--text-tertiary); font-size: var(--text-xs); }
+.shared-card-toggle {
+  width: 100%;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+}
+.shared-card-toggle[aria-expanded="false"] { margin-bottom: 0; }
+.shared-card-toggle-right { display: flex; align-items: center; gap: var(--space-3); color: var(--text-tertiary); font-size: var(--text-xs); }
+.shared-card-chevron { display: inline-block; color: var(--text-tertiary); font-size: 18px; transition: transform var(--duration-fast); }
+.shared-card-chevron-open { transform: rotate(90deg); }
 .shared-export-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-2); }
 .shared-table-wrap { overflow: hidden; border: 1px solid var(--border-secondary); border-radius: var(--radius-md); }
 .shared-course-table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }

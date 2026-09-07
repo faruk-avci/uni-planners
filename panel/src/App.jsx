@@ -108,7 +108,7 @@ function CurriculumPreview({ curriculum, onClose }) {
                       <div className={`preview-course ${course.code ? '' : 'preview-elective'}`} key={`${course.code}-${course.electiveType}-${index}`}>
                         <span className="course-code">{course.code || 'SEÇMELİ'}</span>
                         <span className="course-title">{course.title_tr}</span>
-                        <span className="course-credit">{course.credits} AKTS</span>
+                        <span className="course-credit">{course.credits} Kredi</span>
                       </div>
                     ))}
                   </div>
@@ -333,7 +333,7 @@ function Dashboard({ onLogout }) {
                   const mapped = mappings[requirement.key]
                   return <article className={`requirement-row ${mapped ? 'requirement-ready' : ''}`} key={requirement.key}>
                     <div className="requirement-state">{mapped ? '✓' : '!'}</div>
-                    <div className="requirement-copy"><strong>{requirement.label}</strong><span>{requirement.occurrences.map(item => `${item.year}. yıl ${termLabel(item.term)} · ${item.credits} AKTS`).join(' · ')}</span></div>
+                    <div className="requirement-copy"><strong>{requirement.label}</strong><span>{requirement.occurrences.map(item => `${item.year}. yıl ${termLabel(item.term)} · ${item.credits} Kredi`).join(' · ')}</span></div>
                     <label className="pool-select"><span>Mevcut havuz</span><select value={mapped || ''} onChange={event => setMappings(current => ({ ...current, [requirement.key]: event.target.value }))}><option value="">Havuz seçin</option>{pools.map(pool => <option key={pool.key} value={pool.key}>{pool.label} ({pool.courseCount})</option>)}</select></label>
                     <FilePicker compact label={mapped ? 'Dosyayı yenile' : 'Excel yükle'} hint="Seçmeli ders listesi" onFile={file => uploadElective(requirement, file)} busy={busy === `elective:${requirement.key}`} />
                   </article>

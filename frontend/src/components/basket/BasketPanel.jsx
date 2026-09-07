@@ -10,7 +10,7 @@ function BasketPanel({ basket, setBasket, removeSection, totalCredits, language,
 
   const t = {
     title: language === 'tr' ? 'Sepetim' : 'My Basket',
-    credits: language === 'tr' ? 'AKTS' : 'ECTS',
+    credits: language === 'tr' ? 'Kredi' : 'ECTS',
     empty: language === 'tr' ? 'Sepetiniz boş. Ders arayarak ekleyin.' : 'Your basket is empty. Search to add courses.',
     clear: language === 'tr' ? 'Sepeti Temizle' : 'Clear Basket',
     remove: language === 'tr' ? 'Kaldır' : 'Remove',
@@ -29,10 +29,10 @@ function BasketPanel({ basket, setBasket, removeSection, totalCredits, language,
     deleteConfirm: language === 'tr' ? 'Bu kayıtlı sepet silinsin mi?' : 'Delete this saved basket?',
     courseCount: language === 'tr' ? 'ders' : 'courses',
     creditWarning: language === 'tr'
-      ? '36 AKTS veya üzeri ders yükü almaya uygun olduğunuzdan emin olun.'
+      ? '36 Kredi veya üzeri ders yükü almaya uygun olduğunuzdan emin olun.'
       : 'Make sure you are eligible to take 36 ECTS or more.',
     creditDanger: language === 'tr'
-      ? '42 AKTS üzeri ders yükü seçtiniz. Bu ders yükünü almaya uygun olduğunuzdan emin olun.'
+      ? '42 Kredi üzeri ders yükü seçtiniz. Bu ders yükünü almaya uygun olduğunuzdan emin olun.'
       : 'You selected more than 42 ECTS. Make sure you are eligible for this course load.',
   }
 

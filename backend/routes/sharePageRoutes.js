@@ -33,7 +33,7 @@ export function sharedPageHtml(indexHtml, { id, row, siteOrigin }) {
     ? 'Bir ders programı seninle paylaşıldı · UniPlanners'
     : 'Paylaşılan program bulunamadı · UniPlanners';
   const description = row
-    ? `${row.catalog_term || 'Ders programı'} · ${lessons.length} ders · ${credits} AKTS${courseSummary ? ` — ${courseSummary}` : ''}`
+    ? `${row.catalog_term || 'Ders programı'} · ${lessons.length} ders · ${credits} Kredi${courseSummary ? ` — ${courseSummary}` : ''}`
     : 'Bu paylaşım bağlantısı geçerli değil veya program artık mevcut değil.';
 
   let html = indexHtml

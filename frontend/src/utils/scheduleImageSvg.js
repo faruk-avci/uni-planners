@@ -69,7 +69,7 @@ function scheduleAgendaImageSvg(schedule, language = 'tr') {
   lines.push(`<g transform="translate(${cardMargin} ${cardMargin})">`)
   lines.push(`<style>text{font-family:Arial,Helvetica,sans-serif}.muted{fill:#71717a}.mono{font-family:'Courier New',monospace}</style>`)
   lines.push(`<text x="${padding}" y="54" fill="#18181b" font-size="32" font-weight="700">${tr ? 'Ders Programı' : 'Course Schedule'}</text>`)
-  lines.push(`<text x="${padding}" y="82" class="muted" font-size="17" font-weight="600">${schedule.lessons.length} ${tr ? 'ders' : 'courses'} · ${escapeSvg(schedule.totalCredits)} ${tr ? 'AKTS' : 'ECTS'}</text>`)
+  lines.push(`<text x="${padding}" y="82" class="muted" font-size="17" font-weight="600">${schedule.lessons.length} ${tr ? 'ders' : 'courses'} · ${escapeSvg(schedule.totalCredits)} ${tr ? 'Kredi' : 'ECTS'}</text>`)
 
   let y = titleHeight
   for (const group of groups) {
@@ -112,7 +112,7 @@ export function scheduleImageSvg(schedule, language = 'tr', layout = 'grid') {
   const dayWidth = (width - padding * 2 - timeWidth) / 5
   const rowHeight = 48
   const headerHeight = 48
-  const slotRows = 12
+  const slotRows = 16
   const gridHeight = headerHeight + rowHeight * slotRows
   const gridWidth = timeWidth + dayWidth * 5
   const height = gridTop + gridHeight + padding
@@ -131,7 +131,7 @@ export function scheduleImageSvg(schedule, language = 'tr', layout = 'grid') {
   lines.push(`<g transform="translate(${cardMargin} ${cardMargin})">`)
   lines.push(`<style>text{font-family:Arial,Helvetica,sans-serif}.muted{fill:#71717a}.mono{font-family:'Courier New',monospace}</style>`)
   lines.push(`<text x="${padding}" y="68" fill="#18181b" font-size="30" font-weight="700">${tr ? 'Ders Programı' : 'Course Schedule'}</text>`)
-  lines.push(`<text x="${width - padding}" y="68" class="muted" font-size="16" text-anchor="end">${schedule.lessons.length} ${tr ? 'ders' : 'courses'} · ${escapeSvg(schedule.totalCredits)} ${tr ? 'AKTS' : 'ECTS'}</text>`)
+  lines.push(`<text x="${width - padding}" y="68" class="muted" font-size="16" text-anchor="end">${schedule.lessons.length} ${tr ? 'ders' : 'courses'} · ${escapeSvg(schedule.totalCredits)} ${tr ? 'Kredi' : 'ECTS'}</text>`)
 
   lines.push(`<rect x="${gridLeft}" y="${gridTop}" width="${gridWidth}" height="${gridHeight}" rx="10" fill="#ffffff" stroke="#e4e4e7"/>`)
   lines.push(`<rect x="${gridLeft}" y="${gridTop}" width="${gridWidth}" height="${headerHeight}" rx="10" fill="#f4f4f5"/>`)

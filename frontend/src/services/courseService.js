@@ -281,7 +281,10 @@ export const courseService = {
       const res = await fetch(API_BASE + '/api/schedule/fitting', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ occupied, exclude: excludeCodes, major }),
+        // Matches the backend's hard cap (scheduleRoutes.js) so the full
+        // matching set is returned instead of silently truncating at its
+        // lower default and disagreeing with the reported total.
+        body: JSON.stringify({ occupied, exclude: excludeCodes, major, limit: 300 }),
       });
       if (!res.ok) throw new Error('Fitting request failed');
 

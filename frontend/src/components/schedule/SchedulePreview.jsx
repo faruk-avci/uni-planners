@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
 import './SchedulePreview.css'
 
-const HOURS = ['08:40', '09:40', '10:40', '11:40', '12:40', '13:40', '14:40', '15:40', '16:40', '17:40', '18:40', '19:40']
+const HOURS = ['08:40', '09:40', '10:40', '11:40', '12:40', '13:40', '14:40', '15:40', '16:40', '17:40', '18:40', '19:40', '20:40', '21:40', '22:40', '23:40']
 const DAYS = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma']
 const DAY_ABBR = { 'Pazartesi': 'Pzt', 'Salı': 'Sal', 'Çarşamba': 'Çar', 'Perşembe': 'Per', 'Cuma': 'Cum' }
 // Curated for clear separation on the schedule's light tinted blocks. Colors
@@ -63,6 +63,7 @@ function buildBlocks(schedule, changedCourses = new Set(), colorByCourse = new M
       if (startHour < 0 || startHour >= HOURS.length) return
       blocks.push({
         course: lesson.code,
+        name: lesson.name,
         section: lesson.section.replace(lesson.code, '').trim() || lesson.section,
         day,
         startHour,
@@ -97,6 +98,7 @@ function SchedulePreview({ language, schedules = [], current = 0, onPrev, onNext
         .filter(time => time.day === day)
         .map(time => ({
           course: lesson.code,
+          name: lesson.name,
           section: lesson.section.replace(lesson.code, '').trim() || lesson.section,
           start: time.start,
           end: time.end,
@@ -119,7 +121,7 @@ function SchedulePreview({ language, schedules = [], current = 0, onPrev, onNext
       <span className="schedule-counter">
         {language === 'tr' ? 'Program' : 'Schedule'}{' '}
         <strong>{hasData ? current + 1 : 0}</strong> / {schedules.length}
-        {schedule ? ` · ${schedule.totalCredits} ${language === 'tr' ? 'AKTS' : 'ECTS'}` : ''}
+        {schedule ? ` · ${schedule.totalCredits} ${language === 'tr' ? 'Kredi' : 'ECTS'}` : ''}
       </span>
       <button className="btn btn-ghost btn-sm" onClick={onNext} disabled={!hasData || current >= schedules.length - 1}>
         <span className="schedule-nav-label">{language === 'tr' ? 'Sonraki' : 'Next'}</span>
@@ -183,9 +185,10 @@ function SchedulePreview({ language, schedules = [], current = 0, onPrev, onNext
                       key={`cell-${dayIdx}-${hourIdx}`}
                       className={`grid-block ${block.changed ? 'schedule-changed' : ''}`}
                       style={{ '--block-color': block.color, gridRow: `span ${block.duration}` }}
-                      aria-label={block.course}
+                      aria-label={block.name ? `${block.course} ${block.name}` : block.course}
                     >
                       <span className="block-course">{block.course}</span>
+                      {block.name && <span className="block-name">{block.name}</span>}
                       <span className="block-section">{block.section}</span>
                     </div>
                   )
@@ -214,6 +217,7 @@ function SchedulePreview({ language, schedules = [], current = 0, onPrev, onNext
                   <span className="agenda-marker" aria-hidden="true" />
                   <div>
                     <strong>{item.course}</strong>
+                    {item.name && <span className="agenda-lesson-name">{item.name}</span>}
                     <span>{item.section}</span>
                   </div>
                 </div>

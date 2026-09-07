@@ -165,8 +165,8 @@ function App() {
     surveyNudgeQueuedRef.current = false
   }
 
-  const trackGithubClick = () => {
-    courseService.trackSiteEvent('link', 'github_click')
+  const trackFooterLinkClick = () => {
+    courseService.trackSiteEvent('link', 'footer_link_click')
   }
 
   const trackSurveyHeaderClick = () => {
@@ -784,9 +784,7 @@ function App() {
     setSharingSchedule(true)
     try {
       const result = await courseService.shareSchedule(schedule, major)
-      // The query version makes social apps refresh previews cached before the
-      // dedicated shared-schedule metadata was introduced.
-      const url = `${window.location.origin}/share/${result.id}?v=2`
+      const url = `${window.location.origin}/share/${result.id}`
       let copied = false
       try {
         await navigator.clipboard.writeText(url)
@@ -932,6 +930,7 @@ function App() {
               )}
             </span>
             <span className="fit-course-name">{course.name}</span>
+            <span className="fit-course-credits">{course.credits} {tr('Kredi', 'ECTS')}</span>
           </div>
           {course.sections.length > 1 && (
             <button className="btn btn-sm btn-ghost fit-add-all" onClick={() => addCourseToBasket(course, undefined, 'fitting')}>
@@ -1348,8 +1347,8 @@ function App() {
                                 )}
                               </div>
 
-                              <div className="fit-credit-filter" role="group" aria-label={tr('AKTS filtresi', 'ECTS filter')}>
-                                <span className="fit-filter-label">{tr('AKTS:', 'ECTS:')}</span>
+                              <div className="fit-credit-filter" role="group" aria-label={tr('Kredi filtresi', 'ECTS filter')}>
+                                <span className="fit-filter-label">{tr('Kredi:', 'ECTS:')}</span>
                                 <button
                                   className={`fit-filter-chip ${fitCreditFilter === 'all' ? 'fit-filter-chip-active' : ''}`}
                                   onClick={() => setFitCreditFilter('all')}
@@ -1434,13 +1433,13 @@ function App() {
           >
             <span className="mobile-basket-dock-copy">
               <strong>{tr('Sepetim', 'My Basket')}</strong>
-              <span>{basket.length} {tr('ders', 'courses')} · {totalCredits} {tr('AKTS', 'ECTS')}</span>
+              <span>{basket.length} {tr('ders', 'courses')} · {totalCredits} {tr('Kredi', 'ECTS')}</span>
             </span>
             <span className="mobile-basket-dock-action">{tr('Aç', 'Open')} <span aria-hidden="true">↑</span></span>
           </button>
           <p className="mobile-basket-footer">
             Designed and coded with <span>❤️</span> by{' '}
-            <a href="https://github.com/faruk-avci" target="_blank" rel="noopener noreferrer" onClick={trackGithubClick}>@omer-faruk-avci</a>
+            <a href="https://omer.farukavci.me" target="_blank" rel="noopener noreferrer" onClick={trackFooterLinkClick}>@omer-faruk-avci</a>
           </p>
 
           {mobileBasketOpen && (
@@ -1504,7 +1503,7 @@ function App() {
         <div className="container footer-content">
           <p className="footer-credit">
             UniPlanners · Designed and coded with <span>❤️</span> by{' '}
-            <a href="https://github.com/faruk-avci" target="_blank" rel="noopener noreferrer" className="footer-link" onClick={trackGithubClick}>
+            <a href="https://omer.farukavci.me" target="_blank" rel="noopener noreferrer" className="footer-link" onClick={trackFooterLinkClick}>
               @omer-faruk-avci
             </a>
           </p>

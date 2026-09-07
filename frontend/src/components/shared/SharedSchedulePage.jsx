@@ -10,6 +10,7 @@ function SharedSchedulePage({ id, language, onHome }) {
   const [loading, setLoading] = useState(true)
   const [exporting, setExporting] = useState(false)
   const [exportingCalendar, setExportingCalendar] = useState(false)
+  const [detailsOpen, setDetailsOpen] = useState(false)
   const requestedId = useRef(null)
   const tr = (trText, enText) => language === 'tr' ? trText : enText
 
@@ -97,7 +98,7 @@ function SharedSchedulePage({ id, language, onHome }) {
               <span className="shared-eyebrow">{tr('Paylaşılan program', 'Shared schedule')} · {share.id}</span>
               <h1>{tr('Ders Programı', 'Course Schedule')}</h1>
               <p>
-                {lessons.length} {tr('ders', 'courses')} · {share.schedule.totalCredits} {tr('AKTS', 'ECTS')}
+                {lessons.length} {tr('ders', 'courses')} · {share.schedule.totalCredits} {tr('Kredi', 'ECTS')}
                 {createdAt && ` · ${createdAt}`}
               </p>
             </div>
@@ -105,38 +106,48 @@ function SharedSchedulePage({ id, language, onHome }) {
           </section>
 
           <section className="shared-card">
-            <div className="shared-card-heading">
+            <button
+              type="button"
+              className="shared-card-heading shared-card-toggle"
+              aria-expanded={detailsOpen}
+              onClick={() => setDetailsOpen(open => !open)}
+            >
               <h2>{tr('Ders ve Şube Bilgileri', 'Course and Section Details')}</h2>
-              {share.term && <span>{share.term}</span>}
-            </div>
-            <div className="shared-table-wrap">
-              <table className="shared-course-table">
-                <thead>
-                  <tr>
-                    <th>{tr('Ders', 'Course')}</th>
-                    <th>{tr('Şube', 'Section')}</th>
-                    <th>{tr('Öğretim Elemanı', 'Instructor')}</th>
-                    <th>{tr('Saatler', 'Times')}</th>
-                    <th>{tr('AKTS', 'ECTS')}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {lessons.map((lesson, index) => (
-                    <tr key={`${lesson.code}-${lesson.section}-${index}`}>
-                      <td data-label={tr('Ders', 'Course')}><strong>{lesson.code}</strong><span>{lesson.name}</span></td>
-                      <td data-label={tr('Şube', 'Section')}>{lesson.section}</td>
-                      <td data-label={tr('Öğretim Elemanı', 'Instructor')}>{lesson.lecturer}</td>
-                      <td data-label={tr('Saatler', 'Times')} className="shared-times">
-                        {(lesson.times || []).map((time, timeIndex) => (
-                          <span key={`${time.day}-${time.start}-${timeIndex}`}>{time.day} · {time.start}–{time.end}</span>
-                        ))}
-                      </td>
-                      <td data-label={tr('AKTS', 'ECTS')}>{lesson.credits}</td>
+              <span className="shared-card-toggle-right">
+                {share.term && <span>{share.term}</span>}
+                <span className={`shared-card-chevron ${detailsOpen ? 'shared-card-chevron-open' : ''}`} aria-hidden="true">›</span>
+              </span>
+            </button>
+            {detailsOpen && (
+              <div className="shared-table-wrap">
+                <table className="shared-course-table">
+                  <thead>
+                    <tr>
+                      <th>{tr('Ders', 'Course')}</th>
+                      <th>{tr('Şube', 'Section')}</th>
+                      <th>{tr('Öğretim Elemanı', 'Instructor')}</th>
+                      <th>{tr('Saatler', 'Times')}</th>
+                      <th>{tr('Kredi', 'ECTS')}</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {lessons.map((lesson, index) => (
+                      <tr key={`${lesson.code}-${lesson.section}-${index}`}>
+                        <td data-label={tr('Ders', 'Course')}><strong>{lesson.code}</strong><span>{lesson.name}</span></td>
+                        <td data-label={tr('Şube', 'Section')}>{lesson.section}</td>
+                        <td data-label={tr('Öğretim Elemanı', 'Instructor')}>{lesson.lecturer}</td>
+                        <td data-label={tr('Saatler', 'Times')} className="shared-times">
+                          {(lesson.times || []).map((time, timeIndex) => (
+                            <span key={`${time.day}-${time.start}-${timeIndex}`}>{time.day} · {time.start}–{time.end}</span>
+                          ))}
+                        </td>
+                        <td data-label={tr('Kredi', 'ECTS')}>{lesson.credits}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </section>
 
           <section className="shared-card shared-timetable">

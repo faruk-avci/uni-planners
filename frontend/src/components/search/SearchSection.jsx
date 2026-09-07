@@ -216,6 +216,11 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
     ? sortedMeetingTimes(section).map(time => `${time.day}|${time.start}-${time.end}`).join(';')
     : `TBA-${section.name}`
 
+  // Lab courses are separate catalog entries whose code ends in "L" (e.g.
+  // CS 101L alongside CS 101). The collapsible "pick a time slot" chooser
+  // only makes sense for these -- other large courses just list sections.
+  const isLabCourse = code => /L$/i.test(String(code || '').trim())
+
   const toggleTimeGroup = key => {
     setExpandedTimeGroups(previous => {
       const next = new Set(previous)
@@ -454,7 +459,7 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
 
                     <div className="sections-list">
                       {groupSectionsByTime(course.sections).map(group => {
-                        if (course.sections.length > 8) {
+                        if (course.sections.length > 8 && isLabCourse(course.code)) {
                           const groupKey = `${course.code}|${timeGroupKey(group[0])}`
                           const groupOpen = expandedTimeGroups.has(groupKey)
                           const groupFullyAdded = group.every(section => pinnedSections.has(section.name))

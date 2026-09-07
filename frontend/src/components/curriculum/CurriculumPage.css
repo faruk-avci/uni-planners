@@ -180,7 +180,7 @@
 }
 .offered-first-toggle.active { color: var(--text-primary); border-color: var(--border-accent); }
 .offered-first-switch { display: flex; width: 28px; height: 16px; align-items: center; padding: 2px; background: var(--border-accent); border-radius: var(--radius-full); transition: background var(--duration-fast); }
-.offered-first-switch > span { width: 12px; height: 12px; background: white; border-radius: 50%; box-shadow: var(--shadow-xs); transition: transform var(--duration-fast); }
+.offered-first-switch > span { width: 12px; height: 12px; background: var(--bg-primary); border-radius: 50%; box-shadow: var(--shadow-xs); transition: transform var(--duration-fast); }
 .offered-first-toggle.active .offered-first-switch { background: var(--success); }
 .offered-first-toggle.active .offered-first-switch > span { transform: translateX(12px); }
 

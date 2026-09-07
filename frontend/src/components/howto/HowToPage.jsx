@@ -63,7 +63,7 @@ function HowToPage({ language, onNavigate }) {
           <span className="howto-step-number">3</span>
           <div>
             <h2>{tr('Sepetini kontrol et', 'Review your basket')}</h2>
-            <p>{tr('Dersleri, seçtiğin şubeleri ve toplam AKTS’yi kontrol et. Telefonda alttaki “Sepetim” çubuğuna bas.', 'Review courses, selected sections, and total ECTS. On mobile, press the “My Basket” bar at the bottom.')}</p>
+            <p>{tr('Dersleri, seçtiğin şubeleri ve toplam krediyi kontrol et. Telefonda alttaki “Sepetim” çubuğuna bas.', 'Review courses, selected sections, and total ECTS. On mobile, press the “My Basket” bar at the bottom.')}</p>
           </div>
         </article>
 
