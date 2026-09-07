@@ -201,7 +201,10 @@ router.get('/curriculums/:id', async (req, res) => {
       Object.entries(data.electives || {}).map(([type, courses]) => [type, courses.map(enrich)])
     );
 
-    res.set('Cache-Control', 'no-cache');
+    // Matches the catalog's own TTL: offered/sectionCount enrichment can't
+    // go stale by more than that anyway, since it's read from the same
+    // in-memory catalog snapshot.
+    res.set('Cache-Control', 'public, max-age=300');
     res.json({
       ...data,
       programCodes: data.programCodes || CURRICULUM_PROGRAMS[id] || [],

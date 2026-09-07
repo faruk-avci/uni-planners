@@ -38,14 +38,22 @@ function atomicWrite(file, value) {
   renameSync(temp, file)
 }
 
+// Cached like readCurriculumData below -- otherwise every /api/curriculums
+// list request re-reads and re-parses every curriculum file from disk
+// synchronously, which also means it blocks the event loop under load.
+// Invalidated in writeCurriculumData, the only place this data changes.
+let curriculumListCache = null
+
 export function listCurriculumData() {
+  if (curriculumListCache) return curriculumListCache
   ensureDirectories()
-  return readdirSync(CURRICULUM_DIR, { withFileTypes: true })
+  curriculumListCache = readdirSync(CURRICULUM_DIR, { withFileTypes: true })
     .filter(entry => entry.isFile() && entry.name.endsWith('.json'))
     .map(entry => {
       try { return readJson(path.join(CURRICULUM_DIR, entry.name)) } catch { return null }
     })
     .filter(Boolean)
+  return curriculumListCache
 }
 
 // readCurriculumData (always called with the default resolveElectives=true
@@ -87,6 +95,7 @@ export function writeCurriculumData(data) {
   const saved = { ...data, id, updatedAt: new Date().toISOString() }
   atomicWrite(path.join(CURRICULUM_DIR, `${id}.json`), saved)
   curriculumCache.delete(id)
+  curriculumListCache = null
   return saved
 }
 
