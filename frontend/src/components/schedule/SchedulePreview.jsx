@@ -1,7 +1,10 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
 import './SchedulePreview.css'
 
-const HOURS = ['08:40', '09:40', '10:40', '11:40', '12:40', '13:40', '14:40', '15:40', '16:40', '17:40', '18:40', '19:40', '20:40', '21:40', '22:40', '23:40']
+// Full backend-supported range (matches scheduleEngine.js's MAX_BITS, 08:00-23:00).
+// Only sliced down to what's actually needed per schedule -- see visibleHours below.
+const ALL_HOURS = ['08:40', '09:40', '10:40', '11:40', '12:40', '13:40', '14:40', '15:40', '16:40', '17:40', '18:40', '19:40', '20:40', '21:40', '22:40', '23:40']
+const MIN_VISIBLE_HOURS = 12 // standard 08:40-19:40 day, shown even when a schedule is empty
 const DAYS = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma']
 const DAY_ABBR = { 'Pazartesi': 'Pzt', 'Salı': 'Sal', 'Çarşamba': 'Çar', 'Perşembe': 'Per', 'Cuma': 'Cum' }
 // Curated for clear separation on the schedule's light tinted blocks. Colors
@@ -60,14 +63,14 @@ function buildBlocks(schedule, changedCourses = new Set(), colorByCourse = new M
       const startHour = hourIndex(t.start)
       const endHour = hourIndex(t.end)
       const duration = Math.max(1, endHour - startHour)
-      if (startHour < 0 || startHour >= HOURS.length) return
+      if (startHour < 0 || startHour >= ALL_HOURS.length) return
       blocks.push({
         course: lesson.code,
         name: lesson.name,
         section: lesson.section.replace(lesson.code, '').trim() || lesson.section,
         day,
         startHour,
-        duration: Math.min(duration, HOURS.length - startHour),
+        duration: Math.min(duration, ALL_HOURS.length - startHour),
         color,
         changed: changedCourses.has(lesson.code),
       })
@@ -87,6 +90,11 @@ function SchedulePreview({ language, schedules = [], current = 0, onPrev, onNext
     : buildChangedCourses(schedule, previousSchedule)
   const courseColors = buildCourseColors(schedule)
   const blocks = buildBlocks(schedule, changedCourses, courseColors)
+  // Only extend the grid into the evening when this schedule actually has a
+  // class that late -- otherwise the standard day range is enough and we
+  // avoid a tail of empty rows.
+  const neededHours = blocks.reduce((max, b) => Math.max(max, b.startHour + b.duration), MIN_VISIBLE_HOURS)
+  const HOURS = ALL_HOURS.slice(0, Math.min(neededHours, ALL_HOURS.length))
 
   useEffect(() => {
     previousViewedIndex.current = current

@@ -115,7 +115,10 @@ function SharedSchedulePage({ id, language, onHome }) {
               <h2>{tr('Ders ve Şube Bilgileri', 'Course and Section Details')}</h2>
               <span className="shared-card-toggle-right">
                 {share.term && <span>{share.term}</span>}
-                <span className={`shared-card-chevron ${detailsOpen ? 'shared-card-chevron-open' : ''}`} aria-hidden="true">›</span>
+                <span className="shared-card-toggle-pill">
+                  <span>{detailsOpen ? tr('Detayları gizle', 'Hide details') : tr('Detayları göster', 'Show details')}</span>
+                  <span className={`shared-card-chevron ${detailsOpen ? 'shared-card-chevron-open' : ''}`} aria-hidden="true">›</span>
+                </span>
               </span>
             </button>
             {detailsOpen && (
