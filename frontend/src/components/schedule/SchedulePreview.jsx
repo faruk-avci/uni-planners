@@ -196,7 +196,6 @@ function SchedulePreview({ language, schedules = [], current = 0, onPrev, onNext
                       aria-label={block.name ? `${block.course} ${block.name}` : block.course}
                     >
                       <span className="block-course">{block.course}</span>
-                      {block.name && <span className="block-name">{block.name}</span>}
                       <span className="block-section">{block.section}</span>
                     </div>
                   )
