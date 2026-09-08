@@ -10,7 +10,8 @@
     "term:prepare": "node update_term.js --prepare-only",
     "scrape:offerings": "node scrape_offerings.js",
     "scrape:documents": "node run_documents.js",
-    "check": "node --check update_term.js && node --check scrape_offerings.js && node --check run_documents.js && node --check scrape_documents.js && node --check extract_programs.js && node --check build_program_mappings.js && node --check merge_program_mappings.js && node --check parse_assessments.js && node --check import_all_offerings.js && node --check import_assessments.js"
+    "catalog:import-manual": "node import_manual_catalog.js",
+    "check": "node --check update_term.js && node --check scrape_offerings.js && node --check run_documents.js && node --check scrape_documents.js && node --check extract_programs.js && node --check build_program_mappings.js && node --check merge_program_mappings.js && node --check parse_assessments.js && node --check import_all_offerings.js && node --check import_assessments.js && node --check import_manual_catalog.js"
   },
   "dependencies": {
     "pg": "^8.21.0",
