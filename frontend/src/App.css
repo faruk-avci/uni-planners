@@ -939,16 +939,52 @@
     left: var(--space-2);
     z-index: 800;
     display: flex;
+    align-items: stretch;
+    gap: var(--space-2);
+  }
+
+  .mobile-basket-dock-open {
+    display: flex;
+    flex: 65 1 0;
+    min-width: 0;
     min-height: 58px;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space-4);
+    gap: var(--space-3);
     padding: var(--space-2) var(--space-4);
     color: var(--text-inverse);
     background: var(--accent-primary);
     border: 1px solid color-mix(in srgb, var(--accent-primary), white 12%);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-xl);
+  }
+
+  /* Direct shortcut so generating doesn't require opening the sheet first --
+     the sheet stays available via mobile-basket-dock-open for anyone who
+     wants to review the basket/free-days before generating. */
+  .mobile-basket-dock-generate {
+    display: flex;
+    flex: 35 1 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    min-width: 0;
+    min-height: 58px;
+    padding: var(--space-1) var(--space-3);
+    color: var(--accent-primary);
+    font-size: var(--text-md);
+    font-weight: var(--weight-semibold);
+    line-height: 1.2;
+    background: var(--text-inverse);
+    border: 1px solid color-mix(in srgb, var(--accent-primary), white 12%);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    white-space: nowrap;
+  }
+
+  .mobile-basket-dock-generate:disabled {
+    opacity: .6;
   }
 
   .mobile-basket-footer {

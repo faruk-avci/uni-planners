@@ -1423,19 +1423,37 @@ function App() {
 
       {activePage !== 'shared' && (
         <>
-          <button
-            type="button"
-            className="mobile-basket-dock"
-            onClick={() => setMobileBasketOpen(true)}
-            aria-haspopup="dialog"
-            aria-expanded={mobileBasketOpen}
-          >
-            <span className="mobile-basket-dock-copy">
-              <strong>{tr('Sepetim', 'My Basket')}</strong>
-              <span>{basket.length} {tr('ders', 'courses')} · {totalCredits} {tr('Kredi', 'ECTS')}</span>
-            </span>
-            <span className="mobile-basket-dock-action">{tr('Aç', 'Open')} <span aria-hidden="true">↑</span></span>
-          </button>
+          <div className="mobile-basket-dock">
+            <button
+              type="button"
+              className="mobile-basket-dock-open"
+              onClick={() => setMobileBasketOpen(true)}
+              aria-haspopup="dialog"
+              aria-expanded={mobileBasketOpen}
+            >
+              <span className="mobile-basket-dock-copy">
+                <strong>{tr('Sepetim', 'My Basket')}</strong>
+                <span>{basket.length} {tr('ders', 'courses')} · {totalCredits} {tr('Kredi', 'ECTS')}</span>
+              </span>
+              <span className="mobile-basket-dock-action">{tr('Aç', 'Open')} <span aria-hidden="true">↑</span></span>
+            </button>
+            <button
+              type="button"
+              className="mobile-basket-dock-generate"
+              onClick={() => {
+                if (activePage !== 'planner') navigate('planner')
+                handleGenerate()
+              }}
+              disabled={generating}
+            >
+              {generating ? tr('…', '…') : (
+                <>
+                  <span>{tr('Program', 'Generate')}</span>
+                  <span>{tr('Oluştur', 'Schedules')}</span>
+                </>
+              )}
+            </button>
+          </div>
           <p className="mobile-basket-footer">
             Designed and coded with <span>❤️</span> by{' '}
             <a href="https://omer.farukavci.me" target="_blank" rel="noopener noreferrer" onClick={trackFooterLinkClick}>@omer-faruk-avci</a>
