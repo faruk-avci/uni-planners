@@ -195,7 +195,13 @@ function Dashboard({ onLogout }) {
         headers: { 'Content-Type': 'application/octet-stream', 'X-File-Name': encodeURIComponent(file.name) },
         body: await file.arrayBuffer(),
       })
-      const saved = await request(`/elective-pools/${encodeURIComponent(requirement.key)}`, {
+      // Scoped by programId, not just the requirement's label-derived key --
+      // two majors whose curriculum spreadsheets use the same elective label
+      // (e.g. "FE Serbest Seçmeli") would otherwise resolve to the exact same
+      // pool file and each upload would silently overwrite the other major's
+      // list. Deliberate sharing is still possible via the "Mevcut havuz"
+      // dropdown below, which links to an existing pool without uploading.
+      const saved = await request(`/elective-pools/${encodeURIComponent(`${programId}-${requirement.key}`)}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ label: requirement.label, sourceFile: file.name, courses: parsed.courses }),
