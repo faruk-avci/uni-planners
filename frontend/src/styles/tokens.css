@@ -241,22 +241,6 @@
   --shadow-glow: 0 0 0 3px rgba(102, 88, 232, 0.16);
 }
 
-[data-palette="ozu"] {
-  --bg-primary: #f5f5f5;
-  --bg-secondary: #ffffff;
-  --bg-tertiary: #f3f4f6;
-  --bg-elevated: #ffffff;
-  --bg-accent: #f5e6eb;
-  --border-accent: #c21d64;
-  --text-accent: #a50050;
-  --accent-primary: #a50050;
-  --accent-primary-hover: #82003f;
-  --accent-secondary: #003087;
-  --accent-gradient: linear-gradient(135deg, #003087, #a50050);
-  --accent-soft: #f5e6eb;
-  --shadow-glow: 0 0 0 3px rgba(165, 0, 80, 0.16);
-}
-
 [data-palette="ocean"] {
   --bg-primary: #f5f8fc;
   --bg-tertiary: #edf4fc;
@@ -314,7 +298,7 @@
 }
 
 /* Iris is the only palette that customizes text/border/semantic tokens in
-   light mode (the other five only touch bg/accent/shadow-glow), so it's
+   light mode (the other four only touch bg/accent/shadow-glow), so it's
    also the only one where every one of those needs a dark equivalent here
    — otherwise the light values leak through the equal-specificity cascade
    from [data-palette="iris"] instead of falling back to [data-theme="dark"]. */
@@ -412,26 +396,6 @@
   --accent-secondary: #fbbf24;
   --accent-gradient: linear-gradient(135deg, #fb7185, #fbbf24);
   --accent-soft: rgba(251, 113, 133, 0.13);
-}
-
-[data-theme="dark"][data-palette="ozu"] {
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #2d2d2d;
-  --bg-tertiary: #3a3a3a;
-  --bg-elevated: #2d2d2d;
-  --bg-accent: rgba(165, 0, 80, 0.14);
-  --border-primary: #404040;
-  --border-secondary: rgba(255, 255, 255, 0.07);
-  --border-accent: #c21d64;
-  --text-primary: #e5e7eb;
-  --text-secondary: #9ca3af;
-  --text-accent: #e05a91;
-  --accent-primary: #c21d64;
-  --accent-primary-hover: #dd3a7d;
-  --accent-secondary: #4f83df;
-  --accent-gradient: linear-gradient(135deg, #003087, #a50050);
-  --accent-soft: rgba(165, 0, 80, 0.18);
-  --shadow-glow: 0 0 0 3px rgba(194, 29, 100, 0.22);
 }
 
 /* Site-wide typography is controlled from the admin panel and deliberately

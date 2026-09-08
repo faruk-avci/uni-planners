@@ -106,6 +106,7 @@
 .major-prompt-programs button,
 .major-prompt-other button {
   display: flex;
+  min-width: 0;
   min-height: 42px;
   align-items: center;
   justify-content: space-between;
@@ -121,6 +122,13 @@
   line-height: 1.25;
   text-align: left;
   transition: color var(--duration-fast), background var(--duration-fast), border-color var(--duration-fast), transform var(--duration-fast), box-shadow var(--duration-fast);
+}
+
+.major-prompt-program-label {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .major-prompt-programs button:hover,

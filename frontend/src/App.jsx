@@ -39,11 +39,10 @@ const routeFromLocation = () => {
   if (/^\/how-to\/?$/.test(pathname)) return { page: 'howto', sharedId: '' }
   return { page: 'planner', sharedId: '' }
 }
-const PUBLIC_COLOR_THEMES = new Set(['iris', 'neutral', 'ozu', 'ocean', 'forest', 'violet', 'coral'])
+const PUBLIC_COLOR_THEMES = new Set(['iris', 'neutral', 'ocean', 'forest', 'violet', 'coral'])
 const FAVICON_COLORS = {
   iris: '#6658e8',
   neutral: '#18181b',
-  ozu: '#a50050',
   ocean: '#2563eb',
   forest: '#15803d',
   violet: '#7c3aed',

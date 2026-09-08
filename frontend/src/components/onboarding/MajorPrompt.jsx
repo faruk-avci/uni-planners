@@ -46,7 +46,7 @@ function MajorPrompt({ language, groups, selectedMajor, onSelect, onClose }) {
                     className={selectedMajor === program.value ? 'major-prompt-program-active' : ''}
                     onClick={() => onSelect(program.value)}
                   >
-                    <span>{program.title || program.label}</span>
+                    <span className="major-prompt-program-label" title={program.title || program.label}>{program.title || program.label}</span>
                     {selectedMajor === program.value && <span className="major-prompt-check" aria-hidden="true">✓</span>}
                   </button>
                 ))}

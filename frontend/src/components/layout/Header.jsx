@@ -4,7 +4,6 @@ import './Header.css'
 const COLOR_THEMES = [
   { id: 'iris', tr: 'İris', en: 'Iris', color: '#6658e8' },
   { id: 'neutral', tr: 'Obsidyen', en: 'Obsidian', color: '#18181b' },
-  { id: 'ozu', tr: 'Kampüs', en: 'Campus', color: '#a50050' },
   { id: 'ocean', tr: 'Ege', en: 'Aegean', color: '#2563eb' },
   { id: 'forest', tr: 'Kazdağları', en: 'Mount Ida', color: '#15803d' },
   { id: 'violet', tr: 'Mor Salkım', en: 'Wisteria', color: '#7c3aed' },
