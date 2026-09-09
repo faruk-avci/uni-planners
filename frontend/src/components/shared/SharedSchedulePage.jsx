@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import SchedulePreview from '../schedule/SchedulePreview'
+import CourseWorkload from '../basket/CourseWorkload'
 import { courseService } from '../../services/courseService'
 import { scheduleImagePng } from '../../utils/scheduleImageSvg'
 import './SharedSchedulePage.css'
@@ -11,6 +12,8 @@ function SharedSchedulePage({ id, language, onHome }) {
   const [exporting, setExporting] = useState(false)
   const [exportingCalendar, setExportingCalendar] = useState(false)
   const [detailsOpen, setDetailsOpen] = useState(false)
+  const [workloadOpen, setWorkloadOpen] = useState(false)
+  const [assessmentsByCode, setAssessmentsByCode] = useState({})
   const requestedId = useRef(null)
   const tr = (trText, enText) => language === 'tr' ? trText : enText
 
@@ -26,6 +29,26 @@ function SharedSchedulePage({ id, language, onHome }) {
   }, [id])
 
   const lessons = share?.schedule?.lessons || []
+
+  // The shared page has no basket/session to read assessments from -- fetch
+  // them fresh by course code, same endpoint the planner uses.
+  useEffect(() => {
+    if (lessons.length === 0) return
+    const codes = [...new Set(lessons.map(l => l.code))]
+    courseService.getAssessments(codes)
+      .then(setAssessmentsByCode)
+      .catch(() => setAssessmentsByCode({}))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [share?.id])
+
+  const normalizeCode = value => String(value || '').replace(/\s+/g, '').toUpperCase()
+  const workloadCourses = lessons
+    .filter(lesson => !normalizeCode(lesson.code).endsWith('L'))
+    .map(lesson => ({
+      code: lesson.code,
+      name: lesson.name,
+      assessments: assessmentsByCode[lesson.code] || [],
+    }))
   const createdAt = share?.createdAt
     ? new Intl.DateTimeFormat(language === 'tr' ? 'tr-TR' : 'en-US', { dateStyle: 'medium' }).format(new Date(share.createdAt))
     : ''
@@ -151,6 +174,25 @@ function SharedSchedulePage({ id, language, onHome }) {
                 </table>
               </div>
             )}
+          </section>
+
+          <section className="shared-card">
+            <button
+              type="button"
+              className="shared-card-heading shared-card-toggle"
+              aria-expanded={workloadOpen}
+              onClick={() => setWorkloadOpen(open => !open)}
+            >
+              <h2>{tr('Ders Yükü Tablosu', 'Course Workload Table')}</h2>
+              <span className="shared-card-toggle-right">
+                <span className="badge badge-new">{tr('Yeni', 'New')}</span>
+                <span className="shared-card-toggle-pill">
+                  <span>{workloadOpen ? tr('Detayları gizle', 'Hide details') : tr('Detayları göster', 'Show details')}</span>
+                  <span className={`shared-card-chevron ${workloadOpen ? 'shared-card-chevron-open' : ''}`} aria-hidden="true">›</span>
+                </span>
+              </span>
+            </button>
+            {workloadOpen && <CourseWorkload basket={workloadCourses} language={language} showHeader={false} />}
           </section>
 
           <section className="shared-card shared-timetable">

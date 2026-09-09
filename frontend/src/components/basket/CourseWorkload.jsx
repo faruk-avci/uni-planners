@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import './CourseWorkload.css'
 
-function CourseWorkload({ basket, language }) {
+function CourseWorkload({ basket, language, showHeader = true }) {
   // Translate labels
   const t = {
     course: language === 'tr' ? 'Ders' : 'Course',
@@ -38,12 +38,16 @@ function CourseWorkload({ basket, language }) {
   }
 
   return (
-    <div className="workload-block">
-      <div className="workload-header">
-        <h3>{t.sectionTitle}</h3>
-        <span className="badge badge-new">{t.newBadge}</span>
-      </div>
-      <div className="workload-info-box">{t.infoText}</div>
+    <div className={showHeader ? 'workload-block' : ''}>
+      {showHeader && (
+        <>
+          <div className="workload-header">
+            <h3>{t.sectionTitle}</h3>
+            <span className="badge badge-new">{t.newBadge}</span>
+          </div>
+          <div className="workload-info-box">{t.infoText}</div>
+        </>
+      )}
       <div className="workload-table-wrapper animate-fade-in">
       <table className="workload-table">
         <thead>
