@@ -14,7 +14,14 @@ function CourseWorkload({ basket, language }) {
     attendance: language === 'tr' ? 'Katılım' : 'Attendance',
     other: language === 'tr' ? 'Diğer' : 'Other',
     total: language === 'tr' ? 'Toplam' : 'Total',
-    noData: language === 'tr' ? 'Syllabus verisi yok' : 'No syllabus data',
+    noData: language === 'tr'
+      ? 'Syllabus henüz yayınlanmadı — daha sonra tekrar kontrol edin.'
+      : 'Syllabus not published yet — check back later.',
+    sectionTitle: language === 'tr' ? 'Ders Yükü Tablosu' : 'Course Workload Table',
+    newBadge: language === 'tr' ? 'Yeni' : 'New',
+    infoText: language === 'tr'
+      ? 'Derslerinizin final, vize ve diğer değerlendirme ağırlıklarını tek tabloda görebilirsiniz. Syllabuslar yayınlandıkça burada görünmeye başlayacak.'
+      : 'See the final, midterm, and other grading weights for your courses in one table. They will appear here as syllabi are published.',
   }
 
   // Categories to sum
@@ -31,7 +38,13 @@ function CourseWorkload({ basket, language }) {
   }
 
   return (
-    <div className="workload-table-wrapper animate-fade-in">
+    <div className="workload-block">
+      <div className="workload-header">
+        <h3>{t.sectionTitle}</h3>
+        <span className="badge badge-new">{t.newBadge}</span>
+      </div>
+      <div className="workload-info-box">{t.infoText}</div>
+      <div className="workload-table-wrapper animate-fade-in">
       <table className="workload-table">
         <thead>
           <tr>
@@ -101,6 +114,7 @@ function CourseWorkload({ basket, language }) {
           })}
         </tbody>
       </table>
+      </div>
     </div>
   )
 }

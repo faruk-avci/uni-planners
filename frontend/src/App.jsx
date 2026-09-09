@@ -7,6 +7,7 @@ import Header from './components/layout/Header'
 import ProfileBar from './components/profile/ProfileBar'
 import SearchSection from './components/search/SearchSection'
 import BasketPanel from './components/basket/BasketPanel'
+import CourseWorkload from './components/basket/CourseWorkload'
 import SchedulePreview from './components/schedule/SchedulePreview'
 import FreeDaySelector from './components/schedule/FreeDaySelector'
 import CurriculumPage from './components/curriculum/CurriculumPage'
@@ -1388,6 +1389,18 @@ function App() {
                     )}
                   </div>
                 )}
+
+                {schedules.length > 0 && (() => {
+                  const normalizeCode = value => String(value || '').replace(/\s+/g, '').toUpperCase()
+                  const workloadCourses = schedules[currentSchedule].lessons
+                    .filter(lesson => !normalizeCode(lesson.code).endsWith('L'))
+                    .map(lesson => ({
+                      code: lesson.code,
+                      name: lesson.name,
+                      assessments: basket.find(item => normalizeCode(item.code) === normalizeCode(lesson.code))?.assessments || [],
+                    }))
+                  return <CourseWorkload basket={workloadCourses} language={language} />
+                })()}
               </section>
             )}
 
