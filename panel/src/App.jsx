@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import Analytics from './Analytics.jsx'
 
 const API = '/api/admin'
-const DEFAULT_SITE_SETTINGS = { mainFont: 'system', catalogTerm: '2025-2026 Yaz', surveyUrl: '' }
+const DEFAULT_SITE_SETTINGS = { mainFont: 'system', catalogTerm: '2025-2026 Yaz', surveyUrl: '', announcementUrl: '' }
 const FONT_PREVIEWS = {
   system: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
   inter: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
@@ -309,6 +309,7 @@ function Dashboard({ onLogout }) {
               </select><small>Planlayıcı, Müfredat ve Nasıl Kullanılır sayfalarına uygulanır; panelin fontunu değiştirmez.</small></label>
               <label className="select-field"><span>Gösterilen dönem</span><input value={settingsDraft.catalogTerm} maxLength={60} onChange={event => setSettingsDraft(current => ({ ...current, catalogTerm: event.target.value }))} placeholder="2025-2026 Yaz" required /><small>Arama alanında ve paylaşılan programlarda görünür.</small></label>
               <label className="select-field settings-wide"><span>Anket bağlantısı</span><input type="url" value={settingsDraft.surveyUrl} maxLength={500} onChange={event => setSettingsDraft(current => ({ ...current, surveyUrl: event.target.value }))} placeholder="https://..." /><small>Boş bırakırsanız Anket bağlantısı ana menüden gizlenir.</small></label>
+              <label className="select-field settings-wide"><span>Duyuru bağlantısı</span><input type="url" value={settingsDraft.announcementUrl} maxLength={500} onChange={event => setSettingsDraft(current => ({ ...current, announcementUrl: event.target.value }))} placeholder="https://..." /><small>Boş bırakırsanız üniversite kutusunun yanındaki duyuru bağlantısı gizlenir.</small></label>
             </div>
             <div className="settings-footer">
               <div className="font-preview" style={{ fontFamily: FONT_PREVIEWS[settingsDraft.mainFont] }}><span>Yazı tipi önizlemesi</span><strong>UniPlanner ile programını planla</strong></div>

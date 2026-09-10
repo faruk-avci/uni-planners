@@ -14,6 +14,7 @@ export const DEFAULT_SITE_SETTINGS = {
   mainFont: 'system',
   catalogTerm: process.env.CATALOG_TERM || '2025-2026 Yaz',
   surveyUrl: '',
+  announcementUrl: '',
 }
 
 function ensureDirectories() {
@@ -145,19 +146,24 @@ export function readSiteSettings() {
   }
 }
 
+function validateOptionalHttpsUrl(value, label) {
+  const trimmed = String(value || '').trim().slice(0, 500)
+  if (!trimmed) return trimmed
+  let parsed
+  try { parsed = new URL(trimmed) } catch { throw new Error(`${label} must be a valid URL`) }
+  if (parsed.protocol !== 'https:' && !(parsed.protocol === 'http:' && ['localhost', '127.0.0.1'].includes(parsed.hostname))) {
+    throw new Error(`${label} must use HTTPS`)
+  }
+  return trimmed
+}
+
 export function writeSiteSettings(input) {
   const mainFont = SITE_FONTS.has(input?.mainFont) ? input.mainFont : DEFAULT_SITE_SETTINGS.mainFont
   const catalogTerm = String(input?.catalogTerm || '').trim().slice(0, 60)
-  const surveyUrl = String(input?.surveyUrl || '').trim().slice(0, 500)
   if (!catalogTerm) throw new Error('Academic term is required')
-  if (surveyUrl) {
-    let parsed
-    try { parsed = new URL(surveyUrl) } catch { throw new Error('Survey link must be a valid URL') }
-    if (parsed.protocol !== 'https:' && !(parsed.protocol === 'http:' && ['localhost', '127.0.0.1'].includes(parsed.hostname))) {
-      throw new Error('Survey link must use HTTPS')
-    }
-  }
-  const saved = { mainFont, catalogTerm, surveyUrl, updatedAt: new Date().toISOString() }
+  const surveyUrl = validateOptionalHttpsUrl(input?.surveyUrl, 'Survey link')
+  const announcementUrl = validateOptionalHttpsUrl(input?.announcementUrl, 'Announcement link')
+  const saved = { mainFont, catalogTerm, surveyUrl, announcementUrl, updatedAt: new Date().toISOString() }
   atomicWrite(SITE_SETTINGS_FILE, saved)
   return saved
 }

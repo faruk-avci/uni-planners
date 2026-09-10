@@ -1,9 +1,10 @@
 import './ProfileBar.css'
 
-function ProfileBar({ language, majorLabel, grade, onMajorClick, onGradeChange }) {
+function ProfileBar({ language, majorLabel, grade, onMajorClick, onGradeChange, announcementUrl, surveyUrl }) {
   const tr = (trText, enText) => language === 'tr' ? trText : enText
 
   return (
+    <>
     <section className="profile-bar" aria-label={tr('Akademik profil', 'Academic profile')}>
       <div className="profile-university">
         <span className="profile-university-mark" aria-hidden="true">Ö</span>
@@ -38,6 +39,28 @@ function ProfileBar({ language, majorLabel, grade, onMajorClick, onGradeChange }
         </label>
       </div>
     </section>
+    {(announcementUrl || surveyUrl) && (
+      <div className="profile-links">
+        {announcementUrl && (
+          <a href={announcementUrl} target="_blank" rel="noopener noreferrer" className="profile-link profile-link-announcement">
+            <span aria-hidden="true">📢</span>
+            <span>
+              {language === 'tr' ? (
+                <>Bu site resmi ders kayıt sitesi değildir — resmi duyurular ve ders kaydı için <span className="profile-link-emphasis">tıklayın <span aria-hidden="true">🔗</span></span></>
+              ) : (
+                <>This is not the official course registration site — <span className="profile-link-emphasis">click here <span aria-hidden="true">🔗</span></span> for official announcements and registration</>
+              )}
+            </span>
+          </a>
+        )}
+        {surveyUrl && (
+          <a href={surveyUrl} target="_blank" rel="noopener noreferrer" className="profile-link profile-link-survey">
+            <span>{tr('Lütfen anketi doldurmayı unutmayın', 'Please don’t forget to fill out our survey')} <strong>{tr('→ Ankete git', '→ Go to survey')}</strong></span>
+          </a>
+        )}
+      </div>
+    )}
+    </>
   )
 }
 
