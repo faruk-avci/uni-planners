@@ -61,8 +61,8 @@ function ProfileBar({ language, majorLabel, grade, onMajorClick, onGradeChange, 
         <span aria-hidden="true">ℹ️</span>
         <span>
           {tr(
-            'Ders bilgileri periyodik olarak güncellenir. Kesin ve güncel bilgi için lütfen SIS’i kontrol edin.',
-            'Course information is updated periodically. Please check SIS for the most current information.'
+            'Son güncellemeler: HUM 319, ARCH 212, MİM 209 ve PE 101 ders saatleri değişti; PHYS 221 kaldırıldı, EE 204 eklendi. Güncel bilgi için SIS’i kontrol edin.',
+            'Recent updates: HUM 319, ARCH 212, MİM 209, and PE 101 meeting times changed; PHYS 221 was removed, EE 204 was added. Check SIS for the latest information.'
           )}
         </span>
         <button
