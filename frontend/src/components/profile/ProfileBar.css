@@ -13,13 +13,51 @@
   border-radius: var(--radius-lg);
 }
 
-.profile-links {
+.profile-links,
+.profile-notice-bar {
   display: flex;
   flex-wrap: wrap;
   width: calc(100% - 2 * var(--space-4));
   max-width: var(--max-width);
   gap: var(--space-2);
   margin: var(--space-2) auto 0;
+}
+
+.profile-notice-bar {
+  align-items: center;
+  padding: 10px 12px;
+  color: var(--info);
+  background: var(--info-bg);
+  border: 1px solid var(--info);
+  border-radius: var(--radius-md);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  line-height: 1.4;
+}
+
+.profile-notice-bar span:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-notice-close {
+  display: grid;
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-full);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--duration-fast);
+}
+
+.profile-notice-close:hover {
+  background: color-mix(in srgb, var(--info), transparent 85%);
 }
 
 .profile-link {
