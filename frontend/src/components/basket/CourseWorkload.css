@@ -134,14 +134,6 @@
   border-radius: var(--radius-md);
 }
 
-.workload-chip-label {
-  font-size: 10px;
-  font-weight: var(--weight-bold);
-  color: var(--text-tertiary);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
 .workload-chip-weight {
   font-weight: var(--weight-semibold);
   color: var(--text-primary);

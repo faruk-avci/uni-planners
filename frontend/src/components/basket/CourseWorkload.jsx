@@ -88,21 +88,12 @@ function CourseWorkload({ basket, language, showHeader = true }) {
                   <>
                     <td className="workload-td-breakdown">
                       <div className="workload-chip-row">
-                        {categories.map(cat => {
-                          const items = getWorkloadItems(course.assessments, cat);
-                          if (items.length === 0) return null;
-
-                          const weightStr = items.map(item => `%${item.weight}`).join(' + ');
-                          const typesStr = items.map(item => item.type).join(' + ');
-
-                          return (
-                            <div key={cat} className="workload-chip">
-                              <span className="workload-chip-label">{t[cat]}</span>
-                              <span className="workload-chip-weight">{weightStr}</span>
-                              <span className="workload-chip-types" title={typesStr}>{typesStr}</span>
-                            </div>
-                          )
-                        })}
+                        {categories.flatMap(cat => getWorkloadItems(course.assessments, cat)).map((item, index) => (
+                          <div key={`${item.category}-${index}`} className="workload-chip">
+                            <span className="workload-chip-weight">%{item.weight}</span>
+                            <span className="workload-chip-types" title={item.type}>{item.type}</span>
+                          </div>
+                        ))}
                       </div>
                     </td>
                     <td className="workload-td-total">
