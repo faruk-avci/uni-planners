@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Syllabus İnceleme Aracı</title>
+<style>
+  :root {
+    --bg: #f5f6fa;
+    --panel: #ffffff;
+    --border: #dde1ea;
+    --text: #1f2430;
+    --muted: #6b7280;
+    --accent: #6658e8;
+    --accent-dark: #4f42c9;
+    --good: #16a34a;
+    --bad: #dc2626;
+    --warn: #d97706;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; font-family: -apple-system, "Segoe UI", Inter, sans-serif; background: var(--bg); color: var(--text); }
+  #picker-screen { display: flex; align-items: center; justify-content: center; height: 100%; flex-direction: column; gap: 16px; text-align: center; padding: 24px; }
+  #picker-screen h1 { font-size: 22px; margin: 0; }
+  #picker-screen p { color: var(--muted); max-width: 480px; margin: 0; font-size: 14px; line-height: 1.5; }
+  .btn { border: 0; border-radius: 8px; padding: 10px 18px; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-primary:hover { background: var(--accent-dark); }
+  .btn-secondary { background: white; border: 1px solid var(--border); color: var(--text); }
+  .btn-secondary:hover { background: #f0f1f6; }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+
+  #app { display: none; height: 100%; flex-direction: column; }
+  header { display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: var(--panel); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+  header .course-code { font-size: 17px; font-weight: 800; min-width: 90px; }
+  header select { padding: 7px 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; max-width: 260px; }
+  header .progress { font-size: 12px; color: var(--muted); white-space: nowrap; }
+  header .spacer { flex: 1; }
+  header .flag-btn.active { background: #fff3e0; border-color: var(--warn); color: var(--warn); }
+
+  #body { flex: 1; display: grid; grid-template-columns: 1fr 1fr; min-height: 0; }
+  #pdf-pane { border-right: 1px solid var(--border); background: #2b2f3a; position: relative; }
+  #pdf-pane iframe { width: 100%; height: 100%; border: 0; }
+  #pdf-missing { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #aab0c0; font-size: 14px; }
+
+  #right-pane { padding: 16px; overflow-y: auto; }
+  .total-badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 13px; font-weight: 700; margin-bottom: 12px; }
+  .total-ok { background: #dcfce7; color: var(--good); }
+  .total-bad { background: #fee2e2; color: var(--bad); }
+
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); padding: 6px 6px; }
+  td { padding: 4px 6px; }
+  td input[type="text"], td select { width: 100%; padding: 7px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; background: white; }
+  td input[type="number"] { width: 70px; padding: 7px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; }
+  td.remove-cell { width: 28px; }
+  td.remove-cell button { border: 0; background: transparent; color: var(--bad); font-size: 16px; cursor: pointer; padding: 2px 6px; }
+
+  #add-row-btn { margin-top: 8px; }
+  .right-actions { display: flex; gap: 8px; margin-top: 20px; }
+  .right-actions .btn { flex: 1; }
+  .note { font-size: 12px; color: var(--muted); margin-top: 14px; line-height: 1.5; }
+  .reviewed-tag { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: #dcfce7; color: var(--good); }
+</style>
+</head>
+<body>
+
+<div id="picker-screen">
+  <h1>📋 Syllabus İnceleme Aracı</h1>
+  <p>
+    <code>parse_assessments.js</code> tarafından oluşturulan <code>downloads/&lt;term&gt;</code>
+    klasörünü seçin (içinde <code>assessments.json</code> ve ders klasörleri olmalı).
+    PDF'ler solda, çıkarılan değerler sağda gösterilecek.
+  </p>
+  <input type="file" id="folder-input" webkitdirectory directory multiple style="display:none">
+  <button class="btn btn-primary" id="pick-btn">Klasör Seç</button>
+  <p id="picker-status" style="font-size:12px;"></p>
+</div>
+
+<div id="app">
+  <header>
+    <div class="course-code" id="course-code">-</div>
+    <select id="jump-select"></select>
+    <button class="btn btn-secondary" id="prev-btn">← Önceki</button>
+    <button class="btn btn-secondary" id="next-btn">Sonraki →</button>
+    <span class="progress" id="progress-label"></span>
+    <div class="spacer"></div>
+    <button class="btn btn-secondary" id="flag-btn">⚑ Sorunlu işaretle</button>
+    <button class="btn btn-secondary" id="reset-btn">Sıfırla</button>
+    <button class="btn btn-primary" id="export-btn">⬇ JSON İndir</button>
+  </header>
+
+  <div id="body">
+    <div id="pdf-pane">
+      <div id="pdf-missing" style="display:none;">Bu ders için PDF bulunamadı.</div>
+      <iframe id="pdf-frame"></iframe>
+    </div>
+    <div id="right-pane">
+      <div id="reviewed-indicator"></div>
+      <div class="total-badge" id="total-badge">Toplam: -</div>
+      <table>
+        <thead>
+          <tr><th style="width:40%">Tür</th><th style="width:35%">Kategori</th><th style="width:15%">Ağırlık %</th><th></th></tr>
+        </thead>
+        <tbody id="rows-body"></tbody>
+      </table>
+      <button class="btn btn-secondary" id="add-row-btn">+ Satır Ekle</button>
+
+      <div class="right-actions">
+        <button class="btn btn-primary" id="mark-next-btn">✓ Doğru / Düzeltildi — Sonrakine Geç</button>
+      </div>
+      <p class="note">
+        İlerlemeniz tarayıcınızda otomatik kaydedilir (bu klasör adına göre) — sayfayı
+        kapatıp aynı klasörü tekrar seçerseniz kaldığınız yerden devam edersiniz.
+        Bittiğinde "JSON İndir" ile <code>assessments.json</code>'ın üzerine yazılacak
+        dosyayı indirin, sonra <code>node import_assessments.js</code> çalıştırın.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+const CATEGORIES = ['midterm', 'final', 'quiz', 'homework', 'project', 'report', 'presentation', 'lab', 'attendance', 'other'];
+
+let courseList = [];      // [{code, file}]
+let results = {};         // code -> [{type, category, weight, raw}]
+let reviewed = new Set();
+let flagged = new Set();
+let currentIndex = 0;
+let storageKey = '';
+let currentObjectUrl = null;
+
+function getCourseCode(filename) {
+  const m = filename.match(/^([\p{L}]+)_(\d+[\p{L}]?)(?:\.[\p{L}\p{N}]+)?_Syllabus\.pdf$/iu);
+  if (!m) return null;
+  return `${m[1].toUpperCase()} ${m[2]}`;
+}
+
+function blankRow() {
+  return { type: '', category: 'other', weight: null, raw: '' };
+}
+
+function persist() {
+  localStorage.setItem(storageKey, JSON.stringify({
+    results,
+    reviewed: [...reviewed],
+    flagged: [...flagged],
+  }));
+}
+
+document.getElementById('pick-btn').addEventListener('click', () => {
+  document.getElementById('folder-input').click();
+});
+
+document.getElementById('folder-input').addEventListener('change', event => {
+  loadFromFiles([...event.target.files]);
+});
+
+async function loadFromFiles(files) {
+  if (files.length === 0) return;
+
+  const status = document.getElementById('picker-status');
+  status.textContent = 'Klasör taranıyor…';
+
+  const rootName = files[0].webkitRelativePath.split('/')[0];
+  storageKey = `syllabus_review::${rootName}`;
+
+  // Find assessments.json (may be missing if parse_assessments.js was never run)
+  let assessmentsData = {};
+  const assessmentsFile = files.find(f => f.webkitRelativePath.endsWith('/assessments.json') || f.name === 'assessments.json');
+  if (assessmentsFile) {
+    try {
+      assessmentsData = JSON.parse(await assessmentsFile.text());
+    } catch (e) {
+      console.error('assessments.json parse failed', e);
+    }
+  }
+
+  // Match syllabus PDFs to course codes, first-found-per-code (mirrors parse_assessments.js dedupe)
+  const codeToFile = new Map();
+  for (const f of files) {
+    if (!f.name.endsWith('_Syllabus.pdf')) continue;
+    const code = getCourseCode(f.name);
+    if (!code) continue;
+    if (!codeToFile.has(code)) codeToFile.set(code, f);
+  }
+
+  const allCodes = new Set([...codeToFile.keys(), ...Object.keys(assessmentsData)]);
+  courseList = [...allCodes].sort().map(code => ({ code, file: codeToFile.get(code) || null }));
+
+  if (courseList.length === 0) {
+    status.textContent = 'Bu klasörde syllabus PDF veya assessments.json bulunamadı.';
+    return;
+  }
+
+  // Resume progress if this folder was reviewed before
+  const saved = localStorage.getItem(storageKey);
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      results = parsed.results || {};
+      reviewed = new Set(parsed.reviewed || []);
+      flagged = new Set(parsed.flagged || []);
+    } catch (e) { /* ignore corrupt local data */ }
+  }
+
+  for (const { code } of courseList) {
+    if (!results[code]) {
+      results[code] = assessmentsData[code]
+        ? assessmentsData[code].map(a => ({ type: a.type || '', category: a.category || 'other', weight: a.weight ?? null, raw: a.raw || '' }))
+        : [blankRow()];
+    }
+  }
+
+  document.getElementById('picker-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+
+  buildJumpSelect();
+  currentIndex = courseList.findIndex(c => !reviewed.has(c.code));
+  if (currentIndex === -1) currentIndex = 0;
+  renderCourse();
+}
+
+function buildJumpSelect() {
+  const select = document.getElementById('jump-select');
+  select.innerHTML = '';
+  courseList.forEach((c, i) => {
+    const opt = document.createElement('option');
+    let mark = reviewed.has(c.code) ? '✓ ' : flagged.has(c.code) ? '⚑ ' : '';
+    opt.value = i;
+    opt.textContent = mark + c.code + (c.file ? '' : ' (PDF yok)');
+    select.appendChild(opt);
+  });
+}
+
+function readCurrentRowsFromDom() {
+  const rows = [...document.querySelectorAll('#rows-body tr')].map(tr => {
+    const type = tr.querySelector('.f-type').value.trim();
+    const category = tr.querySelector('.f-category').value;
+    const weightRaw = tr.querySelector('.f-weight').value;
+    const weight = weightRaw === '' ? null : parseFloat(weightRaw);
+    return { type, category, weight, raw: weight != null ? `${weight}%` : '' };
+  }).filter(r => r.type || r.weight != null);
+  return rows.length > 0 ? rows : [blankRow()];
+}
+
+function commitCurrent() {
+  if (courseList.length === 0) return;
+  const code = courseList[currentIndex].code;
+  results[code] = readCurrentRowsFromDom();
+  persist();
+}
+
+function updateTotalBadge(rows) {
+  const total = rows.reduce((sum, r) => sum + (Number.isFinite(r.weight) ? r.weight : 0), 0);
+  const badge = document.getElementById('total-badge');
+  badge.textContent = `Toplam: ${total}%`;
+  badge.className = 'total-badge ' + (Math.abs(total - 100) < 0.01 ? 'total-ok' : 'total-bad');
+}
+
+function renderRows(rows) {
+  const body = document.getElementById('rows-body');
+  body.innerHTML = '';
+  rows.forEach(row => addRowToDom(row));
+  updateTotalBadge(rows);
+}
+
+function addRowToDom(row) {
+  const body = document.getElementById('rows-body');
+  const tr = document.createElement('tr');
+
+  const typeTd = document.createElement('td');
+  const typeInput = document.createElement('input');
+  typeInput.type = 'text';
+  typeInput.className = 'f-type';
+  typeInput.value = row.type || '';
+  typeTd.appendChild(typeInput);
+
+  const catTd = document.createElement('td');
+  const catSelect = document.createElement('select');
+  catSelect.className = 'f-category';
+  CATEGORIES.forEach(cat => {
+    const opt = document.createElement('option');
+    opt.value = cat;
+    opt.textContent = cat;
+    if (cat === row.category) opt.selected = true;
+    catSelect.appendChild(opt);
+  });
+  catTd.appendChild(catSelect);
+
+  const weightTd = document.createElement('td');
+  const weightInput = document.createElement('input');
+  weightInput.type = 'number';
+  weightInput.className = 'f-weight';
+  weightInput.step = '0.5';
+  weightInput.value = row.weight ?? '';
+  weightTd.appendChild(weightInput);
+
+  const removeTd = document.createElement('td');
+  removeTd.className = 'remove-cell';
+  const removeBtn = document.createElement('button');
+  removeBtn.textContent = '×';
+  removeBtn.type = 'button';
+  removeBtn.addEventListener('click', () => {
+    tr.remove();
+    updateTotalBadge(readCurrentRowsFromDom());
+  });
+  removeTd.appendChild(removeBtn);
+
+  tr.append(typeTd, catTd, weightTd, removeTd);
+  body.appendChild(tr);
+
+  weightInput.addEventListener('input', () => updateTotalBadge(readCurrentRowsFromDom()));
+}
+
+document.getElementById('add-row-btn').addEventListener('click', () => {
+  addRowToDom(blankRow());
+});
+
+function renderCourse() {
+  const course = courseList[currentIndex];
+  document.getElementById('course-code').textContent = course.code;
+  document.getElementById('jump-select').value = currentIndex;
+  document.getElementById('progress-label').textContent =
+    `${reviewed.size} / ${courseList.length} incelendi`;
+  document.getElementById('prev-btn').disabled = currentIndex === 0;
+  document.getElementById('next-btn').disabled = currentIndex === courseList.length - 1;
+
+  const flagBtn = document.getElementById('flag-btn');
+  flagBtn.classList.toggle('active', flagged.has(course.code));
+
+  const reviewedIndicator = document.getElementById('reviewed-indicator');
+  reviewedIndicator.innerHTML = reviewed.has(course.code) ? '<span class="reviewed-tag">✓ İncelendi</span>' : '';
+
+  // PDF pane
+  if (currentObjectUrl) { URL.revokeObjectURL(currentObjectUrl); currentObjectUrl = null; }
+  const frame = document.getElementById('pdf-frame');
+  const missing = document.getElementById('pdf-missing');
+  if (course.file) {
+    currentObjectUrl = URL.createObjectURL(course.file);
+    frame.style.display = 'block';
+    missing.style.display = 'none';
+    frame.src = currentObjectUrl + '#page=2';
+  } else {
+    frame.style.display = 'none';
+    missing.style.display = 'flex';
+  }
+
+  renderRows(results[course.code] || [blankRow()]);
+}
+
+function goTo(index) {
+  if (index < 0 || index >= courseList.length) return;
+  commitCurrent();
+  currentIndex = index;
+  renderCourse();
+}
+
+document.getElementById('prev-btn').addEventListener('click', () => goTo(currentIndex - 1));
+document.getElementById('next-btn').addEventListener('click', () => goTo(currentIndex + 1));
+document.getElementById('jump-select').addEventListener('change', e => goTo(parseInt(e.target.value, 10)));
+
+document.getElementById('mark-next-btn').addEventListener('click', () => {
+  const code = courseList[currentIndex].code;
+  results[code] = readCurrentRowsFromDom();
+  reviewed.add(code);
+  persist();
+  buildJumpSelect();
+  const next = courseList.findIndex((c, i) => i > currentIndex && !reviewed.has(c.code));
+  goTo(next === -1 ? Math.min(currentIndex + 1, courseList.length - 1) : next);
+});
+
+document.getElementById('flag-btn').addEventListener('click', () => {
+  const code = courseList[currentIndex].code;
+  if (flagged.has(code)) flagged.delete(code); else flagged.add(code);
+  persist();
+  buildJumpSelect();
+  renderCourse();
+});
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+  if (!confirm('Bu klasör için tüm ilerleme silinsin mi? Bu geri alınamaz.')) return;
+  localStorage.removeItem(storageKey);
+  results = {};
+  reviewed = new Set();
+  flagged = new Set();
+  for (const { code } of courseList) results[code] = [blankRow()];
+  buildJumpSelect();
+  goTo(0);
+});
+
+document.getElementById('export-btn').addEventListener('click', () => {
+  commitCurrent();
+  const output = {};
+  for (const { code } of courseList) {
+    const rows = (results[code] || []).filter(r => r.type && r.weight != null);
+    if (rows.length > 0) output[code] = rows;
+  }
+  const blob = new Blob([JSON.stringify(output, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'assessments.json';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+document.addEventListener('keydown', event => {
+  const tag = document.activeElement.tagName;
+  if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
+  if (event.key === 'ArrowRight') goTo(currentIndex + 1);
+  if (event.key === 'ArrowLeft') goTo(currentIndex - 1);
+});
+</script>
+
+</body>
+</html>

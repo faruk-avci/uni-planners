@@ -65,7 +65,7 @@ function extractAssessments(fullText) {
   const assessments = [];
 
   // Aggressive structural pattern: Group 1 matches Type, Group 2 matches Weight
-  const typePattern = /^\s{0,10}([A-Za-zÇĞİÖŞÜa-zçğıöşü0-9/\-&,:\'\(\)\.#+_*’][A-Za-zÇĞİÖŞÜa-zçğıöşü0-9/\-&,:\'\(\)\.#+_*’ ]*?)\s{2,}(\d+(?:\.\d+)?\s*%?|up\s+to\s+\d+(?:\.\d+)?\s*%?|No|Mandatory|-|bonus)\b/i;
+  const typePattern = /^\s{0,10}([A-Za-zÇĞİÖŞÜa-zçğıöşü0-9/\-&,:\'\(\)\.#+_*’][A-Za-zÇĞİÖŞÜa-zçğıöşü0-9/\-&,:\'\(\)\.#+_*’ ]*?)\s{2,}(%\s*\d+(?:\.\d+)?|\d+(?:\.\d+)?\s*%?|up\s+to\s+\d+(?:\.\d+)?\s*%?|No|Mandatory|-|bonus)\b/i;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -254,11 +254,15 @@ function getCourseCode(filename) {
 function parseArgs() {
   const args = process.argv.slice(2);
   const config = {
-    term: ''
+    term: '',
+    dir: '',
   };
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--term') {
       config.term = args[i + 1] || '';
+      i++;
+    } else if (args[i] === '--dir') {
+      config.dir = args[i + 1] || '';
       i++;
     }
   }
@@ -272,9 +276,11 @@ function termSlug(term) {
 // ── Main ──
 async function main() {
   const config = parseArgs();
-  const baseDir = config.term 
-    ? path.join(DOWNLOADS_DIR, termSlug(config.term))
-    : DOWNLOADS_DIR;
+  const baseDir = config.dir
+    ? path.resolve(config.dir)
+    : config.term
+      ? path.join(DOWNLOADS_DIR, termSlug(config.term))
+      : DOWNLOADS_DIR;
   const outputFile = path.join(baseDir, 'assessments.json');
 
   console.log(`Scanning for Syllabus PDFs in ${baseDir}...`);
@@ -317,7 +323,7 @@ async function main() {
       let text;
       try {
         if (processingPath !== filePath) fs.copyFileSync(filePath, processingPath);
-        text = execFileSync('pdftotext', ['-layout', processingPath, '-'], {
+        text = execFileSync('pdftotext', ['-table', processingPath, '-'], {
           encoding: 'utf-8',
           timeout: 10000,
           stdio: ['pipe', 'pipe', 'pipe']

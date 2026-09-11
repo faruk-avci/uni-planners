@@ -19,11 +19,15 @@ const __dirname = path.dirname(__filename);
 function parseArgs() {
   const args = process.argv.slice(2);
   const config = {
-    term: ''
+    term: '',
+    dir: '',
   };
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--term') {
       config.term = args[i + 1] || '';
+      i++;
+    } else if (args[i] === '--dir') {
+      config.dir = args[i + 1] || '';
       i++;
     }
   }
@@ -36,9 +40,11 @@ function termSlug(term) {
 
 async function main() {
   const config = parseArgs();
-  const baseDir = config.term
-    ? path.join(__dirname, 'downloads', termSlug(config.term))
-    : path.join(__dirname, 'downloads');
+  const baseDir = config.dir
+    ? path.resolve(config.dir)
+    : config.term
+      ? path.join(__dirname, 'downloads', termSlug(config.term))
+      : path.join(__dirname, 'downloads');
 
   const assessmentsFile = path.join(baseDir, 'assessments.json');
 

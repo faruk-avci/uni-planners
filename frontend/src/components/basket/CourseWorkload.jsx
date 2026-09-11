@@ -67,8 +67,14 @@ function CourseWorkload({ basket, language, showHeader = true }) {
         <tbody>
           {basket.map(course => {
             const hasAssessments = course.assessments && course.assessments.length > 0;
-            const totalWeight = hasAssessments 
-              ? course.assessments.reduce((sum, a) => sum + (a.weight || 0), 0) 
+            // A syllabus that only yielded unreliable/unreviewed rows (weight
+            // left null on purpose, e.g. "Please check syllabus") shouldn't
+            // render as a broken all-dashes %0 row -- show its note instead.
+            const reviewNote = hasAssessments && course.assessments.every(a => a.weight === null || a.weight === undefined)
+              ? course.assessments.map(a => a.type).filter(Boolean).join('; ')
+              : null;
+            const totalWeight = hasAssessments
+              ? course.assessments.reduce((sum, a) => sum + (a.weight || 0), 0)
               : 0;
 
             return (
@@ -80,7 +86,11 @@ function CourseWorkload({ basket, language, showHeader = true }) {
                   </div>
                 </td>
                 
-                {hasAssessments ? (
+                {reviewNote ? (
+                  <td colSpan="9" className="workload-no-data">
+                    <em>{reviewNote}</em>
+                  </td>
+                ) : hasAssessments ? (
                   <>
                     {categories.map(cat => {
                       const items = getWorkloadItems(course.assessments, cat);
