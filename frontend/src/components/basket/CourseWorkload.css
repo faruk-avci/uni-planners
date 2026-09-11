@@ -115,34 +115,27 @@
   text-align: left;
 }
 
-.workload-item-row {
+.workload-item-list {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
+  flex-direction: column;
   gap: var(--space-2);
 }
 
-.workload-item-card {
+.workload-item-row {
   display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border-left: 3px solid;
-  border-radius: var(--radius-md);
-  white-space: nowrap;
-}
-
-.workload-item-weight {
-  font-weight: var(--weight-bold);
-  font-size: var(--text-sm);
+  flex-direction: column;
 }
 
 .workload-item-type {
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+}
+
+.workload-item-weight {
   color: var(--text-secondary);
   font-size: var(--text-xs);
-  font-weight: var(--weight-medium);
-  white-space: normal;
-  max-width: 200px;
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
 }
 
 .workload-td-total {

@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-import { COURSE_COLORS } from '../../utils/courseColors'
 import './CourseWorkload.css'
 
 function CourseWorkload({ basket, language, showHeader = true }) {
@@ -88,20 +87,13 @@ function CourseWorkload({ basket, language, showHeader = true }) {
                 ) : hasAssessments ? (
                   <>
                     <td className="workload-td-breakdown">
-                      <div className="workload-item-row">
-                        {categories.flatMap(cat => getWorkloadItems(course.assessments, cat)).map((item, index) => {
-                          const color = COURSE_COLORS[index % COURSE_COLORS.length]
-                          return (
-                            <div
-                              key={`${item.category}-${index}`}
-                              className="workload-item-card"
-                              style={{ background: `color-mix(in srgb, ${color}, white 82%)`, borderLeftColor: color }}
-                            >
-                              <span className="workload-item-weight" style={{ color }}>%{item.weight}</span>
-                              <span className="workload-item-type">{item.type}</span>
-                            </div>
-                          )
-                        })}
+                      <div className="workload-item-list">
+                        {categories.flatMap(cat => getWorkloadItems(course.assessments, cat)).map((item, index) => (
+                          <div key={`${item.category}-${index}`} className="workload-item-row">
+                            <span className="workload-item-type">{item.type}</span>
+                            <span className="workload-item-weight">%{item.weight}</span>
+                          </div>
+                        ))}
                       </div>
                     </td>
                     <td className="workload-td-total">
