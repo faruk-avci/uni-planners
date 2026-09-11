@@ -14,6 +14,7 @@ function CourseWorkload({ basket, language, showHeader = true }) {
     attendance: language === 'tr' ? 'Katılım' : 'Attendance',
     other: language === 'tr' ? 'Diğer' : 'Other',
     total: language === 'tr' ? 'Toplam' : 'Total',
+    breakdown: language === 'tr' ? 'Değerlendirmeler' : 'Assessments',
     noData: language === 'tr'
       ? 'Syllabus henüz yayınlanmadı — daha sonra tekrar kontrol edin.'
       : 'Syllabus not published yet — check back later.',
@@ -53,14 +54,7 @@ function CourseWorkload({ basket, language, showHeader = true }) {
         <thead>
           <tr>
             <th className="workload-th-course">{t.course}</th>
-            <th>{t.final}</th>
-            <th>{t.midterm}</th>
-            <th>{t.quiz}</th>
-            <th>{t.homework}</th>
-            <th>{t.project}</th>
-            <th>{t.lab}</th>
-            <th>{t.attendance}</th>
-            <th>{t.other}</th>
+            <th className="workload-th-breakdown">{t.breakdown}</th>
             <th className="workload-th-total">{t.total}</th>
           </tr>
         </thead>
@@ -87,31 +81,30 @@ function CourseWorkload({ basket, language, showHeader = true }) {
                 </td>
                 
                 {reviewNote ? (
-                  <td colSpan="9" className="workload-no-data">
+                  <td colSpan="2" className="workload-no-data">
                     <em>{reviewNote}</em>
                   </td>
                 ) : hasAssessments ? (
                   <>
-                    {categories.map(cat => {
-                      const items = getWorkloadItems(course.assessments, cat);
-                      const hasItems = items.length > 0;
+                    <td className="workload-td-breakdown">
+                      <div className="workload-chip-row">
+                        {categories.map(cat => {
+                          const items = getWorkloadItems(course.assessments, cat);
+                          if (items.length === 0) return null;
 
-                      if (!hasItems) {
-                        return <td key={cat} className="zero-weight">-</td>;
-                      }
+                          const weightStr = items.map(item => `%${item.weight}`).join(' + ');
+                          const typesStr = items.map(item => item.type).join(' + ');
 
-                      const weightStr = items.map(item => `%${item.weight}`).join(' + ');
-                      const typesStr = items.map(item => item.type).join(' + ');
-
-                      return (
-                        <td key={cat} className="has-weight">
-                          <div className="workload-cell-details">
-                            <span className="workload-cell-weight">{weightStr}</span>
-                            <span className="workload-cell-types" title={typesStr}>{typesStr}</span>
-                          </div>
-                        </td>
-                      )
-                    })}
+                          return (
+                            <div key={cat} className="workload-chip">
+                              <span className="workload-chip-label">{t[cat]}</span>
+                              <span className="workload-chip-weight">{weightStr}</span>
+                              <span className="workload-chip-types" title={typesStr}>{typesStr}</span>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </td>
                     <td className="workload-td-total">
                       <span className={`total-badge ${totalWeight === 100 ? 'total-complete' : 'total-incomplete'}`}>
                         %{totalWeight}
@@ -119,7 +112,7 @@ function CourseWorkload({ basket, language, showHeader = true }) {
                     </td>
                   </>
                 ) : (
-                  <td colSpan="9" className="workload-no-data">
+                  <td colSpan="2" className="workload-no-data">
                     <em>{t.noData}</em>
                   </td>
                 )}
