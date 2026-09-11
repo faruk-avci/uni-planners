@@ -19,7 +19,6 @@ function CourseWorkload({ basket, language, showHeader = true }) {
     noData: language === 'tr'
       ? 'Syllabus henüz yayınlanmadı — daha sonra tekrar kontrol edin.'
       : 'Syllabus not published yet — check back later.',
-    noDataShort: language === 'tr' ? 'Henüz belirlenmedi' : 'Not yet determined',
     sectionTitle: language === 'tr' ? 'Ders Yükü Tablosu' : 'Course Workload Table',
     newBadge: language === 'tr' ? 'Yeni' : 'New',
     infoText: language === 'tr'
@@ -89,24 +88,20 @@ function CourseWorkload({ basket, language, showHeader = true }) {
                 ) : hasAssessments ? (
                   <>
                     <td className="workload-td-breakdown">
-                      <div className="workload-bar">
-                        {categories.flatMap(cat => getWorkloadItems(course.assessments, cat)).map((item, index) => (
-                          <div
-                            key={`${item.category}-${index}`}
-                            className="workload-bar-segment"
-                            style={{ width: `${item.weight}%`, background: COURSE_COLORS[index % COURSE_COLORS.length] }}
-                            title={`${item.type} — %${item.weight}`}
-                          >
-                            {item.weight >= 6 && <span className="workload-bar-label">%{item.weight}</span>}
-                          </div>
-                        ))}
-                        {totalWeight < 100 && (
-                          <div
-                            className="workload-bar-segment workload-bar-remaining"
-                            style={{ width: `${100 - totalWeight}%` }}
-                            title={t.noDataShort}
-                          />
-                        )}
+                      <div className="workload-item-row">
+                        {categories.flatMap(cat => getWorkloadItems(course.assessments, cat)).map((item, index) => {
+                          const color = COURSE_COLORS[index % COURSE_COLORS.length]
+                          return (
+                            <div
+                              key={`${item.category}-${index}`}
+                              className="workload-item-card"
+                              style={{ background: `color-mix(in srgb, ${color}, white 82%)`, borderLeftColor: color }}
+                            >
+                              <span className="workload-item-weight" style={{ color }}>%{item.weight}</span>
+                              <span className="workload-item-type">{item.type}</span>
+                            </div>
+                          )
+                        })}
                       </div>
                     </td>
                     <td className="workload-td-total">
