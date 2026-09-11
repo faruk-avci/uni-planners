@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
+import { COURSE_COLORS } from '../../utils/courseColors'
 import './SchedulePreview.css'
 
 // Full backend-supported range (matches scheduleEngine.js's MAX_BITS, 08:00-23:00).
@@ -7,14 +8,6 @@ const ALL_HOURS = ['08:40', '09:40', '10:40', '11:40', '12:40', '13:40', '14:40'
 const MIN_VISIBLE_HOURS = 12 // standard 08:40-19:40 day, shown even when a schedule is empty
 const DAYS = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma']
 const DAY_ABBR = { 'Pazartesi': 'Pzt', 'Salı': 'Sal', 'Çarşamba': 'Çar', 'Perşembe': 'Per', 'Cuma': 'Cum' }
-// Curated for clear separation on the schedule's light tinted blocks. Colors
-// repeat only after 16 distinct courses and match the backend PNG exporter.
-const COURSE_COLORS = [
-  '#2563eb', '#16a34a', '#7c3aed', '#db2777',
-  '#d97706', '#0891b2', '#dc2626', '#4f46e5',
-  '#0f766e', '#ea580c', '#c026d3', '#65a30d',
-  '#0284c7', '#059669', '#be123c', '#9333ea',
-]
 
 const hourIndex = (t) => parseInt(String(t).split(':')[0], 10) - 8
 
