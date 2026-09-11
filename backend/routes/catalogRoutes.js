@@ -13,9 +13,9 @@ import { listCurriculumData, readSiteSettings } from '../services/curriculumStor
 const router = express.Router();
 
 router.get('/site-settings', (_req, res) => {
-  const { mainFont, catalogTerm, surveyUrl, announcementUrl } = readSiteSettings();
+  const { mainFont, catalogTerm, surveyUrl, announcementUrl, catalogNotice, catalogNoticeUpdatedAt } = readSiteSettings();
   res.set('Cache-Control', 'no-store');
-  res.json({ mainFont, catalogTerm, surveyUrl, announcementUrl });
+  res.json({ mainFont, catalogTerm, surveyUrl, announcementUrl, catalogNotice, catalogNoticeUpdatedAt });
 });
 
 // Many different students search the same handful of popular course codes.

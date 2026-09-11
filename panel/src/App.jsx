@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import Analytics from './Analytics.jsx'
 
 const API = '/api/admin'
-const DEFAULT_SITE_SETTINGS = { mainFont: 'system', catalogTerm: '2025-2026 Yaz', surveyUrl: '', announcementUrl: '' }
+const DEFAULT_SITE_SETTINGS = { mainFont: 'system', catalogTerm: '2025-2026 Yaz', surveyUrl: '', announcementUrl: '', catalogNotice: '', catalogNoticeUpdatedAt: '' }
 const FONT_PREVIEWS = {
   system: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
   inter: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
@@ -310,6 +310,22 @@ function Dashboard({ onLogout }) {
               <label className="select-field"><span>Gösterilen dönem</span><input value={settingsDraft.catalogTerm} maxLength={60} onChange={event => setSettingsDraft(current => ({ ...current, catalogTerm: event.target.value }))} placeholder="2025-2026 Yaz" required /><small>Arama alanında ve paylaşılan programlarda görünür.</small></label>
               <label className="select-field settings-wide"><span>Anket bağlantısı</span><input type="url" value={settingsDraft.surveyUrl} maxLength={500} onChange={event => setSettingsDraft(current => ({ ...current, surveyUrl: event.target.value }))} placeholder="https://..." /><small>Boş bırakırsanız Anket bağlantısı ana menüden gizlenir.</small></label>
               <label className="select-field settings-wide"><span>Duyuru bağlantısı</span><input type="url" value={settingsDraft.announcementUrl} maxLength={500} onChange={event => setSettingsDraft(current => ({ ...current, announcementUrl: event.target.value }))} placeholder="https://..." /><small>Boş bırakırsanız üniversite kutusunun yanındaki duyuru bağlantısı gizlenir.</small></label>
+              <label className="select-field settings-wide">
+                <span>Katalog bildirimi</span>
+                <textarea
+                  value={settingsDraft.catalogNotice}
+                  maxLength={500}
+                  rows={2}
+                  onChange={event => setSettingsDraft(current => ({ ...current, catalogNotice: event.target.value }))}
+                  placeholder="Örn: Son güncellemeler: HUM 319, ARCH 212 ders saatleri değişti; PHYS 221 kaldırıldı, EE 204 eklendi."
+                />
+                <small>
+                  Üniversite kutusunun altında kapatılabilir bir bildirim olarak görünür. Metni her değiştirdiğinizde, daha önce kapatmış kullanıcılara bile yeniden gösterilir.
+                  {siteSettings.catalogNoticeUpdatedAt && (
+                    <> {' '}Son güncelleme: {new Date(siteSettings.catalogNoticeUpdatedAt).toLocaleString('tr-TR')}</>
+                  )}
+                </small>
+              </label>
             </div>
             <div className="settings-footer">
               <div className="font-preview" style={{ fontFamily: FONT_PREVIEWS[settingsDraft.mainFont] }}><span>Yazı tipi önizlemesi</span><strong>UniPlanner ile programını planla</strong></div>

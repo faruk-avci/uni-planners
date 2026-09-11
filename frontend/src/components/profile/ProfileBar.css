@@ -60,6 +60,15 @@
   background: color-mix(in srgb, var(--info), transparent 85%);
 }
 
+.profile-notice-updated {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 4px;
+  color: var(--text-tertiary);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+}
+
 .profile-link {
   display: inline-flex;
   align-items: center;

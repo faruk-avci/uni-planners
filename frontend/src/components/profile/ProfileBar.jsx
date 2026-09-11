@@ -1,24 +1,32 @@
 import { useState } from 'react'
 import './ProfileBar.css'
 
-const CATALOG_NOTICE_DISMISSED_KEY = 'uniplanner_catalog_notice_dismissed'
+const CATALOG_NOTICE_DISMISSED_KEY = 'uniplanner_catalog_notice_dismissed_version'
 
-function ProfileBar({ language, majorLabel, grade, onMajorClick, onGradeChange, announcementUrl, surveyUrl }) {
+function ProfileBar({ language, majorLabel, grade, onMajorClick, onGradeChange, announcementUrl, surveyUrl, catalogNotice, catalogNoticeUpdatedAt }) {
   const tr = (trText, enText) => language === 'tr' ? trText : enText
-  const [noticeDismissed, setNoticeDismissed] = useState(() => {
+  // Dismissal is keyed to *which* notice was dismissed (its updatedAt
+  // timestamp), not just a yes/no flag -- so publishing a new notice from
+  // the panel makes it reappear even for people who closed an earlier one.
+  const [dismissedVersion, setDismissedVersion] = useState(() => {
     try {
-      return localStorage.getItem(CATALOG_NOTICE_DISMISSED_KEY) === '1'
+      return localStorage.getItem(CATALOG_NOTICE_DISMISSED_KEY) || ''
     } catch {
-      return false
+      return ''
     }
   })
+  const noticeVisible = Boolean(catalogNotice) && catalogNoticeUpdatedAt !== dismissedVersion
 
   const dismissNotice = () => {
-    setNoticeDismissed(true)
+    setDismissedVersion(catalogNoticeUpdatedAt)
     try {
-      localStorage.setItem(CATALOG_NOTICE_DISMISSED_KEY, '1')
+      localStorage.setItem(CATALOG_NOTICE_DISMISSED_KEY, catalogNoticeUpdatedAt || '')
     } catch { /* private browsing / storage disabled -- dismissal just won't persist */ }
   }
+
+  const lastUpdatedLabel = catalogNoticeUpdatedAt
+    ? new Date(catalogNoticeUpdatedAt).toLocaleDateString(language === 'tr' ? 'tr-TR' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' })
+    : ''
 
   return (
     <>
@@ -56,15 +64,10 @@ function ProfileBar({ language, majorLabel, grade, onMajorClick, onGradeChange, 
         </label>
       </div>
     </section>
-    {!noticeDismissed ? (
+    {noticeVisible ? (
       <div className="profile-notice-bar">
         <span aria-hidden="true">ℹ️</span>
-        <span>
-          {tr(
-            'Son güncellemeler: HUM 319, ARCH 212, MİM 209 ve PE 101 ders saatleri değişti; PHYS 221 kaldırıldı, EE 204 eklendi. Güncel bilgi için SIS’i kontrol edin.',
-            'Recent updates: HUM 319, ARCH 212, MİM 209, and PE 101 meeting times changed; PHYS 221 was removed, EE 204 was added. Check SIS for the latest information.'
-          )}
-        </span>
+        <span>{catalogNotice}</span>
         <button
           type="button"
           className="profile-notice-close"
@@ -74,7 +77,7 @@ function ProfileBar({ language, majorLabel, grade, onMajorClick, onGradeChange, 
           ×
         </button>
       </div>
-    ) : (announcementUrl || surveyUrl) && (
+    ) : (announcementUrl || surveyUrl || lastUpdatedLabel) && (
       <div className="profile-links">
         {announcementUrl && (
           <a href={announcementUrl} target="_blank" rel="noopener noreferrer" className="profile-link profile-link-announcement">
@@ -92,6 +95,11 @@ function ProfileBar({ language, majorLabel, grade, onMajorClick, onGradeChange, 
           <a href={surveyUrl} target="_blank" rel="noopener noreferrer" className="profile-link profile-link-survey">
             <span>{tr('Lütfen anketi doldurmayı unutmayın', 'Please don’t forget to fill out our survey')} <strong>{tr('→ Ankete git', '→ Go to survey')}</strong></span>
           </a>
+        )}
+        {lastUpdatedLabel && (
+          <span className="profile-notice-updated">
+            {tr('Katalog son güncelleme:', 'Catalog last updated:')} {lastUpdatedLabel}
+          </span>
         )}
       </div>
     )}

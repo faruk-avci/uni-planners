@@ -15,6 +15,8 @@ export const DEFAULT_SITE_SETTINGS = {
   catalogTerm: process.env.CATALOG_TERM || '2025-2026 Yaz',
   surveyUrl: '',
   announcementUrl: '',
+  catalogNotice: '',
+  catalogNoticeUpdatedAt: '',
 }
 
 function ensureDirectories() {
@@ -163,7 +165,21 @@ export function writeSiteSettings(input) {
   if (!catalogTerm) throw new Error('Academic term is required')
   const surveyUrl = validateOptionalHttpsUrl(input?.surveyUrl, 'Survey link')
   const announcementUrl = validateOptionalHttpsUrl(input?.announcementUrl, 'Announcement link')
-  const saved = { mainFont, catalogTerm, surveyUrl, announcementUrl, updatedAt: new Date().toISOString() }
+  const catalogNotice = String(input?.catalogNotice || '').trim().slice(0, 500)
+
+  // Only bump the notice's own timestamp when its text actually changes --
+  // not on every settings save (font tweaks, term updates, etc. shouldn't
+  // make a previously-dismissed notice reappear for users).
+  const previous = readSiteSettings()
+  const catalogNoticeUpdatedAt = catalogNotice !== previous.catalogNotice
+    ? new Date().toISOString()
+    : previous.catalogNoticeUpdatedAt
+
+  const saved = {
+    mainFont, catalogTerm, surveyUrl, announcementUrl,
+    catalogNotice, catalogNoticeUpdatedAt,
+    updatedAt: new Date().toISOString(),
+  }
   atomicWrite(SITE_SETTINGS_FILE, saved)
   return saved
 }

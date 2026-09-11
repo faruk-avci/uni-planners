@@ -61,7 +61,7 @@ const ENGLISH_DAY_NAMES = {
 function App() {
   const initialRoute = useRef(routeFromLocation()).current
   const [language, setLanguage] = useState('tr')
-  const [siteSettings, setSiteSettings] = useState({ mainFont: 'system', catalogTerm: '2025-2026 Yaz', surveyUrl: '', announcementUrl: '' })
+  const [siteSettings, setSiteSettings] = useState({ mainFont: 'system', catalogTerm: '2025-2026 Yaz', surveyUrl: '', announcementUrl: '', catalogNotice: '', catalogNoticeUpdatedAt: '' })
   const [colorTheme, setColorTheme] = useState(() => {
     const saved = localStorage.getItem('uniplanner_color_theme')
     return PUBLIC_COLOR_THEMES.has(saved) ? saved : 'iris'
@@ -1046,6 +1046,8 @@ function App() {
           onGradeChange={saveGradePreference}
           announcementUrl={siteSettings.announcementUrl}
           surveyUrl={siteSettings.surveyUrl}
+          catalogNotice={siteSettings.catalogNotice}
+          catalogNoticeUpdatedAt={siteSettings.catalogNoticeUpdatedAt}
         />
       )}
 

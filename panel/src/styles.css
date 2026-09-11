@@ -32,8 +32,9 @@ button { cursor: pointer; }
 .login-card h1 { margin: 0 0 8px; font-size: 28px; letter-spacing: -.03em; }
 .login-card > .muted { margin: 0 0 28px; line-height: 1.55; }
 .login-card label, .select-field { display: grid; gap: 8px; color: #424a5b; font-size: 13px; font-weight: 700; }
-input, select { width: 100%; min-height: 46px; padding: 0 13px; border: 1px solid #d8dce5; border-radius: 10px; color: var(--ink); background: white; outline: none; }
-input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+input, select, textarea { width: 100%; min-height: 46px; padding: 0 13px; border: 1px solid #d8dce5; border-radius: 10px; color: var(--ink); background: white; outline: none; }
+input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+textarea { padding: 11px 13px; font: inherit; resize: vertical; }
 .primary-button { min-height: 46px; padding: 0 18px; border: 0; border-radius: 10px; color: white; background: var(--accent); font-weight: 750; box-shadow: 0 5px 12px rgba(102,88,232,.2); }
 .primary-button:hover:not(:disabled) { background: var(--accent-dark); }
 .primary-button:disabled { opacity: .48; cursor: not-allowed; box-shadow: none; }
