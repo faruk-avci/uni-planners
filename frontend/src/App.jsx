@@ -321,14 +321,14 @@ function App() {
 
       const data = await courseService.getAssessments(codesToFetch);
       setBasket(prev => prev.map(course => (
-        data[course.code]
-          ? { ...course, assessments: data[course.code] }
-          : { ...course, assessments: [] }
+        codesToFetch.includes(course.code)
+          ? { ...course, assessments: data[course.code] || [] }
+          : course
       )));
     };
 
     fetchAssessments();
-  }, []);
+  }, [basket]);
 
   const selectColorTheme = nextTheme => {
     setColorTheme(nextTheme)
