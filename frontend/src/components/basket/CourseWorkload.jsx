@@ -124,10 +124,7 @@ function CourseWorkload({ basket, language, showHeader = true }) {
                           <div
                             key={`${item.category}-${index}`}
                             className="workload-item-row"
-                            style={{
-                              '--item-color': COURSE_COLORS[index % COURSE_COLORS.length],
-                              flex: `${item.weight} 1 0%`,
-                            }}
+                            style={{ '--item-color': COURSE_COLORS[index % COURSE_COLORS.length] }}
                           >
                             <span className="workload-item-type" title={item.type}>{item.type}</span>
                             <span className="workload-item-weight">%{item.weight}</span>
