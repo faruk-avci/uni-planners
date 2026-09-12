@@ -186,6 +186,7 @@ async function run() {
         section_no VARCHAR(10) NOT NULL,
         instructor VARCHAR(255),
         schedule TEXT,
+        room TEXT,
         UNIQUE (course_code, section_no)
       )
     `);
@@ -236,6 +237,8 @@ async function run() {
       `, [s.course_code, s.section_no, s.instructor, s.schedule]);
     }
     console.log(`✓ Inserted ${sections.length} sections`);
+    console.log('Note: this replaced catalog_sections, so any previously-imported room');
+    console.log('data is gone -- rerun import_rooms.js if needed.');
 
     await client.query('COMMIT');
 

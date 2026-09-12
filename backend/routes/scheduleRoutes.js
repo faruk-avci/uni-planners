@@ -98,7 +98,7 @@ router.post('/generate', async (req, res) => {
     }
 
     const { rows: secRows } = await pool.query(
-      `SELECT course_code, section_no, instructor, schedule FROM catalog_sections
+      `SELECT course_code, section_no, instructor, schedule, room FROM catalog_sections
        WHERE course_code = ANY($1) ORDER BY course_code, section_no`,
       [codes]
     );
@@ -119,6 +119,7 @@ router.post('/generate', async (req, res) => {
             section: sectionName,
             lecturer: s.instructor || 'Staff',
             credits: meta.credits,
+            room: s.room ? s.room.replace(/;/g, ' / ') : null,
             times,
             mask: buildMask(times),
           };

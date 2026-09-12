@@ -66,6 +66,11 @@
 .grid-block:hover {
   background: color-mix(in srgb, var(--block-color) 18%, var(--bg-secondary));
 }
+.block-header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+}
 .block-course {
   font-size: var(--text-sm);
   font-weight: var(--weight-semibold);
@@ -75,6 +80,10 @@
 .block-section {
   font-size: var(--text-xs);
   color: var(--text-secondary);
+}
+.block-room {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
 }
 
 /* Actions */
@@ -156,11 +165,15 @@
 }
 .agenda-lesson time span { color: var(--text-tertiary); font-weight: var(--weight-normal); }
 .agenda-marker { width: 7px; height: 7px; background: var(--lesson-color, var(--text-tertiary)); border-radius: var(--radius-full); }
-.agenda-lesson > div {
+.agenda-lesson-body {
   display: flex;
+  flex-direction: column;
   min-width: 0;
+  gap: 2px;
+}
+.agenda-lesson-title {
+  display: flex;
   align-items: baseline;
-  justify-content: space-between;
   gap: var(--space-2);
 }
 .agenda-lesson strong {
@@ -171,14 +184,22 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.agenda-lesson > div span { flex: 0 0 auto; color: var(--text-tertiary); font-size: var(--text-xs); }
+.agenda-lesson-title span { flex: 0 0 auto; color: var(--text-tertiary); font-size: var(--text-xs); }
 .agenda-lesson-name {
-  flex: 1 1 auto !important;
   min-width: 0;
   overflow: hidden;
-  text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: var(--text-tertiary);
+  font-size: var(--text-xs);
+}
+.agenda-lesson-room {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-tertiary);
+  font-size: var(--text-xs);
 }
 .agenda-lesson.schedule-changed {
   border-radius: var(--radius-sm);
@@ -245,6 +266,7 @@
     padding: 3px 2px;
     border-left-width: 2px;
   }
+  .block-header { gap: 3px; }
   .block-course {
     max-width: 100%;
     overflow-wrap: anywhere;
@@ -253,6 +275,7 @@
     line-height: 1.15;
   }
   .block-section { overflow: hidden; font-size: 9px; line-height: 1.1; text-overflow: ellipsis; white-space: nowrap; }
+  .block-room { overflow: hidden; font-size: 8px; line-height: 1.1; text-overflow: ellipsis; white-space: nowrap; }
 
   .schedule-agenda {
     display: grid;
@@ -314,11 +337,16 @@
     border-radius: var(--radius-full);
   }
 
-  .agenda-lesson > div {
+  .agenda-lesson-body {
     display: flex;
+    flex-direction: column;
     min-width: 0;
+    gap: 2px;
+  }
+
+  .agenda-lesson-title {
+    display: flex;
     align-items: baseline;
-    justify-content: space-between;
     gap: var(--space-2);
   }
 
@@ -331,7 +359,7 @@
     white-space: nowrap;
   }
 
-  .agenda-lesson > div span {
+  .agenda-lesson-title span {
     flex: 0 0 auto;
     color: var(--text-tertiary);
     font-size: var(--text-xs);

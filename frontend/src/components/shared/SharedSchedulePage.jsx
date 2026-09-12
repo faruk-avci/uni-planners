@@ -151,6 +151,7 @@ function SharedSchedulePage({ id, language, onHome }) {
                     <tr>
                       <th>{tr('Ders', 'Course')}</th>
                       <th>{tr('Şube', 'Section')}</th>
+                      <th>{tr('Derslik', 'Room')}</th>
                       <th>{tr('Öğretim Elemanı', 'Instructor')}</th>
                       <th>{tr('Saatler', 'Times')}</th>
                       <th>{tr('Kredi', 'ECTS')}</th>
@@ -161,6 +162,7 @@ function SharedSchedulePage({ id, language, onHome }) {
                       <tr key={`${lesson.code}-${lesson.section}-${index}`}>
                         <td data-label={tr('Ders', 'Course')}><strong>{lesson.code}</strong><span>{lesson.name}</span></td>
                         <td data-label={tr('Şube', 'Section')}>{lesson.section}</td>
+                        <td data-label={tr('Derslik', 'Room')}>{lesson.room || '—'}</td>
                         <td data-label={tr('Öğretim Elemanı', 'Instructor')}>{lesson.lecturer}</td>
                         <td data-label={tr('Saatler', 'Times')} className="shared-times">
                           {(lesson.times || []).map((time, timeIndex) => (

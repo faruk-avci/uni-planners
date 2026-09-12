@@ -43,12 +43,14 @@ export function normalizeSharedSchedule(raw) {
     });
 
     const credits = Number(lesson?.credits);
+    const room = String(lesson?.room || '').trim().slice(0, 200);
     normalized.push({
       code,
       name: String(lesson?.name || code).trim().slice(0, 200),
       section,
       lecturer: String(lesson?.lecturer || 'Staff').trim().slice(0, 200),
       credits: Number.isFinite(credits) && credits >= 0 && credits <= 100 ? credits : 0,
+      room: room || null,
       times,
     });
   }
@@ -147,6 +149,7 @@ export function scheduleCalendarIcs(schedule, language = 'tr') {
         'RRULE:FREQ=WEEKLY;UNTIL=20270106T205959Z',
         `SUMMARY:${escapeIcs(`${lesson.code} · ${sectionShort}`)}`,
         `DESCRIPTION:${escapeIcs(description)}`,
+        ...(lesson.room ? [`LOCATION:${escapeIcs(lesson.room)}`] : []),
         'STATUS:CONFIRMED',
         'END:VEVENT',
       );

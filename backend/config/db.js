@@ -45,8 +45,10 @@ async function ensureSchema() {
       section_no  VARCHAR(10) NOT NULL,
       instructor  VARCHAR(255),
       schedule    TEXT,
+      room        TEXT,
       UNIQUE (course_code, section_no)
     )`);
+  await pool.query(`ALTER TABLE catalog_sections ADD COLUMN IF NOT EXISTS room TEXT`);
   await pool.query(`
     CREATE TABLE IF NOT EXISTS course_assessments (
       id              SERIAL PRIMARY KEY,

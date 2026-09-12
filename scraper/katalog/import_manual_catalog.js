@@ -194,7 +194,8 @@ async function run() {
     console.log(`Inserted ${sections.length} sections.`);
 
     await client.query('COMMIT');
-    console.log('Catalog import complete.');
+    console.log('Catalog import complete. Note: this replaced catalog_sections, so any');
+    console.log('previously-imported room data is gone -- rerun import_rooms.js if needed.');
   } catch (err) {
     console.error('Database operation failed:', err.message);
     try { await client.query('ROLLBACK'); } catch { /* connection may already be gone */ }

@@ -61,6 +61,7 @@ function buildBlocks(schedule, changedCourses = new Set(), colorByCourse = new M
         course: lesson.code,
         name: lesson.name,
         section: lesson.section.replace(lesson.code, '').trim() || lesson.section,
+        room: lesson.room,
         day,
         startHour,
         duration: Math.min(duration, ALL_HOURS.length - startHour),
@@ -101,6 +102,7 @@ function SchedulePreview({ language, schedules = [], current = 0, onPrev, onNext
           course: lesson.code,
           name: lesson.name,
           section: lesson.section.replace(lesson.code, '').trim() || lesson.section,
+          room: lesson.room,
           start: time.start,
           end: time.end,
           color: courseColors.get(lesson.code) || COURSE_COLORS[0],
@@ -188,8 +190,11 @@ function SchedulePreview({ language, schedules = [], current = 0, onPrev, onNext
                       style={{ '--block-color': block.color, gridRow: `span ${block.duration}` }}
                       aria-label={block.name ? `${block.course} ${block.name}` : block.course}
                     >
-                      <span className="block-course">{block.course}</span>
-                      <span className="block-section">{block.section}</span>
+                      <div className="block-header">
+                        <span className="block-course">{block.course}</span>
+                        <span className="block-section">{block.section}</span>
+                      </div>
+                      {block.room && <span className="block-room">{block.room}</span>}
                     </div>
                   )
                 }
@@ -215,10 +220,13 @@ function SchedulePreview({ language, schedules = [], current = 0, onPrev, onNext
                 >
                   <time>{item.start}<span>{item.end}</span></time>
                   <span className="agenda-marker" aria-hidden="true" />
-                  <div>
-                    <strong>{item.course}</strong>
+                  <div className="agenda-lesson-body">
+                    <div className="agenda-lesson-title">
+                      <strong>{item.course}</strong>
+                      <span>{item.section}</span>
+                    </div>
                     {item.name && <span className="agenda-lesson-name">{item.name}</span>}
-                    <span>{item.section}</span>
+                    {item.room && <span className="agenda-lesson-room">{item.room}</span>}
                   </div>
                 </div>
               ))}

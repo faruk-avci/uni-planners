@@ -265,6 +265,7 @@ function generateSchedules(coursesSections, { freeDayIdxs, preference = 'balance
       section: s.section,
       lecturer: s.lecturer,
       credits: s.credits,
+      room: s.room,
       times: s.times,
     }));
     const totalCredits = lessons.reduce((sum, l) => sum + (l.credits || 0), 0);
