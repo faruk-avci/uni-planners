@@ -1,7 +1,10 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { COURSE_COLORS } from '../../utils/courseColors'
+import { workloadImagePng } from '../../utils/workloadImageSvg'
 import './CourseWorkload.css'
 
 function CourseWorkload({ basket, language, showHeader = true }) {
+  const [exporting, setExporting] = useState(false)
   // Translate labels
   const t = {
     course: language === 'tr' ? 'Ders' : 'Course',
@@ -23,6 +26,30 @@ function CourseWorkload({ basket, language, showHeader = true }) {
     infoText: language === 'tr'
       ? 'Derslerinizin final, vize ve diğer değerlendirme ağırlıklarını tek tabloda görebilirsiniz. Syllabuslar yayınlandıkça burada görünmeye başlayacak.'
       : 'See the final, midterm, and other grading weights for your courses in one table. They will appear here as syllabi are published.',
+    exportImage: language === 'tr' ? 'Görsel Olarak İndir' : 'Download PNG',
+    exporting: language === 'tr' ? 'Görsel hazırlanıyor…' : 'Creating image…',
+  }
+
+  const hasAnyData = (basket || []).some(course => course.assessments && course.assessments.length > 0)
+
+  const handleExport = async () => {
+    if (exporting) return
+    setExporting(true)
+    try {
+      const blob = await workloadImagePng(basket, language)
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = 'uniplanners-ders-yuku.png'
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000)
+    } catch (error) {
+      console.error('Workload image export failed:', error)
+    } finally {
+      setExporting(false)
+    }
   }
 
   // Categories to sum
@@ -43,8 +70,13 @@ function CourseWorkload({ basket, language, showHeader = true }) {
       {showHeader && (
         <>
           <div className="workload-header">
-            <h3>{t.sectionTitle}</h3>
-            <span className="badge badge-new">{t.newBadge}</span>
+            <div className="workload-header-title">
+              <h3>{t.sectionTitle}</h3>
+              <span className="badge badge-new">{t.newBadge}</span>
+            </div>
+            <button className="btn btn-secondary btn-sm" onClick={handleExport} disabled={!hasAnyData || exporting}>
+              {exporting ? t.exporting : t.exportImage}
+            </button>
           </div>
           <div className="workload-info-box">{t.infoText}</div>
         </>
@@ -89,8 +121,15 @@ function CourseWorkload({ basket, language, showHeader = true }) {
                     <td className="workload-td-breakdown">
                       <div className="workload-item-list">
                         {categories.flatMap(cat => getWorkloadItems(course.assessments, cat)).map((item, index) => (
-                          <div key={`${item.category}-${index}`} className="workload-item-row">
-                            <span className="workload-item-type">{item.type}</span>
+                          <div
+                            key={`${item.category}-${index}`}
+                            className="workload-item-row"
+                            style={{
+                              '--item-color': COURSE_COLORS[index % COURSE_COLORS.length],
+                              flex: `${item.weight} 1 0%`,
+                            }}
+                          >
+                            <span className="workload-item-type" title={item.type}>{item.type}</span>
                             <span className="workload-item-weight">%{item.weight}</span>
                           </div>
                         ))}
