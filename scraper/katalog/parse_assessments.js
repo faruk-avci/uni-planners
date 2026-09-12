@@ -21,24 +21,45 @@ const __dirname = path.dirname(__filename);
 const DOWNLOADS_DIR = path.join(__dirname, 'downloads');
 const OUTPUT_FILE = path.join(DOWNLOADS_DIR, 'assessments.json');
 
+// pdftotext renders these syllabi's Turkish glyphs badly: Ğ/İ/Ş disappear
+// entirely and Ö/Ü/Ç come through as U+FFFD. Folding to plain ASCII (and
+// dropping U+FFFD) lets one set of patterns match both the clean text and the
+// mangled text, e.g. "Ödev" arriving as "�dev" or "dev".
+function foldTurkish(value) {
+  return String(value)
+    .replace(/�/g, '')
+    .replace(/[ıİI]/g, 'i')
+    .replace(/[şŞ]/g, 's')
+    .replace(/[ğĞ]/g, 'g')
+    .replace(/[üÜ]/g, 'u')
+    .replace(/[öÖ]/g, 'o')
+    .replace(/[çÇ]/g, 'c')
+    .toLowerCase()
+    .trim();
+}
+
 // ── Category normalization map ──
 function normalizeCategory(rawType) {
-  const t = rawType.toLowerCase().trim();
-  if (/lab|laboratory|laboratories/.test(t)) return 'lab';
-  if (/project|proje|studio|portfolio|sketch/.test(t)) return 'project';
+  const t = foldTurkish(rawType);
+  if (/lab|laboratuvar/.test(t)) return 'lab';
+  if (/project|proje|studio|studyo|portfolio|sketch/.test(t)) return 'project';
   if (/presentation|sunum/.test(t)) return 'presentation';
   if (/report|rapor/.test(t)) return 'report';
-  if (/homework|hw|ödev|assignment|cpg|classroom/.test(t)) return 'homework';
+  if (/homework|hw|odev|assignment|cpg|classroom/.test(t)) return 'homework';
   if (/quiz|task|exercise/.test(t)) return 'quiz';
-  if (/attend[ae]nce|katılım/.test(t)) return 'attendance';
-  if (/final|büt/.test(t)) return 'final';
-  if (/midterm|mid-term|mid term|mid-jury|mid jury|review|jury|exam|vize|sınav/.test(t)) return 'midterm';
+  if (/attend[ae]nce|katilim|derse devam/.test(t)) return 'attendance';
+  if (/final|butunleme|yariyil sonu|donem sonu/.test(t)) return 'final';
+  if (/midterm|mid-term|mid term|mid-jury|mid jury|review|jury|exam|vize|sinav/.test(t)) return 'midterm';
   return 'other';
 }
 
 // ── Parse weight string into a numeric value ──
 function parseWeight(weightStr) {
   if (!weightStr) return null;
+  // "2 x 20%" is two assessments worth 20% each, i.e. 40% of the grade.
+  const multiplied = weightStr.match(/(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d+)?)/i);
+  if (multiplied) return parseFloat(multiplied[1]) * parseFloat(multiplied[2]);
+
   // Match a percentage or number like "40%" or "40"
   const m = weightStr.match(/(\d+(?:\.\d+)?)\s*%?/i);
   if (m) return parseFloat(m[1]);
@@ -47,17 +68,32 @@ function parseWeight(weightStr) {
   return null;
 }
 
+// Turkish syllabi head the same table with "DEĞERLENDİRME YÖNTEMLERİ,
+// AĞIRLIKLARI VE KURALLARI". Since pdftotext eats Ğ/İ/Ö there, each of those
+// positions is matched with an optional wildcard rather than the real letter.
+const SECTION_HEADERS = [
+  /ASSESSMENT\s+METHODS[\s,]+WEIGHTS\s+AND\s+RULES/i,
+  /DE.?ERLEND.?RME\s+Y.?NTEMLER.?[\s,]*A.?IRLIKLARI\s+VE\s+KURALLARI/i,
+];
+
 // ── Extract assessment rows from the text between ASSESSMENT METHODS and Total ──
 function extractAssessments(fullText) {
-  // Find the ASSESSMENT METHODS section
-  const startMatch = fullText.match(/ASSESSMENT\s+METHODS[\s,]+WEIGHTS\s+AND\s+RULES/i);
-  if (!startMatch) return null;
+  // Find the ASSESSMENT METHODS section, in either language
+  let startIdx = -1;
+  for (const header of SECTION_HEADERS) {
+    const startMatch = fullText.match(header);
+    if (startMatch) {
+      startIdx = startMatch.index + startMatch[0].length;
+      break;
+    }
+  }
+  if (startIdx === -1) return null;
 
-  const startIdx = startMatch.index + startMatch[0].length;
   const afterSection = fullText.substring(startIdx);
 
-  // Find the "Total" line that ends the table
-  const totalMatch = afterSection.match(/^\s*Total\s+100\s*%?/im);
+  // Find the "Total" line that ends the table. Turkish syllabi write the
+  // percent sign ahead of the number ("Total %100") and sometimes say "Toplam".
+  const totalMatch = afterSection.match(/^\s*(?:Total|Toplam)\s+(?:%\s*100|100\s*%?)/im);
   const endIdx = totalMatch ? totalMatch.index + totalMatch[0].length : Math.min(afterSection.length, 3000);
   const sectionText = afterSection.substring(0, endIdx);
 
@@ -65,11 +101,21 @@ function extractAssessments(fullText) {
   const assessments = [];
 
   // Aggressive structural pattern: Group 1 matches Type, Group 2 matches Weight
-  const typePattern = /^\s{0,10}([A-Za-zÇĞİÖŞÜa-zçğıöşü0-9/\-&,:\'\(\)\.#+_*’][A-Za-zÇĞİÖŞÜa-zçğıöşü0-9/\-&,:\'\(\)\.#+_*’ ]*?)\s{2,}(%\s*\d+(?:\.\d+)?|\d+(?:\.\d+)?\s*%?|up\s+to\s+\d+(?:\.\d+)?\s*%?|No|Mandatory|-|bonus)\b/i;
+  // A bare number followed by ". " is an ordinal opening a sub-item ("1. ara
+  // sinav  %30"), not the row's weight -- without the lookahead the row reads
+  // as 1%.
+  const typePattern = /^\s{0,10}([A-Za-zÇĞİÖŞÜa-zçğıöşü�0-9/\-&,:\'\(\)\.#+_*’][A-Za-zÇĞİÖŞÜa-zçğıöşü�0-9/\-&,:\'\(\)\.#+_*’ ]*?)\s{2,}(\d+(?:\.\d+)?\s*[x×]\s*\d+(?:\.\d+)?\s*%?|%\s*\d+(?:\.\d+)?|\d+(?:\.\d+)?(?!\s*\.\s)\s*%?|up\s+to\s+\d+(?:\.\d+)?\s*%?|No|Mandatory|-|bonus)\b/i;
+
+  // pdftotext pads inside a type name too ("Midterm Exam  1  25%"), so the
+  // loose pattern above would stop at the "1" and call it the weight. Trying a
+  // percent-marked weight first makes the real column win; the loose pattern
+  // stays as the fallback for rows written without a % ("Final Exam  40").
+  const typePatternPct = /^\s{0,10}([A-Za-zÇĞİÖŞÜa-zçğıöşü�0-9/\-&,:\'\(\)\.#+_*’][A-Za-zÇĞİÖŞÜa-zçğıöşü�0-9/\-&,:\'\(\)\.#+_*’ ]*?)\s{2,}(\d+(?:\.\d+)?\s*[x×]\s*\d+(?:\.\d+)?\s*%|%\s*\d+(?:\.\d+)?|\d+(?:\.\d+)?\s*%|up\s+to\s+\d+(?:\.\d+)?\s*%)(?=\s|$)/i;
+  const matchTypeRow = line => line.match(typePatternPct) || line.match(typePattern);
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    const match = line.match(typePattern);
+    const match = matchTypeRow(line);
     if (!match) continue;
 
     const rawType = match[1].trim();
@@ -80,7 +126,7 @@ function extractAssessments(fullText) {
     const weightIndexInLine = matchIndex + match[0].length - match[2].length;
     if (weightIndexInLine > 38) continue;
 
-    if (rawType.toLowerCase().startsWith('total')) continue;
+    if (/^(total|toplam)/.test(foldTurkish(rawType))) continue;
 
     const weightVal = parseWeight(weightRaw);
     let typeAccumulator = rawType;
@@ -92,7 +138,7 @@ function extractAssessments(fullText) {
     while (j < lines.length) {
       const nextLine = lines[j];
       
-      const nextMatch = nextLine.match(typePattern);
+      const nextMatch = matchTypeRow(nextLine);
       if (nextMatch) {
         const nextMatchIndex = nextLine.indexOf(nextMatch[0]);
         const nextWeightIndex = nextMatchIndex + nextMatch[0].length - nextMatch[2].length;
@@ -102,10 +148,10 @@ function extractAssessments(fullText) {
       }
 
       // Check if first column has text (non-space within the first 12 characters)
-      const firstColumnMatch = nextLine.match(/^\s{0,12}([A-Za-zÇĞİÖŞÜa-zçğıöşü0-9/\-&,:\'\(\)\.#+_*’][A-Za-zÇĞİÖŞÜa-zçğıöşü0-9/\-&,:\'\(\)\.#+_*’ ]*?)(?:\s{2,}|\s*$)/i);
+      const firstColumnMatch = nextLine.match(/^\s{0,12}([A-Za-zÇĞİÖŞÜa-zçğıöşü�0-9/\-&,:\'\(\)\.#+_*’][A-Za-zÇĞİÖŞÜa-zçğıöşü�0-9/\-&,:\'\(\)\.#+_*’ ]*?)(?:\s{2,}|\s*$)/i);
       if (firstColumnMatch) {
         const text = firstColumnMatch[1].trim();
-        if (text && !text.toLowerCase().startsWith('total') && !/^\d+(?:\.\d+)?\s*%?$/.test(text)) {
+        if (text && !/^(total|toplam)/.test(foldTurkish(text)) && !/^\d+(?:\.\d+)?\s*%?$/.test(text)) {
           typeAccumulator += " " + text;
           matchedLines.push(nextLine);
           emptyCount = 0; // Reset empty count
@@ -243,6 +289,13 @@ function extractAssessments(fullText) {
   return finalAssessments.length > 0 ? finalAssessments : null;
 }
 
+// "CS 101L" is the lab component and "MATH 101R" the recitation of an existing
+// course -- both are graded through the parent course, so neither gets its own
+// row in the workload table.
+function isLabOrRecitation(courseCode) {
+  return /\d+[LR]$/i.test(String(courseCode).trim());
+}
+
 // ── Get course code from filename: "CS_101.A_Syllabus.pdf" → "CS 101" ──
 function getCourseCode(filename) {
   // Pattern: SUBJ_NUM.SECTION_Syllabus.pdf or SUBJ_NUM.SEC_Syllabus.pdf
@@ -300,6 +353,7 @@ async function main() {
   let empty = 0;
   let noSection = 0;
   let skippedDupe = 0;
+  let skippedLabRecitation = 0;
 
   for (const subj of subjects) {
     const dir = path.join(baseDir, subj);
@@ -309,6 +363,13 @@ async function main() {
       totalPdfs++;
       const courseCode = getCourseCode(file);
       if (!courseCode) continue;
+
+      // Lab ("CS 101L") and recitation ("MATH 101R") codes are graded as part
+      // of their parent course, so they don't belong in the workload table.
+      if (isLabOrRecitation(courseCode)) {
+        skippedLabRecitation++;
+        continue;
+      }
 
       // Skip if we already parsed this course code (sections often share syllabi)
       if (results[courseCode]) {
@@ -359,6 +420,7 @@ async function main() {
   console.log(`\nResults:`);
   console.log(`  Total Syllabus PDFs: ${totalPdfs}`);
   console.log(`  Skipped (duplicate course): ${skippedDupe}`);
+  console.log(`  Skipped (lab/recitation): ${skippedLabRecitation}`);
   console.log(`  Empty/image PDFs: ${empty}`);
   console.log(`  No assessment section: ${noSection}`);
   console.log(`  Successfully parsed: ${parsed}`);

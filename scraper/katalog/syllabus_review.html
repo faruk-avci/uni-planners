@@ -134,6 +134,10 @@ function getCourseCode(filename) {
   return `${m[1].toUpperCase()} ${m[2]}`;
 }
 
+function isLabOrRecitation(courseCode) {
+  return /\d+[LR]$/i.test(String(courseCode).trim());
+}
+
 function blankRow() {
   return { type: '', category: 'other', weight: null, raw: '' };
 }
@@ -183,8 +187,12 @@ async function loadFromFiles(files) {
     if (!codeToFile.has(code)) codeToFile.set(code, f);
   }
 
+  // Lab ("CS 101L") and recitation ("MATH 101R") components are graded through
+  // their parent course, so they're not reviewed and never exported.
   const allCodes = new Set([...codeToFile.keys(), ...Object.keys(assessmentsData)]);
-  courseList = [...allCodes].sort().map(code => ({ code, file: codeToFile.get(code) || null }));
+  courseList = [...allCodes].sort()
+    .filter(code => !isLabOrRecitation(code))
+    .map(code => ({ code, file: codeToFile.get(code) || null }));
 
   if (courseList.length === 0) {
     status.textContent = 'Bu klasörde syllabus PDF veya assessments.json bulunamadı.';
@@ -202,12 +210,14 @@ async function loadFromFiles(files) {
     } catch (e) { /* ignore corrupt local data */ }
   }
 
+  // Re-running the parser picks up weights the previous run missed, so refresh
+  // every course the human hasn't touched yet. Keeping saved progress for those
+  // would leave the old blank rows shadowing the newly parsed data.
   for (const { code } of courseList) {
-    if (!results[code]) {
-      results[code] = assessmentsData[code]
-        ? assessmentsData[code].map(a => ({ type: a.type || '', category: a.category || 'other', weight: a.weight ?? null, raw: a.raw || '' }))
-        : [blankRow()];
-    }
+    if (reviewed.has(code) || flagged.has(code)) continue;
+    results[code] = assessmentsData[code]
+      ? assessmentsData[code].map(a => ({ type: a.type || '', category: a.category || 'other', weight: a.weight ?? null, raw: a.raw || '' }))
+      : [blankRow()];
   }
 
   document.getElementById('picker-screen').style.display = 'none';
@@ -391,6 +401,9 @@ document.getElementById('export-btn').addEventListener('click', () => {
   commitCurrent();
   const output = {};
   for (const { code } of courseList) {
+    // Flagging a course marks its parse as untrustworthy -- keep it out of the
+    // export rather than shipping numbers the reviewer already rejected.
+    if (flagged.has(code)) continue;
     const rows = (results[code] || []).filter(r => r.type && r.weight != null);
     if (rows.length > 0) output[code] = rows;
   }
