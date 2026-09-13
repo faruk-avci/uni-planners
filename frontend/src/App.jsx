@@ -310,16 +310,28 @@ function App() {
     return () => clearTimeout(t)
   }, [basket, basketLoaded])
 
+  // Courses added from search carry their assessments already, but ones added
+  // from the curriculum page start with an empty array -- so the field being
+  // present says nothing, and an empty list still has to be looked up. Courses
+  // whose syllabus genuinely lists none are remembered here: without that they
+  // would be refetched on every basket change, since each fetch builds a new
+  // basket array and re-runs this effect.
+  const coursesWithoutAssessments = useRef(new Set());
+
   // Sync assessments on mount / basket initialization
   useEffect(() => {
     const fetchAssessments = async () => {
       const codesToFetch = basket
-        .filter(c => !c.assessments)
+        .filter(c => !c.assessments?.length && !coursesWithoutAssessments.current.has(c.code))
         .map(c => c.code);
 
       if (codesToFetch.length === 0) return;
 
       const data = await courseService.getAssessments(codesToFetch);
+      for (const code of codesToFetch) {
+        if (!data[code]?.length) coursesWithoutAssessments.current.add(code);
+      }
+
       setBasket(prev => prev.map(course => (
         codesToFetch.includes(course.code)
           ? { ...course, assessments: data[course.code] || [] }
