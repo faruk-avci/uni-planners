@@ -47,6 +47,8 @@ router.post('/analytics/course-add', async (req, res) => {
 const ALLOWED_SITE_EVENTS = new Set([
   'survey:header_click',
   'survey:popup_click',
+  'disclaimer:acknowledged',
+  'disclaimer:sis_click',
   'link:github_click',
   'preference:theme_change',
   'preference:palette_change',
