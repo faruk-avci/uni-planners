@@ -112,7 +112,22 @@ export function scheduleImageSvg(schedule, language = 'tr', layout = 'grid') {
   const dayWidth = (width - padding * 2 - timeWidth) / 5
   const rowHeight = 48
   const headerHeight = 48
-  const slotRows = 16
+  // Stop at the last hour that actually has a class (same as the on-screen
+  // grid) instead of always drawing through 23:40 -- otherwise most exports
+  // carry several rows of empty evening.
+  const MAX_SLOT_ROWS = 16
+  const MIN_SLOT_ROWS = 12
+  const slotRows = Math.min(MAX_SLOT_ROWS, schedule.lessons.reduce((max, lesson) => (
+    (lesson.times || []).reduce((rowMax, time) => {
+      const startMinutes = minutesFromTime(time.start)
+      const endMinutes = minutesFromTime(time.end)
+      if (startMinutes == null || endMinutes == null) return rowMax
+      const startRow = Math.floor(startMinutes / 60) - 8
+      const endRow = Math.floor(endMinutes / 60) - 8
+      if (startRow < 0) return rowMax
+      return Math.max(rowMax, startRow + Math.max(1, endRow - startRow))
+    }, max)
+  ), MIN_SLOT_ROWS))
   const gridHeight = headerHeight + rowHeight * slotRows
   const gridWidth = timeWidth + dayWidth * 5
   const height = gridTop + gridHeight + padding
@@ -157,12 +172,25 @@ export function scheduleImageSvg(schedule, language = 'tr', layout = 'grid') {
       const start = minutesFromTime(time.start)
       const end = minutesFromTime(time.end)
       if (dayIndex < 0 || start == null || end == null) continue
-      const x = gridLeft + timeWidth + dayWidth * dayIndex + 3
-      const y = gridTop + headerHeight + ((start - baseMinutes) / 60) * rowHeight + 3
-      const blockHeight = Math.max(36, ((end - start) / 60) * rowHeight - 6)
+
+      // Snap to whole hour rows exactly like the on-screen grid does, rather
+      // than positioning by real minutes: a 50-minute class in a 60-minute row
+      // otherwise leaves a ragged gap under every block. Only a 1px seam is
+      // left so neighbouring blocks stay visually separate, matching the
+      // grid's 1px gap.
+      const startRow = Math.floor(start / 60) - 8
+      const endRow = Math.floor(end / 60) - 8
+      if (startRow < 0 || startRow >= slotRows) continue
+      const span = Math.min(Math.max(1, endRow - startRow), slotRows - startRow)
+
+      const seam = 1
+      const x = gridLeft + timeWidth + dayWidth * dayIndex + seam
+      const y = gridTop + headerHeight + startRow * rowHeight + seam
+      const blockWidth = dayWidth - seam * 2
+      const blockHeight = span * rowHeight - seam * 2
       const color = courseColor.get(lesson.code)
       const sectionShort = lesson.section.replace(lesson.code, '').trim() || lesson.section
-      lines.push(`<rect x="${x}" y="${y}" width="${dayWidth - 6}" height="${blockHeight}" rx="5" fill="${color}" fill-opacity="0.12"/>`)
+      lines.push(`<rect x="${x}" y="${y}" width="${blockWidth}" height="${blockHeight}" rx="4" fill="${color}" fill-opacity="0.12"/>`)
       lines.push(`<rect x="${x}" y="${y}" width="4" height="${blockHeight}" rx="2" fill="${color}"/>`)
       lines.push(`<text x="${x + 13}" y="${y + 21}" fill="#18181b" class="mono" font-size="14" font-weight="700">${escapeSvg(lesson.code)}</text>`)
       lines.push(`<text x="${x + 13}" y="${y + 40}" fill="#71717a" font-size="12">${escapeSvg(sectionShort)}</text>`)
