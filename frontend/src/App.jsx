@@ -18,6 +18,10 @@ import SharedSchedulePage from './components/shared/SharedSchedulePage'
 import CorequisitePrompt from './components/coreq/CorequisitePrompt'
 import DegreeAuditUpload from './components/audit/DegreeAuditUpload'
 import SurveyNudge from './components/survey/SurveyNudge'
+import RegistrationDisclaimer from './components/disclaimer/RegistrationDisclaimer'
+
+// How often an open tab re-checks whether a new build has been deployed.
+const APP_VERSION_POLL_MS = 5 * 60 * 1000
 import { courseService } from './services/courseService'
 import { scheduleImagePng } from './utils/scheduleImageSvg'
 import { recordGenerateSuccess, shouldQueueSurveyNudge, markSurveyNudgeShown, markSurveyNudgeDone } from './utils/surveyNudge'
@@ -62,6 +66,8 @@ function App() {
   const initialRoute = useRef(routeFromLocation()).current
   const [language, setLanguage] = useState('tr')
   const [siteSettings, setSiteSettings] = useState({ mainFont: 'system', catalogTerm: '2025-2026 Yaz', surveyUrl: '', announcementUrl: '', catalogNotice: '', catalogNoticeUpdatedAt: '' })
+  const appVersionRef = useRef(null)
+  const [disclaimerKey, setDisclaimerKey] = useState(0)
   const [colorTheme, setColorTheme] = useState(() => {
     const saved = localStorage.getItem('uniplanner_color_theme')
     return PUBLIC_COLOR_THEMES.has(saved) ? saved : 'iris'
@@ -186,10 +192,36 @@ function App() {
     })
   }
 
+  // A tab left open across a deploy keeps running the old bundle and would
+  // never show a newly shipped notice. Poll the version the API reports (and
+  // check whenever the tab is brought back into view); when it changes, bump
+  // the key so the disclaimer remounts and has to be acknowledged again.
   useEffect(() => {
-    courseService.getSiteSettings()
-      .then(settings => setSiteSettings(current => ({ ...current, ...settings })))
-      .catch(() => {})
+    let cancelled = false
+
+    const check = async () => {
+      if (document.visibilityState === 'hidden') return
+      try {
+        const settings = await courseService.getSiteSettings()
+        if (cancelled || !settings?.appVersion) return
+        setSiteSettings(current => ({ ...current, ...settings }))
+        if (appVersionRef.current === null) {
+          appVersionRef.current = settings.appVersion
+        } else if (appVersionRef.current !== settings.appVersion) {
+          appVersionRef.current = settings.appVersion
+          setDisclaimerKey(key => key + 1)
+        }
+      } catch { /* offline or API down -- try again on the next tick */ }
+    }
+
+    check()
+    const timer = setInterval(check, APP_VERSION_POLL_MS)
+    document.addEventListener('visibilitychange', check)
+    return () => {
+      cancelled = true
+      clearInterval(timer)
+      document.removeEventListener('visibilitychange', check)
+    }
   }, [])
 
   useEffect(() => {
@@ -1005,6 +1037,7 @@ function App() {
 
   return (
     <div className="app">
+      <RegistrationDisclaimer key={disclaimerKey} />
       {notice && (
         <div className={`toast toast-${notice.type}`} role="status">{notice.text}</div>
       )}

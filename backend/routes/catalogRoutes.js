@@ -12,10 +12,16 @@ import { listCurriculumData, readSiteSettings } from '../services/curriculumStor
 
 const router = express.Router();
 
+// Lets an already-open tab notice that a new build is live: the client keeps
+// the value it started with and compares on every poll. APP_VERSION (e.g. the
+// deployed commit) is preferred; without it the process start time works,
+// since a deploy restarts the service.
+const APP_VERSION = process.env.APP_VERSION || String(Date.now());
+
 router.get('/site-settings', (_req, res) => {
   const { mainFont, catalogTerm, surveyUrl, announcementUrl, catalogNotice, catalogNoticeUpdatedAt } = readSiteSettings();
   res.set('Cache-Control', 'no-store');
-  res.json({ mainFont, catalogTerm, surveyUrl, announcementUrl, catalogNotice, catalogNoticeUpdatedAt });
+  res.json({ mainFont, catalogTerm, surveyUrl, announcementUrl, catalogNotice, catalogNoticeUpdatedAt, appVersion: APP_VERSION });
 });
 
 // Many different students search the same handful of popular course codes.
