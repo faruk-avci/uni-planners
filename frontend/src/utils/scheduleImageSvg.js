@@ -19,6 +19,13 @@ function escapeSvg(value) {
     .replaceAll("'", '&apos;')
 }
 
+// A section can carry several rooms (" / " joined), which easily outruns a
+// grid cell -- SVG text has no wrapping or clipping of its own.
+function truncate(value, maxChars) {
+  const text = String(value ?? '')
+  return text.length > maxChars ? `${text.slice(0, Math.max(1, maxChars - 1))}…` : text
+}
+
 function minutesFromTime(value) {
   const [hour, minute] = String(value || '').split(':').map(Number)
   return Number.isFinite(hour) && Number.isFinite(minute) ? hour * 60 + minute : null
@@ -89,7 +96,8 @@ function scheduleAgendaImageSvg(schedule, language = 'tr') {
       lines.push(`<text x="${padding + 20}" y="${rowY + 55}" class="muted mono" font-size="16">${escapeSvg(lesson.time.end)}</text>`)
       lines.push(`<rect x="${padding + 140}" y="${rowY + 17}" width="5" height="44" rx="2.5" fill="${color}"/>`)
       lines.push(`<text x="${padding + 168}" y="${rowY + 34}" fill="#18181b" class="mono" font-size="24" font-weight="700">${escapeSvg(lesson.code)}</text>`)
-      lines.push(`<text x="${padding + 168}" y="${rowY + 58}" class="muted" font-size="17" font-weight="600">${escapeSvg(sectionShort)}</text>`)
+      const detail = lesson.room ? `${sectionShort} · ${lesson.room}` : sectionShort
+      lines.push(`<text x="${padding + 168}" y="${rowY + 58}" class="muted" font-size="17" font-weight="600">${escapeSvg(truncate(detail, 60))}</text>`)
     })
     y += cardHeight + dayGap
   }
@@ -193,7 +201,8 @@ export function scheduleImageSvg(schedule, language = 'tr', layout = 'grid') {
       lines.push(`<rect x="${x}" y="${y}" width="${blockWidth}" height="${blockHeight}" rx="4" fill="${color}" fill-opacity="0.12"/>`)
       lines.push(`<rect x="${x}" y="${y}" width="4" height="${blockHeight}" rx="2" fill="${color}"/>`)
       lines.push(`<text x="${x + 13}" y="${y + 21}" fill="#18181b" class="mono" font-size="14" font-weight="700">${escapeSvg(lesson.code)}</text>`)
-      lines.push(`<text x="${x + 13}" y="${y + 40}" fill="#71717a" font-size="12">${escapeSvg(sectionShort)}</text>`)
+      const detail = lesson.room ? `${sectionShort} · ${lesson.room}` : sectionShort
+      lines.push(`<text x="${x + 13}" y="${y + 40}" fill="#71717a" font-size="12">${escapeSvg(truncate(detail, 30))}</text>`)
     }
   }
 
