@@ -19,6 +19,7 @@ import CorequisitePrompt from './components/coreq/CorequisitePrompt'
 import DegreeAuditUpload from './components/audit/DegreeAuditUpload'
 import SurveyNudge from './components/survey/SurveyNudge'
 import RegistrationDisclaimer from './components/disclaimer/RegistrationDisclaimer'
+import RecapPage from './components/recap/RecapPage'
 
 // How often an open tab re-checks whether a new build has been deployed.
 const APP_VERSION_POLL_MS = 5 * 60 * 1000
@@ -42,6 +43,7 @@ const routeFromLocation = () => {
   if (sharedId) return { page: 'shared', sharedId }
   if (/^\/curriculum\/?$/.test(pathname)) return { page: 'curriculum', sharedId: '' }
   if (/^\/how-to\/?$/.test(pathname)) return { page: 'howto', sharedId: '' }
+  if (/^\/ozyegin\/recap\/26-27-guz\/?$/.test(pathname)) return { page: 'recap', sharedId: '' }
   return { page: 'planner', sharedId: '' }
 }
 const PUBLIC_COLOR_THEMES = new Set(['iris', 'neutral', 'ocean', 'forest', 'violet', 'coral'])
@@ -275,7 +277,7 @@ function App() {
   }, [mobileBasketOpen])
 
   const navigate = page => {
-    const path = page === 'curriculum' ? '/curriculum' : page === 'howto' ? '/how-to' : '/'
+    const path = page === 'curriculum' ? '/curriculum' : page === 'howto' ? '/how-to' : page === 'recap' ? '/ozyegin/recap/26-27-guz' : '/'
     window.history.pushState(null, '', path)
     setSharedScheduleId('')
     setActivePage(page)
@@ -1082,7 +1084,7 @@ function App() {
         />
       )}
 
-      {activePage !== 'shared' && (
+      {activePage !== 'shared' && activePage !== 'recap' && (
         <ProfileBar
           language={language}
           majorLabel={selectedMajorLabel}
@@ -1096,7 +1098,7 @@ function App() {
         />
       )}
 
-      {activePage !== 'shared' && majorPromptReason && (
+      {activePage !== 'shared' && activePage !== 'recap' && majorPromptReason && (
         <MajorPrompt
           language={language}
           groups={majorGroups}
@@ -1127,6 +1129,8 @@ function App() {
         />
       ) : activePage === 'howto' ? (
         <HowToPage language={language} onNavigate={navigate} />
+      ) : activePage === 'recap' ? (
+        <RecapPage language={language} />
       ) : (
       <main className="main">
         <div className="main-layout">
@@ -1483,7 +1487,7 @@ function App() {
       </main>
       )}
 
-      {activePage !== 'shared' && (
+      {activePage !== 'shared' && activePage !== 'recap' && (
         <>
           <div className="mobile-basket-dock">
             <button
@@ -1578,7 +1582,7 @@ function App() {
         </>
       )}
 
-      <footer className={`footer ${activePage !== 'shared' ? 'footer-mobile-basket' : ''}`}>
+      <footer className={`footer ${activePage !== 'shared' && activePage !== 'recap' ? 'footer-mobile-basket' : ''}`}>
         <div className="container footer-content">
           <p className="footer-credit">
             UniPlanners · Designed and coded with <span>❤️</span> by{' '}

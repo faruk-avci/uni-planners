@@ -1,0 +1,145 @@
+{
+    "data": {
+        "viewer": {
+            "accounts": [
+                {
+                    "series": [
+                        {
+                            "avg": {
+                                "sampleInterval": 10.26595744680851
+                            },
+                            "count": 1930,
+                            "dimensions": {
+                                "ts": "2026-09-09"
+                            },
+                            "sum": {
+                                "visits": 1110
+                            }
+                        },
+                        {
+                            "avg": {
+                                "sampleInterval": 10.350877192982455
+                            },
+                            "count": 1180,
+                            "dimensions": {
+                                "ts": "2026-09-10"
+                            },
+                            "sum": {
+                                "visits": 790
+                            }
+                        },
+                        {
+                            "avg": {
+                                "sampleInterval": 10
+                            },
+                            "count": 50,
+                            "dimensions": {
+                                "ts": "2026-09-07"
+                            },
+                            "sum": {
+                                "visits": 20
+                            }
+                        },
+                        {
+                            "avg": {
+                                "sampleInterval": 10.392156862745098
+                            },
+                            "count": 530,
+                            "dimensions": {
+                                "ts": "2026-09-16"
+                            },
+                            "sum": {
+                                "visits": 430
+                            }
+                        },
+                        {
+                            "avg": {
+                                "sampleInterval": 10.09433962264151
+                            },
+                            "count": 1070,
+                            "dimensions": {
+                                "ts": "2026-09-12"
+                            },
+                            "sum": {
+                                "visits": 640
+                            }
+                        },
+                        {
+                            "avg": {
+                                "sampleInterval": 10.285714285714286
+                            },
+                            "count": 2160,
+                            "dimensions": {
+                                "ts": "2026-09-15"
+                            },
+                            "sum": {
+                                "visits": 1260
+                            }
+                        },
+                        {
+                            "avg": {
+                                "sampleInterval": 10
+                            },
+                            "count": 70,
+                            "dimensions": {
+                                "ts": "2026-09-06"
+                            },
+                            "sum": {
+                                "visits": 40
+                            }
+                        },
+                        {
+                            "avg": {
+                                "sampleInterval": 10
+                            },
+                            "count": 1100,
+                            "dimensions": {
+                                "ts": "2026-09-11"
+                            },
+                            "sum": {
+                                "visits": 740
+                            }
+                        },
+                        {
+                            "avg": {
+                                "sampleInterval": 10.398230088495575
+                            },
+                            "count": 2350,
+                            "dimensions": {
+                                "ts": "2026-09-08"
+                            },
+                            "sum": {
+                                "visits": 1280
+                            }
+                        },
+                        {
+                            "avg": {
+                                "sampleInterval": 10.213675213675213
+                            },
+                            "count": 2390,
+                            "dimensions": {
+                                "ts": "2026-09-14"
+                            },
+                            "sum": {
+                                "visits": 1220
+                            }
+                        },
+                        {
+                            "avg": {
+                                "sampleInterval": 10.216216216216216
+                            },
+                            "count": 1890,
+                            "dimensions": {
+                                "ts": "2026-09-13"
+                            },
+                            "sum": {
+                                "visits": 1180
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "errors": null
+}
