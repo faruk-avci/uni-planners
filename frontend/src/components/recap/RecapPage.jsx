@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import './RecapPage.css';
 import chartDataJson from './chart-data.json';
+import { courseService } from '../../services/courseService';
 import {
   ComposedChart,
   Line,
@@ -15,6 +16,11 @@ import {
 export default function RecapPage({ language }) {
   useEffect(() => {
     document.title = 'UniPlanners Recap - 2026/2027 Güz Ders Kayıt Dönemi';
+    try {
+      courseService.trackSiteEvent('recap_page', 'view');
+    } catch (e) {
+      console.error('Failed to track recap page view', e);
+    }
   }, []);
 
   const tr = (a, b) => (language === 'tr' ? a : b);
