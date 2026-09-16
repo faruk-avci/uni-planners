@@ -429,9 +429,9 @@ h1, h2, h3, strong {
 @media (max-width: 700px) {
   .recap-page { padding-top: var(--space-5); padding-bottom: 96px; }
   .recap-hero { padding: var(--space-6) var(--space-4); }
-  .recap-step { grid-template-columns: 36px minmax(0, 1fr); gap: var(--space-4); padding: var(--space-4); }
-  .recap-step-number { width: 36px; height: 36px; font-size: var(--text-base); }
-  .recap-step-body h2 { margin-top: 2px; font-size: var(--text-lg); }
+  .recap-step { grid-template-columns: 1fr; gap: var(--space-3); padding: var(--space-4); }
+  .recap-step-number { width: 36px; height: 36px; font-size: var(--text-base); margin-bottom: var(--space-1); }
+  .recap-step-body h2 { margin-top: 0; font-size: var(--text-lg); }
   .recap-stats-grid { grid-template-columns: 1fr; }
   .recap-q-block { align-items: flex-start; }
   .recap-q-response { align-items: flex-start; margin-top: var(--space-3); width: 100%; }
