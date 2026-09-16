@@ -18,7 +18,6 @@ import SharedSchedulePage from './components/shared/SharedSchedulePage'
 import CorequisitePrompt from './components/coreq/CorequisitePrompt'
 import DegreeAuditUpload from './components/audit/DegreeAuditUpload'
 import SurveyNudge from './components/survey/SurveyNudge'
-import RegistrationDisclaimer from './components/disclaimer/RegistrationDisclaimer'
 import RecapPage from './components/recap/RecapPage'
 
 // How often an open tab re-checks whether a new build has been deployed.
@@ -1039,7 +1038,6 @@ function App() {
 
   return (
     <div className="app">
-      <RegistrationDisclaimer key={disclaimerKey} />
       {notice && (
         <div className={`toast toast-${notice.type}`} role="status">{notice.text}</div>
       )}

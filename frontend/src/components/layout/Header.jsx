@@ -61,8 +61,8 @@ function Header({
             <button type="button" onClick={() => onNavigate('curriculum')} className={`nav-link ${activePage === 'curriculum' ? 'nav-link-active' : ''}`}>
               {language === 'tr' ? 'Müfredat' : 'Curriculum'}
             </button>
-            <button type="button" onClick={() => onNavigate('howto')} className={`nav-link nav-link-secondary ${activePage === 'howto' ? 'nav-link-active' : ''}`}>
-              {language === 'tr' ? 'Nasıl Kullanılır' : 'How to Use'}
+            <button type="button" onClick={() => onNavigate('recap')} className={`nav-link nav-link-secondary ${activePage === 'recap' ? 'nav-link-active' : ''}`}>
+              {language === 'tr' ? 'Özet' : 'Recap'}
             </button>
             {surveyUrl && (
               <a href={surveyUrl} target="_blank" rel="noopener noreferrer" className="nav-link nav-link-secondary" onClick={onSurveyLinkClick}>
@@ -75,13 +75,13 @@ function Header({
         {/* Actions */}
         <div className="header-actions">
           <button
-            className={`action-btn howto-mobile ${activePage === 'howto' ? 'action-btn-active' : ''}`}
+            className={`action-btn howto-mobile ${activePage === 'recap' ? 'action-btn-active' : ''}`}
             type="button"
-            onClick={() => onNavigate('howto')}
-            title={language === 'tr' ? 'Nasıl Kullanılır' : 'How to Use'}
-            aria-label={language === 'tr' ? 'Nasıl Kullanılır' : 'How to Use'}
+            onClick={() => onNavigate('recap')}
+            title={language === 'tr' ? 'Dönem Özeti' : 'Semester Recap'}
+            aria-label={language === 'tr' ? 'Özet' : 'Recap'}
           >
-            {language === 'tr' ? 'Nasıl?' : 'How to'}
+            {language === 'tr' ? 'Özet' : 'Recap'}
           </button>
           {surveyUrl && (
             <a href={surveyUrl} target="_blank" rel="noopener noreferrer" className="action-btn howto-mobile" onClick={onSurveyLinkClick}>
