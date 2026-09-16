@@ -205,7 +205,7 @@ export default function RecapPage({ language }) {
           <span className="recap-step-number">2</span>
           <div className="recap-step-body">
             <h2>{tr('Öne Çıkanlar', 'Highlights')}</h2>
-            <p>{tr('En çok hangi bölümler sistemi kullandı ve en çok hangi ders sepetlere eklendi?', 'Which majors used the system the most, and which course was added most frequently?')}</p>
+            <p>{tr('Sistemi en çok hangi bölümler kullandı ve sınıflara göre dağılım nasıldı?', 'Which majors used the system the most, and what was the distribution by year?')}</p>
             
             <div className="recap-highlights-container" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 'var(--space-6)' }}>
               <div className="recap-highlight-box">
