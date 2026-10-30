@@ -110,6 +110,7 @@ function App() {
     }
   })
   const [trayBasketOpen, setTrayBasketOpen] = useState(false)
+  const [searchClearToken, setSearchClearToken] = useState(0)
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem('uniplanner_dark_mode')
     return saved === '1'
@@ -701,6 +702,8 @@ function App() {
       return
     }
     setGenerating(true)
+    // Design 2 shows schedules where the search results were, so clear them.
+    if (layout === '2') setSearchClearToken(token => token + 1)
     const result = await courseService.generateSchedule(generationBasket, generationFreeDays, options)
     setGenerating(false)
 
@@ -1108,19 +1111,6 @@ function App() {
     catalogNoticeUpdatedAt: siteSettings.catalogNoticeUpdatedAt,
   }
 
-  const searchNode = (
-    <SearchSection
-      language={language}
-      onAddCourse={addCourseToBasket}
-      catalogTerm={siteSettings.catalogTerm}
-      basket={basket}
-      onRemoveCourse={removeCourseFromBasket}
-      onRemoveSection={removeSection}
-      onExcludeSection={excludeSectionFromBasket}
-      major={major}
-    />
-  )
-
   const basketNode = (
     <BasketPanel
       basket={basket}
@@ -1457,6 +1447,21 @@ function App() {
               </section>
   ) : null
 
+  const searchNode = (
+    <SearchSection
+      language={language}
+      onAddCourse={addCourseToBasket}
+      catalogTerm={siteSettings.catalogTerm}
+      basket={basket}
+      onRemoveCourse={removeCourseFromBasket}
+      onRemoveSection={removeSection}
+      onExcludeSection={excludeSectionFromBasket}
+      major={major}
+      afterForm={layout === '2' ? schedulesSection : null}
+      clearToken={searchClearToken}
+    />
+  )
+
   if (activePage === 'landing') {
     return (
       <LandingPage
@@ -1570,10 +1575,9 @@ function App() {
       layout === '2' ? (
       <main className="main planner-focus">
         <section className="focus-hero">
+          <ContextStrip {...profileProps} />
           {searchNode}
         </section>
-
-        {schedulesSection && <div className="focus-results">{schedulesSection}</div>}
 
         {trayBasketOpen && (
           <div className="focus-basket-drawer" role="dialog" aria-label={tr('Sepet', 'Basket')}>

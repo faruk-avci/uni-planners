@@ -71,7 +71,7 @@ const ELECTIVE_LABELS = {
   other: ['Diğer seçmeli', 'Other elective'],
 }
 
-function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemoveCourse, onRemoveSection, onExcludeSection, major = '' }) {
+function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemoveCourse, onRemoveSection, onExcludeSection, major = '', afterForm = null, clearToken = 0 }) {
   const [searchQuery, setSearchQuery] = useState('')
   const [expandedCourse, setExpandedCourse] = useState(null)
   const [expandedTimeGroups, setExpandedTimeGroups] = useState(() => new Set())
@@ -244,6 +244,15 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
     setQueryTooShort(false);
   }
 
+  // A parent can ask the search to reset itself (design 2 clears it when
+  // schedules are generated so they land directly under the search form).
+  const lastClearToken = useRef(clearToken)
+  useEffect(() => {
+    if (clearToken === lastClearToken.current) return
+    lastClearToken.current = clearToken
+    handleClear()
+  }, [clearToken])
+
   const groupSectionsByTime = sections => {
     const groups = new Map()
 
@@ -358,7 +367,10 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
         </div>
       </form>
 
+      {afterForm}
+
       {/* Results */}
+      {!(afterForm && !isLoading && !queryTooShort && searchResults.length === 0) && (
       <div className="search-results stagger-enter">
         {isLoading ? (
           <p className="no-results-msg">{t.loading}</p>
@@ -653,6 +665,7 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
           })
         )}
       </div>
+      )}
     </section>
   )
 }

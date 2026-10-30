@@ -52,8 +52,16 @@
   height: 60px;
 }
 
-.focus-results {
-  margin-top: var(--space-10);
+.planner-focus .context-strip {
+  width: 100%;
+  margin: 0 0 var(--space-8);
+}
+
+/* Generated schedules land on the line between the search form and its
+   results. */
+.planner-focus .search-section .generated-schedules {
+  margin: var(--space-2) 0 var(--space-6);
+  scroll-margin-top: calc(var(--header-height) + var(--space-4));
 }
 
 /* The checkout tray, pinned to the bottom of the screen. */
@@ -261,7 +269,7 @@
   .planner-focus .search-input { font-size: 16px; }
   .planner-focus .search-btn { height: 52px; }
   .planner-focus .clear-btn { height: auto; }
-  .focus-results { margin-top: var(--space-6); }
+  .planner-focus .context-strip { margin-bottom: var(--space-5); }
 }
 
 /* ─────────────────────────────────────────────
