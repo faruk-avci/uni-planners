@@ -71,36 +71,6 @@ export function ContextStrip({ language, majorLabel, grade, onMajorClick, onUniv
   )
 }
 
-/* The same profile, read as a sentence whose blanks are the controls (design 2). */
-export function ContextSentence({ language, majorLabel, grade, onMajorClick, onUniversityClick, onGradeChange }) {
-  const tr = (trText, enText) => language === 'tr' ? trText : enText
-  const caret = <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
-  const uni = (
-    <a className="sentence-blank" href="/" title={tr('Üniversiteyi değiştir', 'Change university')} onClick={universityClick(onUniversityClick)}>
-      Özyeğin
-    </a>
-  )
-  const majorBlank = (
-    <button type="button" className={`sentence-blank ${majorLabel ? '' : 'sentence-blank-empty'}`} onClick={onMajorClick}>
-      {majorLabel || tr('bölümünü seç', 'choose your major')}{caret}
-    </button>
-  )
-  const gradeBlank = (
-    <label className="sentence-blank sentence-select">
-      <span className="sr-only">{tr('Sınıf', 'Year')}</span>
-      <GradeSelect grade={grade} onGradeChange={onGradeChange} language={language} emptyLabel={tr('sınıfın?', 'your year?')} />
-      {caret}
-    </label>
-  )
-  return (
-    <p className="context-sentence">
-      {language === 'tr'
-        ? <>{uni}’de {majorBlank} okuyorum <span aria-hidden="true">·</span> {gradeBlank}</>
-        : <>I study {majorBlank} at {uni} <span aria-hidden="true">·</span> {gradeBlank}</>}
-    </p>
-  )
-}
-
 /* One slot for everything the site needs to say. */
 export function NoticeRail({ language, announcementUrl, surveyUrl, catalogNotice, catalogNoticeUpdatedAt, inline = false }) {
   const tr = (trText, enText) => language === 'tr' ? trText : enText

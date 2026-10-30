@@ -27,7 +27,7 @@ import { scheduleImagePng } from './utils/scheduleImageSvg'
 import { recordGenerateSuccess, shouldQueueSurveyNudge, markSurveyNudgeShown, markSurveyNudgeDone } from './utils/surveyNudge'
 import { canonicalProgramCode, groupMajorOptions } from './data/programs'
 import LandingPage from './components/landing/LandingPage'
-import { ContextStrip, ContextSentence, NoticeRail } from './components/profile/ProfileBar'
+import { ContextStrip, NoticeRail } from './components/profile/ProfileBar'
 import BasketTray from './components/layouts/BasketTray'
 import WeekPlaceholder from './components/layouts/WeekPlaceholder'
 import './components/layouts/layouts.css'
@@ -1570,9 +1570,6 @@ function App() {
       layout === '2' ? (
       <main className="main planner-focus">
         <section className="focus-hero">
-          <h1>{tr('Bu dönem hangi dersleri alıyorsun?', 'Which courses are you taking this term?')}</h1>
-          <ContextSentence {...profileProps} />
-          <NoticeRail {...profileProps} inline />
           {searchNode}
         </section>
 

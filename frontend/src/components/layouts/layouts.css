@@ -13,74 +13,6 @@
   padding: clamp(24px, 6vh, 64px) 0 160px;
 }
 
-.focus-hero h1 {
-  max-width: 18ch;
-  font-size: clamp(2rem, 4.4vw, 3.25rem);
-  font-weight: 800;
-  line-height: 1.02;
-  letter-spacing: -0.035em;
-}
-
-/* The profile as a sentence; the blanks are the controls. */
-.context-sentence {
-  margin-top: var(--space-4);
-  color: var(--text-secondary);
-  font-size: clamp(1rem, 1.6vw, 1.1875rem);
-  line-height: 1.7;
-}
-
-.sentence-blank {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  padding: 0;
-  color: var(--text-primary);
-  font: inherit;
-  font-weight: var(--weight-semibold);
-  text-decoration: underline;
-  text-decoration-color: var(--border-accent);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 0.28em;
-  cursor: pointer;
-  transition: color var(--duration-fast) var(--ease-out), text-decoration-color var(--duration-fast) var(--ease-out);
-}
-
-.sentence-blank:hover,
-.sentence-blank:focus-within {
-  color: var(--accent-primary);
-  text-decoration-color: var(--accent-primary);
-}
-
-.sentence-blank svg {
-  color: var(--text-tertiary);
-}
-
-.sentence-blank-empty,
-.sentence-select select.context-placeholder {
-  color: var(--accent-primary);
-}
-
-.sentence-select {
-  position: relative;
-}
-
-.sentence-select select {
-  padding: 0;
-  color: inherit;
-  background: transparent;
-  border: 0;
-  outline: 0;
-  appearance: none;
-  -webkit-appearance: none;
-  font: inherit;
-  cursor: pointer;
-}
-
-.sentence-select select option {
-  color: var(--text-primary);
-  background-color: var(--bg-secondary);
-}
-
 .notice-rail-inline {
   width: 100%;
   margin: var(--space-5) 0 0;
@@ -88,7 +20,7 @@
 
 /* Search sits in the hero: no card, a larger field. */
 .planner-focus .search-section {
-  margin-top: var(--space-8);
+  margin-top: 0;
   padding: 0;
   background: transparent;
   border: 0;
@@ -325,7 +257,6 @@
     padding: var(--space-6) 0 var(--space-8);
   }
 
-  .planner-focus .search-section { margin-top: var(--space-6); }
   .planner-focus .search-input-wrapper { min-height: 52px; padding-inline: var(--space-3); }
   .planner-focus .search-input { font-size: 16px; }
   .planner-focus .search-btn { height: 52px; }
