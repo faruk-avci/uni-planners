@@ -53,6 +53,7 @@ const ALLOWED_SITE_EVENTS = new Set([
   'preference:theme_change',
   'preference:palette_change',
   'preference:language_change',
+  'preference:layout_change',
   'recap_page:view',
 ]);
 

@@ -3,7 +3,106 @@ import './ProfileBar.css'
 
 const CATALOG_NOTICE_DISMISSED_KEY = 'uniplanner_catalog_notice_dismissed_version'
 
-function ProfileBar({ language, majorLabel, grade, onMajorClick, onUniversityClick, onGradeChange, announcementUrl, surveyUrl, catalogNotice, catalogNoticeUpdatedAt }) {
+const GRADE_OPTIONS = [
+  { value: 'prep', tr: 'Hazırlık', en: 'Preparatory' },
+  { value: '1', tr: '1. sınıf', en: 'Year 1' },
+  { value: '2', tr: '2. sınıf', en: 'Year 2' },
+  { value: '3', tr: '3. sınıf', en: 'Year 3' },
+  { value: '4', tr: '4. sınıf', en: 'Year 4' },
+]
+
+const universityClick = onUniversityClick => event => {
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return
+  event.preventDefault()
+  onUniversityClick()
+}
+
+function GradeSelect({ grade, onGradeChange, language, emptyLabel, className = '' }) {
+  return (
+    <select value={grade} onChange={event => onGradeChange(event.target.value)} className={`${className} ${grade ? '' : 'context-placeholder'}`.trim()}>
+      <option value="">{emptyLabel}</option>
+      {GRADE_OPTIONS.map(option => (
+        <option key={option.value} value={option.value}>{language === 'tr' ? option.tr : option.en}</option>
+      ))}
+    </select>
+  )
+}
+
+/* University › Major › Year as one bar (design 1, and the workbench pane). */
+export function ContextStrip({ language, majorLabel, grade, onMajorClick, onUniversityClick, onGradeChange, compact = false }) {
+  const tr = (trText, enText) => language === 'tr' ? trText : enText
+  return (
+    <nav className={`context-strip ${compact ? 'context-strip-compact' : ''}`} aria-label={tr('Akademik profil', 'Academic profile')}>
+      <a
+        className="context-segment context-university"
+        href="/"
+        title={tr('Üniversiteyi değiştir', 'Change university')}
+        aria-label={tr('Özyeğin Üniversitesi, üniversiteyi değiştir', 'Özyeğin University, change university')}
+        onClick={universityClick(onUniversityClick)}
+      >
+        <span className="context-mark" aria-hidden="true">Ö</span>
+        <span className="context-copy">
+          <small>{tr('Üniversite', 'University')}</small>
+          <strong>{tr('Özyeğin Üniversitesi', 'Özyeğin University')}</strong>
+        </span>
+        <span className="context-action">{tr('Değiştir', 'Change')}</span>
+      </a>
+
+      <ContextDivider />
+
+      <button className="context-segment context-major" type="button" onClick={onMajorClick}>
+        <span className="context-copy">
+          <small>{tr('Bölüm', 'Major')}</small>
+          <strong className={majorLabel ? '' : 'context-placeholder'}>{majorLabel || tr('Bölümünü seç', 'Select your major')}</strong>
+        </span>
+        <svg className="context-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6" /></svg>
+      </button>
+
+      <ContextDivider />
+
+      <label className="context-segment context-grade">
+        <span className="context-copy">
+          <small>{tr('Sınıf', 'Year')}</small>
+          <GradeSelect grade={grade} onGradeChange={onGradeChange} language={language} emptyLabel={tr('İsteğe bağlı', 'Optional')} />
+        </span>
+        <svg className="context-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+      </label>
+    </nav>
+  )
+}
+
+/* The same profile, read as a sentence whose blanks are the controls (design 2). */
+export function ContextSentence({ language, majorLabel, grade, onMajorClick, onUniversityClick, onGradeChange }) {
+  const tr = (trText, enText) => language === 'tr' ? trText : enText
+  const caret = <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+  const uni = (
+    <a className="sentence-blank" href="/" title={tr('Üniversiteyi değiştir', 'Change university')} onClick={universityClick(onUniversityClick)}>
+      Özyeğin
+    </a>
+  )
+  const majorBlank = (
+    <button type="button" className={`sentence-blank ${majorLabel ? '' : 'sentence-blank-empty'}`} onClick={onMajorClick}>
+      {majorLabel || tr('bölümünü seç', 'choose your major')}{caret}
+    </button>
+  )
+  const gradeBlank = (
+    <label className="sentence-blank sentence-select">
+      <span className="sr-only">{tr('Sınıf', 'Year')}</span>
+      <GradeSelect grade={grade} onGradeChange={onGradeChange} language={language} emptyLabel={tr('sınıfın?', 'your year?')} />
+      {caret}
+    </label>
+  )
+  return (
+    <p className="context-sentence">
+      {language === 'tr'
+        ? <>{uni}’de {majorBlank} okuyorum <span aria-hidden="true">·</span> {gradeBlank}</>
+        : <>I study {majorBlank} at {uni} <span aria-hidden="true">·</span> {gradeBlank}</>}
+    </p>
+  )
+}
+
+/* One slot for everything the site needs to say. */
+export function NoticeRail({ language, announcementUrl, surveyUrl, catalogNotice, catalogNoticeUpdatedAt, inline = false }) {
   const tr = (trText, enText) => language === 'tr' ? trText : enText
   // Dismissal is keyed to *which* notice was dismissed (its updatedAt
   // timestamp), not just a yes/no flag -- so publishing a new notice from
@@ -64,82 +163,40 @@ function ProfileBar({ language, majorLabel, grade, onMajorClick, onUniversityCli
     })
   }
 
+  if (notices.length === 0) return null
+  return (
+    <div className={`notice-rail ${inline ? 'notice-rail-inline' : ''}`}>
+      {notices.map(notice => (
+        <div key={notice.key} className={`notice notice-${notice.tone}`} role={notice.tone === 'info' ? 'status' : undefined}>
+          <NoticeIcon name={notice.icon} />
+          <p className="notice-body">
+            {notice.body}
+            {notice.link && (
+              <>
+                {' '}
+                <a href={notice.link.href} target={notice.link.external ? '_blank' : undefined} rel={notice.link.external ? 'noopener noreferrer' : undefined} className="notice-link">
+                  {notice.link.label}
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg>
+                </a>
+              </>
+            )}
+          </p>
+          {notice.onDismiss && (
+            <button type="button" className="notice-close" onClick={notice.onDismiss} aria-label={tr('Kapat', 'Close')}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+            </button>
+          )}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function ProfileBar(props) {
   return (
     <>
-      <nav className="context-strip" aria-label={tr('Akademik profil', 'Academic profile')}>
-        <a
-          className="context-segment context-university"
-          href="/"
-          title={tr('Üniversiteyi değiştir', 'Change university')}
-          aria-label={tr('Özyeğin Üniversitesi, üniversiteyi değiştir', 'Özyeğin University, change university')}
-          onClick={event => {
-            if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return
-            event.preventDefault()
-            onUniversityClick()
-          }}
-        >
-          <span className="context-mark" aria-hidden="true">Ö</span>
-          <span className="context-copy">
-            <small>{tr('Üniversite', 'University')}</small>
-            <strong>{tr('Özyeğin Üniversitesi', 'Özyeğin University')}</strong>
-          </span>
-          <span className="context-action">{tr('Değiştir', 'Change')}</span>
-        </a>
-
-        <ContextDivider />
-
-        <button className="context-segment context-major" type="button" onClick={onMajorClick}>
-          <span className="context-copy">
-            <small>{tr('Bölüm', 'Major')}</small>
-            <strong className={majorLabel ? '' : 'context-placeholder'}>{majorLabel || tr('Bölümünü seç', 'Select your major')}</strong>
-          </span>
-          <svg className="context-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6" /></svg>
-        </button>
-
-        <ContextDivider />
-
-        <label className="context-segment context-grade">
-          <span className="context-copy">
-            <small>{tr('Sınıf', 'Year')}</small>
-            <select value={grade} onChange={event => onGradeChange(event.target.value)} className={grade ? '' : 'context-placeholder'}>
-              <option value="">{tr('İsteğe bağlı', 'Optional')}</option>
-              <option value="prep">{tr('Hazırlık', 'Preparatory')}</option>
-              <option value="1">{tr('1. sınıf', 'Year 1')}</option>
-              <option value="2">{tr('2. sınıf', 'Year 2')}</option>
-              <option value="3">{tr('3. sınıf', 'Year 3')}</option>
-              <option value="4">{tr('4. sınıf', 'Year 4')}</option>
-            </select>
-          </span>
-          <svg className="context-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
-        </label>
-      </nav>
-
-      {notices.length > 0 && (
-        <div className="notice-rail">
-          {notices.map(notice => (
-            <div key={notice.key} className={`notice notice-${notice.tone}`} role={notice.tone === 'info' ? 'status' : undefined}>
-              <NoticeIcon name={notice.icon} />
-              <p className="notice-body">
-                {notice.body}
-                {notice.link && (
-                  <>
-                    {' '}
-                    <a href={notice.link.href} target={notice.link.external ? '_blank' : undefined} rel={notice.link.external ? 'noopener noreferrer' : undefined} className="notice-link">
-                      {notice.link.label}
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg>
-                    </a>
-                  </>
-                )}
-              </p>
-              {notice.onDismiss && (
-                <button type="button" className="notice-close" onClick={notice.onDismiss} aria-label={tr('Kapat', 'Close')}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
+      <ContextStrip {...props} />
+      <NoticeRail {...props} />
     </>
   )
 }

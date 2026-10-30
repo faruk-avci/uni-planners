@@ -1,6 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import './Header.css'
 
+const LAYOUTS = [
+  { id: '1', tr: 'Klasik', en: 'Classic' },
+  { id: '2', tr: 'Odak', en: 'Focus' },
+  { id: '3', tr: 'Takvim', en: 'Calendar' },
+]
+
 const COLOR_THEMES = [
   { id: 'petrol', tr: 'Petrol', en: 'Petrol', color: '#1d5e66' },
   { id: 'iris', tr: 'İris', en: 'Iris', color: '#3b3f9a' },
@@ -23,6 +29,8 @@ function Header({
   onLogoClick,
   surveyUrl,
   onSurveyLinkClick,
+  layout,
+  onLayoutChange,
 }) {
   const [paletteOpen, setPaletteOpen] = useState(false)
   const paletteRef = useRef(null)
@@ -89,6 +97,24 @@ function Header({
               {language === 'tr' ? 'Anket' : 'Survey'}
             </a>
           )}
+          {activePage === 'planner' && onLayoutChange && (
+            <div className="layout-switch" role="radiogroup" aria-label={language === 'tr' ? 'Tasarım' : 'Design'}>
+              <span className="layout-switch-label">{language === 'tr' ? 'Tasarım' : 'Design'}</span>
+              {LAYOUTS.map(option => (
+                <button
+                  key={option.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={layout === option.id}
+                  className={`layout-switch-option ${layout === option.id ? 'layout-switch-active' : ''}`}
+                  title={language === 'tr' ? option.tr : option.en}
+                  onClick={() => onLayoutChange(option.id)}
+                >
+                  {option.id}
+                </button>
+              ))}
+            </div>
+          )}
           <button
             className="action-btn dark-mode-toggle"
             type="button"
@@ -127,6 +153,33 @@ function Header({
 
               {paletteOpen && (
                 <div className="palette-menu" role="menu">
+                  {activePage === 'planner' && onLayoutChange && (
+                    <>
+                      <span className="palette-menu-title">{language === 'tr' ? 'Tasarım' : 'Design'}</span>
+                      {LAYOUTS.map(option => (
+                        <button
+                          key={option.id}
+                          type="button"
+                          className={`palette-option ${layout === option.id ? 'palette-option-active' : ''}`}
+                          onClick={() => {
+                            onLayoutChange(option.id)
+                            setPaletteOpen(false)
+                          }}
+                          role="menuitemradio"
+                          aria-checked={layout === option.id}
+                        >
+                          <span className="layout-menu-num">{option.id}</span>
+                          <span>{language === 'tr' ? option.tr : option.en}</span>
+                          {layout === option.id && (
+                            <svg className="palette-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                              <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                          )}
+                        </button>
+                      ))}
+                      <span className="palette-menu-divider" aria-hidden="true" />
+                    </>
+                  )}
                   <span className="palette-menu-title">
                     {language === 'tr' ? 'Renk teması' : 'Color theme'}
                   </span>

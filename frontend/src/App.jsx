@@ -27,6 +27,10 @@ import { scheduleImagePng } from './utils/scheduleImageSvg'
 import { recordGenerateSuccess, shouldQueueSurveyNudge, markSurveyNudgeShown, markSurveyNudgeDone } from './utils/surveyNudge'
 import { canonicalProgramCode, groupMajorOptions } from './data/programs'
 import LandingPage from './components/landing/LandingPage'
+import { ContextStrip, ContextSentence, NoticeRail } from './components/profile/ProfileBar'
+import BasketTray from './components/layouts/BasketTray'
+import WeekPlaceholder from './components/layouts/WeekPlaceholder'
+import './components/layouts/layouts.css'
 
 const isUndergraduateMajor = value => Boolean(value && !['none', 'master', 'doctorate'].includes(value))
 const sharedIdFromPath = pathname => String(pathname || '').match(/^\/share\/([A-Za-z0-9]{8})\/?$/)?.[1] || ''
@@ -50,6 +54,7 @@ const routeFromLocation = () => {
 }
 const PUBLIC_COLOR_THEMES = new Set(['petrol', 'iris', 'neutral', 'ocean', 'forest', 'violet', 'coral'])
 const DEFAULT_COLOR_THEME = 'petrol'
+const PLANNER_LAYOUTS = ['1', '2', '3']
 const FAVICON_COLORS = {
   petrol: '#1d5e66',
   iris: '#3b3f9a',
@@ -94,6 +99,17 @@ function App() {
     localStorage.setItem('uniplanner_palette_v2', '1')
     return PUBLIC_COLOR_THEMES.has(saved) ? saved : DEFAULT_COLOR_THEME
   })
+  // Planner layout: 1 = classic, 2 = focus (search hero + checkout tray),
+  // 3 = workbench (control pane + week stage). Remembered per browser.
+  const [layout, setLayout] = useState(() => {
+    try {
+      const saved = localStorage.getItem('uniplanner_layout')
+      return PLANNER_LAYOUTS.includes(saved) ? saved : '1'
+    } catch {
+      return '1'
+    }
+  })
+  const [trayBasketOpen, setTrayBasketOpen] = useState(false)
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem('uniplanner_dark_mode')
     return saved === '1'
@@ -199,6 +215,18 @@ function App() {
 
   const trackSurveyHeaderClick = () => {
     courseService.trackSiteEvent('survey', 'header_click')
+  }
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-layout', layout)
+    try { localStorage.setItem('uniplanner_layout', layout) } catch { /* storage disabled */ }
+  }, [layout])
+
+  const selectLayout = next => {
+    if (!PLANNER_LAYOUTS.includes(next) || next === layout) return
+    setLayout(next)
+    setTrayBasketOpen(false)
+    courseService.trackSiteEvent('preference', 'layout_change', `design_${next}`)
   }
 
   useEffect(() => {
@@ -1067,130 +1095,59 @@ function App() {
     </>
   )
 
-  if (activePage === 'landing') {
-    return (
-      <LandingPage
-        language={language}
-        toggleLanguage={toggleLanguage}
-        darkMode={darkMode}
-        onToggleDarkMode={toggleDarkMode}
-        onOpenUniversity={() => navigate('planner')}
-        footerCredit={footerCredit}
-      />
-    )
+  const profileProps = {
+    language,
+    majorLabel: selectedMajorLabel,
+    grade,
+    onMajorClick: () => setMajorPromptReason('profile'),
+    onUniversityClick: () => navigate('landing'),
+    onGradeChange: saveGradePreference,
+    announcementUrl: siteSettings.announcementUrl,
+    surveyUrl: siteSettings.surveyUrl,
+    catalogNotice: siteSettings.catalogNotice,
+    catalogNoticeUpdatedAt: siteSettings.catalogNoticeUpdatedAt,
   }
 
-  return (
-    <div className="app">
-      {notice && (
-        <div className={`toast toast-${notice.type}`} role="status">{notice.text}</div>
-      )}
-      {surveyNudgeVisible && (
-        <SurveyNudge
-          language={language}
-          surveyUrl={siteSettings.surveyUrl}
-          onFillSurvey={handleFillSurvey}
-          onDismiss={dismissSurveyNudge}
-        />
-      )}
-      {coreqPrompt && (
-        <CorequisitePrompt
-          prompt={coreqPrompt}
-          language={language}
-          onCancel={cancelCorequisiteWarning}
-          onContinue={continueWithoutCorequisite}
-          onAddCorequisite={addCorequisiteAndGenerate}
-        />
-      )}
-      {auditOpen && (
-        <DegreeAuditUpload
-          language={language}
-          result={auditResult}
-          onResult={handleAuditResult}
-          onClose={() => setAuditOpen(false)}
-        />
-      )}
-      {activePage !== 'shared' && (
-        <Header
-          language={language}
-          toggleLanguage={toggleLanguage}
-          colorTheme={colorTheme}
-          setColorTheme={selectColorTheme}
-          darkMode={darkMode}
-          onToggleDarkMode={toggleDarkMode}
-          activePage={activePage}
-          onNavigate={navigate}
-          onLogoClick={handleLogoClick}
-          surveyUrl={siteSettings.surveyUrl}
-          onSurveyLinkClick={trackSurveyHeaderClick}
-        />
-      )}
+  const searchNode = (
+    <SearchSection
+      language={language}
+      onAddCourse={addCourseToBasket}
+      catalogTerm={siteSettings.catalogTerm}
+      basket={basket}
+      onRemoveCourse={removeCourseFromBasket}
+      onRemoveSection={removeSection}
+      onExcludeSection={excludeSectionFromBasket}
+      major={major}
+    />
+  )
 
-      {activePage !== 'shared' && activePage !== 'recap' && (
-        <ProfileBar
-          language={language}
-          majorLabel={selectedMajorLabel}
-          grade={grade}
-          onMajorClick={() => setMajorPromptReason('profile')}
-          onUniversityClick={() => navigate('landing')}
-          onGradeChange={saveGradePreference}
-          announcementUrl={siteSettings.announcementUrl}
-          surveyUrl={siteSettings.surveyUrl}
-          catalogNotice={siteSettings.catalogNotice}
-          catalogNoticeUpdatedAt={siteSettings.catalogNoticeUpdatedAt}
-        />
-      )}
+  const basketNode = (
+    <BasketPanel
+      basket={basket}
+      setBasket={setBasket}
+      removeSection={removeSection}
+      totalCredits={totalCredits}
+      language={language}
+      savedBaskets={savedBaskets}
+      setSavedBaskets={setSavedBaskets}
+    />
+  )
 
-      {activePage !== 'shared' && activePage !== 'recap' && majorPromptReason && (
-        <MajorPrompt
-          language={language}
-          groups={majorGroups}
-          selectedMajor={major}
-          onSelect={handleMajorPromptSelect}
-          onClose={majorPromptReason === 'profile' ? () => setMajorPromptReason(null) : null}
-        />
-      )}
+  const controlsNode = (
+    <div className="schedule-controls">
+      <FreeDaySelector
+        freeDays={freeDays}
+        setFreeDays={setFreeDays}
+        language={language}
+      />
 
-      {activePage === 'planner' && (
-        <DinoGame
-          active={dinoMode}
-          open={dinoOpen}
-          onOpen={() => setDinoOpen(true)}
-          onClose={() => setDinoOpen(false)}
-          language={language}
-        />
-      )}
+      <button className="btn btn-primary btn-generate" onClick={handleGenerate} disabled={generating}>
+        {generating ? tr('Oluşturuluyor…', 'Generating…') : tr('Program Oluştur', 'Generate Schedules')}
+      </button>
+    </div>
+  )
 
-      {activePage === 'shared' ? (
-        <SharedSchedulePage id={sharedScheduleId} language={language} onHome={() => navigate('planner')} />
-      ) : activePage === 'curriculum' ? (
-        <CurriculumPage
-          language={language}
-          onAddCourse={addCourseToBasket}
-          major={major}
-          auditResult={auditResult}
-        />
-      ) : activePage === 'howto' ? (
-        <HowToPage language={language} onNavigate={navigate} />
-      ) : activePage === 'recap' ? (
-        <RecapPage language={language} />
-      ) : (
-      <main className="main">
-        <div className="main-layout">
-          {/* Left: Search + Results */}
-          <div className="main-content">
-            <SearchSection
-              language={language}
-              onAddCourse={addCourseToBasket}
-              catalogTerm={siteSettings.catalogTerm}
-              basket={basket}
-              onRemoveCourse={removeCourseFromBasket}
-              onRemoveSection={removeSection}
-              onExcludeSection={excludeSectionFromBasket}
-              major={major}
-            />
-
-            {(schedules.length > 0 || genMessage) && (
+  const schedulesSection = (schedules.length > 0 || genMessage) ? (
               <section className="section generated-schedules" ref={generatedSchedulesRef}>
                 <div className="section-header">
                   <h2>{language === 'tr' ? 'Oluşturulan Programlar' : 'Generated Schedules'}</h2>
@@ -1498,36 +1455,179 @@ function App() {
                   return <CourseWorkload basket={workloadCourses} language={language} />
                 })()}
               </section>
-            )}
+  ) : null
 
+  if (activePage === 'landing') {
+    return (
+      <LandingPage
+        language={language}
+        toggleLanguage={toggleLanguage}
+        darkMode={darkMode}
+        onToggleDarkMode={toggleDarkMode}
+        onOpenUniversity={() => navigate('planner')}
+        footerCredit={footerCredit}
+      />
+    )
+  }
+
+  return (
+    <div className="app">
+      {notice && (
+        <div className={`toast toast-${notice.type}`} role="status">{notice.text}</div>
+      )}
+      {surveyNudgeVisible && (
+        <SurveyNudge
+          language={language}
+          surveyUrl={siteSettings.surveyUrl}
+          onFillSurvey={handleFillSurvey}
+          onDismiss={dismissSurveyNudge}
+        />
+      )}
+      {coreqPrompt && (
+        <CorequisitePrompt
+          prompt={coreqPrompt}
+          language={language}
+          onCancel={cancelCorequisiteWarning}
+          onContinue={continueWithoutCorequisite}
+          onAddCorequisite={addCorequisiteAndGenerate}
+        />
+      )}
+      {auditOpen && (
+        <DegreeAuditUpload
+          language={language}
+          result={auditResult}
+          onResult={handleAuditResult}
+          onClose={() => setAuditOpen(false)}
+        />
+      )}
+      {activePage !== 'shared' && (
+        <Header
+          language={language}
+          toggleLanguage={toggleLanguage}
+          colorTheme={colorTheme}
+          setColorTheme={selectColorTheme}
+          darkMode={darkMode}
+          onToggleDarkMode={toggleDarkMode}
+          activePage={activePage}
+          onNavigate={navigate}
+          onLogoClick={handleLogoClick}
+          surveyUrl={siteSettings.surveyUrl}
+          onSurveyLinkClick={trackSurveyHeaderClick}
+          layout={layout}
+          onLayoutChange={selectLayout}
+        />
+      )}
+
+      {activePage !== 'shared' && activePage !== 'recap' && !(activePage === 'planner' && layout !== '1') && (
+        <ProfileBar
+          language={language}
+          majorLabel={selectedMajorLabel}
+          grade={grade}
+          onMajorClick={() => setMajorPromptReason('profile')}
+          onUniversityClick={() => navigate('landing')}
+          onGradeChange={saveGradePreference}
+          announcementUrl={siteSettings.announcementUrl}
+          surveyUrl={siteSettings.surveyUrl}
+          catalogNotice={siteSettings.catalogNotice}
+          catalogNoticeUpdatedAt={siteSettings.catalogNoticeUpdatedAt}
+        />
+      )}
+
+      {activePage !== 'shared' && activePage !== 'recap' && majorPromptReason && (
+        <MajorPrompt
+          language={language}
+          groups={majorGroups}
+          selectedMajor={major}
+          onSelect={handleMajorPromptSelect}
+          onClose={majorPromptReason === 'profile' ? () => setMajorPromptReason(null) : null}
+        />
+      )}
+
+      {activePage === 'planner' && (
+        <DinoGame
+          active={dinoMode}
+          open={dinoOpen}
+          onOpen={() => setDinoOpen(true)}
+          onClose={() => setDinoOpen(false)}
+          language={language}
+        />
+      )}
+
+      {activePage === 'shared' ? (
+        <SharedSchedulePage id={sharedScheduleId} language={language} onHome={() => navigate('planner')} />
+      ) : activePage === 'curriculum' ? (
+        <CurriculumPage
+          language={language}
+          onAddCourse={addCourseToBasket}
+          major={major}
+          auditResult={auditResult}
+        />
+      ) : activePage === 'howto' ? (
+        <HowToPage language={language} onNavigate={navigate} />
+      ) : activePage === 'recap' ? (
+        <RecapPage language={language} />
+      ) : (
+      layout === '2' ? (
+      <main className="main planner-focus">
+        <section className="focus-hero">
+          <h1>{tr('Bu dönem hangi dersleri alıyorsun?', 'Which courses are you taking this term?')}</h1>
+          <ContextSentence {...profileProps} />
+          <NoticeRail {...profileProps} inline />
+          {searchNode}
+        </section>
+
+        {schedulesSection && <div className="focus-results">{schedulesSection}</div>}
+
+        {trayBasketOpen && (
+          <div className="focus-basket-drawer" role="dialog" aria-label={tr('Sepet', 'Basket')}>
+            {basketNode}
+          </div>
+        )}
+        <BasketTray
+          language={language}
+          basket={basket}
+          totalCredits={totalCredits}
+          onRemoveCourse={removeCourseFromBasket}
+          freeDays={freeDays}
+          setFreeDays={setFreeDays}
+          onGenerate={handleGenerate}
+          generating={generating}
+          basketOpen={trayBasketOpen}
+          onToggleBasket={() => setTrayBasketOpen(open => !open)}
+        />
+      </main>
+      ) : layout === '3' ? (
+      <main className="main planner-workbench">
+        <aside className="workbench-pane" aria-label={tr('Ders seçimi', 'Course selection')}>
+          <div className="workbench-pane-scroll">
+            <ContextStrip {...profileProps} compact />
+            <NoticeRail {...profileProps} inline />
+            {searchNode}
+            {basketNode}
+          </div>
+          <div className="workbench-pane-actions">{controlsNode}</div>
+        </aside>
+        <div className="workbench-stage">
+          {schedulesSection || (
+            <WeekPlaceholder language={language} basketCount={basket.length} onGenerate={handleGenerate} generating={generating} />
+          )}
+        </div>
+      </main>
+      ) : (
+      <main className="main">
+        <div className="main-layout">
+          <div className="main-content">
+            {searchNode}
+            {schedulesSection}
           </div>
 
-          {/* Right: Basket Sidebar */}
           <aside className="sidebar">
-            <BasketPanel
-                basket={basket}
-                setBasket={setBasket}
-                removeSection={removeSection}
-                totalCredits={totalCredits}
-                language={language}
-                savedBaskets={savedBaskets}
-                setSavedBaskets={setSavedBaskets}
-            />
-
-            <div className="schedule-controls">
-              <FreeDaySelector
-                freeDays={freeDays}
-                setFreeDays={setFreeDays}
-                language={language}
-              />
-
-              <button className="btn btn-primary btn-generate" onClick={handleGenerate} disabled={generating}>
-                {generating ? tr('Oluşturuluyor…', 'Generating…') : tr('Program Oluştur', 'Generate Schedules')}
-              </button>
-            </div>
+            {basketNode}
+            {controlsNode}
           </aside>
         </div>
       </main>
+      )
       )}
 
       {activePage !== 'shared' && activePage !== 'recap' && (
