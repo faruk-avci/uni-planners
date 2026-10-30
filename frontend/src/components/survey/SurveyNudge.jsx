@@ -1,4 +1,5 @@
 import './SurveyNudge.css'
+import { linkTargetProps } from '../../utils/links'
 
 function SurveyNudge({ language, surveyUrl, onFillSurvey, onDismiss }) {
   const tr = (a, b) => language === 'tr' ? a : b
@@ -11,8 +12,7 @@ function SurveyNudge({ language, surveyUrl, onFillSurvey, onDismiss }) {
       <div className="survey-nudge-actions">
         <a
           href={surveyUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+          {...linkTargetProps(surveyUrl)}
           className="btn btn-primary btn-sm"
           onClick={onFillSurvey}
         >

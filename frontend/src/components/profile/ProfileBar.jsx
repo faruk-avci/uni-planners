@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { isExternalUrl } from '../../utils/links'
 import './ProfileBar.css'
 
 const CATALOG_NOTICE_DISMISSED_KEY = 'uniplanner_catalog_notice_dismissed_version'
@@ -129,7 +130,7 @@ export function NoticeRail({ language, announcementUrl, surveyUrl, catalogNotice
       tone: 'neutral',
       icon: 'survey',
       body: tr('Lütfen anketi doldurmayı unutmayın.', 'Please don’t forget to fill out our survey.'),
-      link: { href: surveyUrl, label: tr('Ankete git', 'Go to survey'), external: true },
+      link: { href: surveyUrl, label: tr('Ankete git', 'Go to survey'), external: isExternalUrl(surveyUrl) },
     })
   }
 

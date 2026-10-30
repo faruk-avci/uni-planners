@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { linkTargetProps } from '../../utils/links'
 import './Header.css'
 
 const LAYOUTS = [
@@ -98,7 +99,7 @@ function Header({
               {language === 'tr' ? 'Özet' : 'Recap'}
             </button>
             {surveyUrl && (
-              <a href={surveyUrl} target="_blank" rel="noopener noreferrer" className="nav-link nav-link-secondary" onClick={onSurveyLinkClick}>
+              <a href={surveyUrl} {...linkTargetProps(surveyUrl)} className="nav-link nav-link-secondary" onClick={onSurveyLinkClick}>
                 {language === 'tr' ? 'Anket' : 'Survey'}
               </a>
             )}
@@ -117,7 +118,7 @@ function Header({
             {language === 'tr' ? 'Özet' : 'Recap'}
           </button>
           {surveyUrl && (
-            <a href={surveyUrl} target="_blank" rel="noopener noreferrer" className="action-btn howto-mobile" onClick={onSurveyLinkClick}>
+            <a href={surveyUrl} {...linkTargetProps(surveyUrl)} className="action-btn howto-mobile" onClick={onSurveyLinkClick}>
               {language === 'tr' ? 'Anket' : 'Survey'}
             </a>
           )}
