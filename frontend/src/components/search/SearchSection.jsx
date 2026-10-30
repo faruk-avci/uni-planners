@@ -71,7 +71,7 @@ const ELECTIVE_LABELS = {
   other: ['Diğer seçmeli', 'Other elective'],
 }
 
-function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemoveCourse, onRemoveSection, onExcludeSection, major = '', afterForm = null, clearToken = 0 }) {
+function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemoveCourse, onRemoveSection, onExcludeSection, major = '', afterForm = null, clearToken = 0, onSearch = null }) {
   const [searchQuery, setSearchQuery] = useState('')
   const [expandedCourse, setExpandedCourse] = useState(null)
   const [expandedTimeGroups, setExpandedTimeGroups] = useState(() => new Set())
@@ -149,6 +149,7 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
       setSearchResults([])
       return
     }
+    onSearch?.()
     setQueryTooShort(false)
     setIsLoading(true)
     setShowSuggestions(false)

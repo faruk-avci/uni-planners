@@ -111,6 +111,7 @@ function App() {
   })
   const [trayBasketOpen, setTrayBasketOpen] = useState(false)
   const [searchClearToken, setSearchClearToken] = useState(0)
+  const focusSearchRef = useRef(null)
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem('uniplanner_dark_mode')
     return saved === '1'
@@ -1459,6 +1460,11 @@ function App() {
       major={major}
       afterForm={layout === '2' ? schedulesSection : null}
       clearToken={searchClearToken}
+      onSearch={layout === '2' ? () => {
+        // Design 2: bring the search to the top so the profile strip scrolls
+        // out of view; scrolling back up reveals it again.
+        window.requestAnimationFrame(() => focusSearchRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+      } : null}
     />
   )
 
@@ -1576,7 +1582,7 @@ function App() {
       <main className="main planner-focus">
         <section className="focus-hero">
           <ContextStrip {...profileProps} />
-          {searchNode}
+          <div className="focus-search" ref={focusSearchRef}>{searchNode}</div>
         </section>
 
         {trayBasketOpen && (

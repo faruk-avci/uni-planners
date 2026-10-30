@@ -23,7 +23,7 @@ function BasketTray({ language, basket, totalCredits, onRemoveCourse, freeDays, 
         >
           <span className="tray-count">{basket.length}</span>
           <span className="tray-basket-copy">
-            <strong>{tr('Sepet', 'Basket')}</strong>
+            <strong>{basketOpen ? tr('Sepeti kapat', 'Close basket') : tr('Sepeti aç', 'Open basket')}</strong>
             <span>{totalCredits} {tr('Kredi', 'ECTS')}</span>
           </span>
         </button>
