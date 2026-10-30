@@ -211,6 +211,23 @@ export const courseService = {
     }
   },
 
+  async getSurvey(university) {
+    const res = await fetch(API_BASE + '/api/survey/' + encodeURIComponent(university), { credentials: 'include' })
+    if (!res.ok) throw new Error('Survey could not be loaded')
+    return res.json()
+  },
+
+  async submitSurvey(university, answers, layout) {
+    const res = await fetch(API_BASE + '/api/survey/' + encodeURIComponent(university), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ answers, layout }),
+    })
+    const data = await res.json().catch(() => ({}))
+    return { ok: res.ok, status: res.status, error: data.error }
+  },
+
   async trackSiteEvent(category, action, label) {
     try {
       const res = await fetch(API_BASE + '/api/analytics/site-event', {

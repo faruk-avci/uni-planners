@@ -1,6 +1,7 @@
 import express from 'express'
 import { pool } from '../config/db.js'
 import { FACULTIES, PROGRAMS, PROGRAM_BY_ID } from '../config/programs.js'
+import { SURVEYS } from '../config/surveys.js'
 import { adminLogin, adminLogout, requireAdmin } from '../middleware/adminAuth.js'
 import { electiveKeyForLabel, parseCurriculumWorkbook, parseElectiveWorkbook } from '../services/curriculumWorkbook.js'
 import {
@@ -353,6 +354,91 @@ router.get('/analytics/summary', async (req, res) => {
   } catch (err) {
     console.error('GET /admin/analytics/summary error:', err.message)
     res.status(500).json({ error: 'Failed to load summary' })
+  }
+})
+
+// --- Survey results (anonymous) ---
+
+const surveyAnswerText = (question, value) => {
+  if (value === undefined || value === null) return ''
+  if (question.type === 'multi') {
+    const labels = (value.selected || []).map(key => question.options.find(option => option.value === key)?.tr || key)
+    if (value.other) labels.push(`Diğer: ${value.other}`)
+    return labels.join('; ')
+  }
+  return String(value)
+}
+
+const surveyRows = university => pool.query(
+  `SELECT answers, major_code, grade_level, layout, submitted_on
+     FROM survey_responses
+    WHERE university = $1
+    ORDER BY submitted_on DESC`,
+  [university]
+)
+
+const isoDate = value => value instanceof Date ? value.toISOString().slice(0, 10) : String(value || '')
+
+router.get('/survey/:university', async (req, res) => {
+  const survey = SURVEYS[req.params.university]
+  if (!survey) return res.status(404).json({ error: 'Survey not found' })
+  try {
+    const { rows } = await surveyRows(req.params.university)
+    const questions = survey.questions.map(question => {
+      const values = rows.map(row => row.answers?.[question.key]).filter(value => value !== undefined && value !== null)
+      if (question.type === 'scale') {
+        const counts = {}
+        for (let score = question.min; score <= question.max; score++) counts[score] = 0
+        values.forEach(value => { counts[value] = (counts[value] || 0) + 1 })
+        const average = values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : null
+        return { key: question.key, type: question.type, label: question.label.tr, min: question.min, max: question.max, answered: values.length, average, counts }
+      }
+      if (question.type === 'multi') {
+        const counts = Object.fromEntries(question.options.map(option => [option.value, 0]))
+        const other = []
+        values.forEach(value => {
+          (value.selected || []).forEach(key => { counts[key] = (counts[key] || 0) + 1 })
+          if (value.other) other.push(value.other)
+        })
+        return {
+          key: question.key, type: question.type, label: question.label.tr, answered: values.length,
+          options: question.options.map(option => ({ value: option.value, label: option.tr, count: counts[option.value] || 0 })),
+          other,
+        }
+      }
+      const answers = rows
+        .filter(row => row.answers?.[question.key])
+        .map(row => ({ text: row.answers[question.key], date: isoDate(row.submitted_on), major: row.major_code, grade: row.grade_level, layout: row.layout }))
+      return { key: question.key, type: question.type, label: question.label.tr, answered: answers.length, answers }
+    })
+    const byLayout = {}
+    rows.forEach(row => { const key = row.layout || 'unknown'; byLayout[key] = (byLayout[key] || 0) + 1 })
+    res.json({ university: req.params.university, total: rows.length, byLayout, questions })
+  } catch (err) {
+    console.error('GET /admin/survey error:', err.message)
+    res.status(500).json({ error: 'Survey results could not be loaded' })
+  }
+})
+
+router.get('/survey/:university/export.csv', async (req, res) => {
+  const survey = SURVEYS[req.params.university]
+  if (!survey) return res.status(404).json({ error: 'Survey not found' })
+  try {
+    const { rows } = await surveyRows(req.params.university)
+    const cell = value => `"${String(value ?? '').replace(/"/g, '""')}"`
+    const header = ['Tarih', 'Bölüm', 'Sınıf', 'Tasarım', ...survey.questions.map(question => question.label.tr)]
+    const lines = [header.map(cell).join(',')]
+    rows.forEach(row => {
+      const layout = row.layout === '2' ? 'Odak' : row.layout === '1' ? 'Klasik' : ''
+      lines.push([isoDate(row.submitted_on), row.major_code, row.grade_level, layout, ...survey.questions.map(question => surveyAnswerText(question, row.answers?.[question.key]))].map(cell).join(','))
+    })
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8')
+    res.setHeader('Content-Disposition', `attachment; filename="uniplanners-anket-${req.params.university}.csv"`)
+    // BOM so Excel opens the Turkish characters correctly.
+    res.send('﻿' + lines.join('\r\n'))
+  } catch (err) {
+    console.error('GET /admin/survey export error:', err.message)
+    res.status(500).json({ error: 'Survey export failed' })
   }
 })
 

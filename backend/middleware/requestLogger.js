@@ -120,6 +120,9 @@ function metadataFor(req, path) {
 }
 
 export function requestLogger(req, res, next) {
+  // Survey submissions are never logged: size, time and IP next to a
+  // submission could identify an otherwise anonymous answer.
+  if (req.method === 'POST' && req.originalUrl.split('?')[0].startsWith('/api/survey/')) return next()
   const startedAt = performance.now()
   const requestId = randomUUID()
   const path = req.originalUrl.split('?')[0]

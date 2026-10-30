@@ -26,6 +26,7 @@ import { scheduleImagePng } from './utils/scheduleImageSvg'
 import { recordGenerateSuccess, shouldQueueSurveyNudge, markSurveyNudgeShown, markSurveyNudgeDone } from './utils/surveyNudge'
 import { canonicalProgramCode, groupMajorOptions } from './data/programs'
 import LandingPage from './components/landing/LandingPage'
+import SurveyPage from './components/survey/SurveyPage'
 import { ContextStrip } from './components/profile/ProfileBar'
 import BasketTray from './components/layouts/BasketTray'
 import './components/layouts/layouts.css'
@@ -46,6 +47,7 @@ const routeFromLocation = () => {
   if (/^\/curriculum\/?$/.test(pathname)) return { page: 'curriculum', sharedId: '' }
   if (/^\/how-to\/?$/.test(pathname)) return { page: 'howto', sharedId: '' }
   if (/^\/ozyegin\/recap\/26-27-guz\/?$/.test(pathname)) return { page: 'recap', sharedId: '' }
+  if (/^\/ozyegin\/anket\/?$/.test(pathname)) return { page: 'survey', sharedId: '' }
   if (/^\/ozyegin\/?$/.test(pathname)) return { page: 'planner', sharedId: '' }
   // `/` and any university that has no planner yet land on the index.
   return { page: 'landing', sharedId: '' }
@@ -330,7 +332,7 @@ function App() {
   }, [mobileBasketOpen])
 
   const navigate = page => {
-    const path = page === 'curriculum' ? '/curriculum' : page === 'howto' ? '/how-to' : page === 'recap' ? '/ozyegin/recap/26-27-guz' : page === 'landing' ? '/' : '/ozyegin'
+    const path = page === 'curriculum' ? '/curriculum' : page === 'howto' ? '/how-to' : page === 'recap' ? '/ozyegin/recap/26-27-guz' : page === 'survey' ? '/ozyegin/anket' : page === 'landing' ? '/' : '/ozyegin'
     window.history.pushState(null, '', path)
     setSharedScheduleId('')
     setActivePage(page)
@@ -1526,7 +1528,7 @@ function App() {
         />
       )}
 
-      {activePage !== 'shared' && activePage !== 'recap' && !(activePage === 'planner' && layout !== '1') && (
+      {activePage !== 'shared' && activePage !== 'recap' && activePage !== 'survey' && !(activePage === 'planner' && layout !== '1') && (
         <ProfileBar
           language={language}
           majorLabel={selectedMajorLabel}
@@ -1541,7 +1543,7 @@ function App() {
         />
       )}
 
-      {activePage !== 'shared' && activePage !== 'recap' && majorPromptReason && (
+      {activePage !== 'shared' && activePage !== 'recap' && activePage !== 'survey' && majorPromptReason && (
         <MajorPrompt
           language={language}
           groups={majorGroups}
@@ -1574,6 +1576,8 @@ function App() {
         <HowToPage language={language} onNavigate={navigate} />
       ) : activePage === 'recap' ? (
         <RecapPage language={language} />
+      ) : activePage === 'survey' ? (
+        <SurveyPage language={language} university="ozyegin" layout={layout} onBack={() => navigate('planner')} />
       ) : (
       layout === '2' ? (
       <main className="main planner-focus">
@@ -1617,7 +1621,7 @@ function App() {
       )
       )}
 
-      {activePage !== 'shared' && activePage !== 'recap' && (
+      {activePage !== 'shared' && activePage !== 'recap' && activePage !== 'survey' && (
         <>
           <div className="mobile-basket-dock">
             <button
@@ -1712,7 +1716,7 @@ function App() {
         </>
       )}
 
-      <footer className={`footer ${activePage !== 'shared' && activePage !== 'recap' ? 'footer-mobile-basket' : ''}`}>
+      <footer className={`footer ${activePage !== 'shared' && activePage !== 'recap' && activePage !== 'survey' ? 'footer-mobile-basket' : ''}`}>
         <div className="container footer-content">
           <p className="footer-credit">
             UniPlanners · Designed and coded with <HeartIcon /> by{' '}

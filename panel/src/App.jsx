@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Analytics from './Analytics.jsx'
+import SurveyResults from './SurveyResults.jsx'
 
 const API = '/api/admin'
 const DEFAULT_SITE_SETTINGS = { mainFont: 'grotesk', catalogTerm: '2026-2027 Güz', surveyUrl: '', announcementUrl: '', catalogNotice: '', catalogNoticeUpdatedAt: '' }
@@ -275,6 +276,7 @@ function Dashboard({ onLogout }) {
           <button className="nav-active" onClick={() => document.getElementById('curriculum-management')?.scrollIntoView({ behavior: 'smooth' })}><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></svg>Müfredatlar</button>
           <button onClick={() => document.getElementById('site-settings')?.scrollIntoView({ behavior: 'smooth' })}><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6" /><line x1="4" y1="12" x2="20" y2="12" /><line x1="4" y1="18" x2="20" y2="18" /><circle cx="9" cy="6" r="2" fill="currentColor" /><circle cx="15" cy="12" r="2" fill="currentColor" /><circle cx="8" cy="18" r="2" fill="currentColor" /></svg>Site ayarları</button>
           <button onClick={() => document.getElementById('analytics')?.scrollIntoView({ behavior: 'smooth' })}><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="6" y1="20" x2="6" y2="12" /><line x1="12" y1="20" x2="12" y2="5" /><line x1="18" y1="20" x2="18" y2="14" /></svg>Analitik</button>
+          <button onClick={() => document.getElementById('survey-results')?.scrollIntoView({ behavior: 'smooth' })}><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" /><rect x="9" y="3" width="6" height="4" rx="1" /><path d="m9 14 2 2 4-4" /></svg>Anket</button>
         </nav>
         <div className="side-footer"><a href="https://uniplanners.org">Siteye git</a><button onClick={onLogout}>Çıkış yap</button></div>
       </aside>
@@ -381,6 +383,7 @@ function Dashboard({ onLogout }) {
         <CurriculumPreview curriculum={preview} onClose={() => setPreview(null)} />
 
         <Analytics />
+        <SurveyResults />
       </main>
     </div>
   )

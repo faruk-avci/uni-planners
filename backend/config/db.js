@@ -176,6 +176,26 @@ async function ensureSchema() {
   await pool.query(`CREATE INDEX IF NOT EXISTS server_request_logs_action_idx ON server_request_logs (event_action, created_at DESC)`);
   await pool.query(`CREATE INDEX IF NOT EXISTS server_request_logs_session_idx ON server_request_logs (session_id, created_at DESC)`);
   await pool.query(`CREATE INDEX IF NOT EXISTS server_request_logs_status_idx ON server_request_logs (status_code, created_at DESC)`);
+  // Anonymous survey: answers carry no session id, no IP and no time of day
+  // (see routes/surveyRoutes.js). Submissions only stop repeat answers.
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS survey_responses (
+      id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      university     VARCHAR(32) NOT NULL,
+      survey_version INTEGER NOT NULL,
+      answers        JSONB NOT NULL,
+      major_code     VARCHAR(32),
+      grade_level    VARCHAR(16),
+      layout         VARCHAR(8),
+      submitted_on   DATE NOT NULL DEFAULT CURRENT_DATE
+    )`);
+  await pool.query(`CREATE INDEX IF NOT EXISTS survey_responses_university_idx ON survey_responses (university, submitted_on)`);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS survey_submissions (
+      session_id UUID NOT NULL REFERENCES sessions(id) ON DELETE CASCADE,
+      university VARCHAR(32) NOT NULL,
+      PRIMARY KEY (session_id, university)
+    )`);
 }
 
 export { pool, ensureSchema };

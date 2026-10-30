@@ -21,6 +21,7 @@ import sharedScheduleRoutes from './routes/sharedScheduleRoutes.js';
 import sharePageRoutes from './routes/sharePageRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import degreeAuditRoutes from './routes/degreeAuditRoutes.js';
+import surveyRoutes from './routes/surveyRoutes.js';
 
 const app = express();
 const PORT = parseInt(process.env.PORT, 10) || 3001;
@@ -77,6 +78,7 @@ app.use('/api/dino', dinoRoutes);
 app.use('/api/shared-schedules', sharedScheduleRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/degree-audit', degreeAuditRoutes);
+app.use('/api/survey', surveyRoutes);
 
 // ─── Start ─────────────────────────────────────────────────────────
 let server;
