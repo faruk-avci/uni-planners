@@ -126,7 +126,7 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
     title: language === 'tr' ? 'Ders Ara' : 'Search Courses',
     placeholder: language === 'tr' ? 'Ders kodu yazın... (örn. EE 201)' : 'Type a course code... (e.g. EE 201)',
     search: language === 'tr' ? 'Ara' : 'Search',
-    term: catalogTerm || '2025-2026 Yaz',
+    term: catalogTerm || '2026-2027 Güz',
     addAll: language === 'tr' ? 'Tümünü Ekle' : 'Add All',
     removeCourse: language === 'tr' ? 'Dersi Çıkar' : 'Remove Course',
     showSections: language === 'tr' ? 'Şubeleri Göster' : 'Show Sections',

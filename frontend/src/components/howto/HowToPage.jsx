@@ -6,7 +6,6 @@ function HowToPage({ language, onNavigate }) {
   return (
     <main className="howto-page">
       <section className="howto-hero">
-        <span className="howto-eyebrow">UniPlanners</span>
         <h1>{tr('Nasıl Kullanılır?', 'How to Use')}</h1>
         <p>{tr('Derslerini seç, uygun programları oluştur ve sana en iyi gelen programı bul.', 'Choose your courses, generate valid schedules, and find the one that works best for you.')}</p>
         <button className="btn btn-primary" type="button" onClick={() => onNavigate('planner')}>

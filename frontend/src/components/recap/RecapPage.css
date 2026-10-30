@@ -26,8 +26,7 @@ h1, h2, h3, strong {
   color: var(--accent-primary); 
   font-size: var(--text-sm); 
   font-weight: 800; 
-  letter-spacing: 0.15em; 
-  text-transform: uppercase; 
+  letter-spacing: 0.15em;  
   margin-bottom: var(--space-3);
   padding: 4px 12px;
   background: var(--accent-soft);
@@ -146,8 +145,6 @@ h1, h2, h3, strong {
 .recap-stat-card span { 
   color: var(--text-primary); 
   font-size: var(--text-sm); 
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
   font-weight: 700;
 }
 
@@ -254,15 +251,12 @@ h1, h2, h3, strong {
   flex-direction: column;
   background: var(--bg-secondary);
   border: 1px solid var(--border-secondary);
-  border-left: 4px solid var(--accent-primary);
   border-radius: var(--radius-lg);
   padding: var(--space-4) var(--space-5);
   gap: var(--space-4);
-  transition: transform 0.2s ease;
 }
 
 .recap-q-block:hover {
-  transform: translateX(4px);
   background: var(--bg-tertiary);
 }
 
@@ -283,7 +277,6 @@ h1, h2, h3, strong {
 .recap-q-asked strong {
   font-size: 0.75rem;
   color: var(--accent-primary);
-  text-transform: uppercase;
   letter-spacing: 0.1em;
   font-weight: 800;
 }
@@ -318,7 +311,6 @@ h1, h2, h3, strong {
   color: var(--text-primary);
   font-weight: 700;
   margin-top: 4px;
-  text-transform: uppercase;
 }
 
 .recap-favorites-box {

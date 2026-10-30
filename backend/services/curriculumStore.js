@@ -8,11 +8,11 @@ const CURRICULUM_DIR = path.join(DATA_ROOT, 'curriculums')
 const ELECTIVE_DIR = path.join(DATA_ROOT, 'elective-pools')
 const SITE_SETTINGS_FILE = path.join(DATA_ROOT, 'site-settings.json')
 const SAFE_KEY = /^[a-z0-9][a-z0-9_-]{0,79}$/
-const SITE_FONTS = new Set(['system', 'inter', 'arial', 'rounded'])
+const SITE_FONTS = new Set(['grotesk', 'system', 'inter', 'arial', 'rounded'])
 
 export const DEFAULT_SITE_SETTINGS = {
-  mainFont: 'system',
-  catalogTerm: process.env.CATALOG_TERM || '2025-2026 Yaz',
+  mainFont: 'grotesk',
+  catalogTerm: process.env.CATALOG_TERM || '2026-2027 Güz',
   surveyUrl: '',
   announcementUrl: '',
   catalogNotice: '',

@@ -30,6 +30,8 @@ body {
               color var(--duration-slow) var(--ease-out);
   min-height: 100vh;
   overflow-x: hidden;
+  caret-color: var(--accent-primary);
+  scrollbar-color: var(--border-accent) transparent;
 }
 
 #root {
@@ -42,16 +44,9 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-weight: var(--weight-semibold);
   line-height: var(--leading-tight);
+  letter-spacing: -0.012em;
   color: var(--text-primary);
-}
-
-[data-palette="iris"] h1,
-[data-palette="iris"] h2,
-[data-palette="iris"] h3,
-[data-palette="iris"] h4,
-[data-palette="iris"] h5,
-[data-palette="iris"] h6 {
-  letter-spacing: -0.025em;
+  text-wrap: balance;
 }
 
 h1 { font-size: var(--text-3xl); }
@@ -73,6 +68,11 @@ a {
 
 a:hover {
   color: var(--accent-primary-hover);
+}
+
+a:hover,
+a:focus-visible {
+  text-underline-offset: 0.2em;
 }
 
 /* ── Buttons (Reset) ── */
@@ -128,13 +128,8 @@ select {
 
 /* ── Selection ── */
 ::selection {
-  background-color: var(--blue-100);
-  color: var(--ink-900);
-}
-
-[data-theme="dark"] ::selection {
-  background-color: var(--blue-700);
-  color: #fff;
+  background-color: color-mix(in srgb, var(--accent-primary), transparent 78%);
+  color: var(--text-primary);
 }
 
 /* ── Scrollbar ── */
@@ -148,20 +143,12 @@ select {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--gray-300);
+  background: var(--border-accent);
   border-radius: var(--radius-full);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--gray-400);
-}
-
-[data-theme="dark"] ::-webkit-scrollbar-thumb {
-  background: var(--gray-700);
-}
-
-[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
-  background: var(--gray-600);
+  background: var(--text-tertiary);
 }
 
 /* ── Focus Visible ── */
@@ -169,6 +156,20 @@ select {
   outline: 2px solid var(--accent-primary);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
+}
+
+/* ── Tabular numerals where figures line up ──
+   Scoped rather than global: some faces also make . and : tabular under tnum,
+   which opens visible gaps before punctuation in running text. */
+time,
+table td,
+.grid-time,
+.section-times,
+.credits-value,
+.basket-count,
+.course-credits,
+.sections-toggle-count {
+  font-variant-numeric: tabular-nums;
 }
 
 /* ── Utilities ── */

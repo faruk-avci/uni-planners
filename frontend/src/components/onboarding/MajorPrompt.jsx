@@ -24,7 +24,6 @@ function MajorPrompt({ language, groups, selectedMajor, onSelect, onClose }) {
       <section className="major-prompt" role="dialog" aria-modal="true" aria-labelledby="major-prompt-title">
         <header className="major-prompt-header">
           <div>
-            <span className="major-prompt-eyebrow">{tr('Akademik profil', 'Academic profile')}</span>
             <h2 id="major-prompt-title">{tr('Bölümünüzü seçin', 'Select your major')}</h2>
           </div>
           {onClose && (
@@ -47,7 +46,7 @@ function MajorPrompt({ language, groups, selectedMajor, onSelect, onClose }) {
                     onClick={() => onSelect(program.value)}
                   >
                     <span className="major-prompt-program-label" title={program.title || program.label}>{program.title || program.label}</span>
-                    {selectedMajor === program.value && <span className="major-prompt-check" aria-hidden="true">✓</span>}
+                    {selectedMajor === program.value && <svg className="major-prompt-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12" /></svg>}
                   </button>
                 ))}
               </div>

@@ -2,12 +2,13 @@ import { useEffect, useRef, useState } from 'react'
 import './Header.css'
 
 const COLOR_THEMES = [
-  { id: 'iris', tr: 'İris', en: 'Iris', color: '#6658e8' },
-  { id: 'neutral', tr: 'Obsidyen', en: 'Obsidian', color: '#18181b' },
-  { id: 'ocean', tr: 'Ege', en: 'Aegean', color: '#2563eb' },
-  { id: 'forest', tr: 'Kazdağları', en: 'Mount Ida', color: '#15803d' },
-  { id: 'violet', tr: 'Mor Salkım', en: 'Wisteria', color: '#7c3aed' },
-  { id: 'coral', tr: 'Günbatımı', en: 'Sunset', color: '#e05a47' },
+  { id: 'petrol', tr: 'Petrol', en: 'Petrol', color: '#1d5e66' },
+  { id: 'iris', tr: 'İris', en: 'Iris', color: '#3b3f9a' },
+  { id: 'neutral', tr: 'Obsidyen', en: 'Obsidian', color: '#23262b' },
+  { id: 'ocean', tr: 'Ege', en: 'Aegean', color: '#1f5a96' },
+  { id: 'forest', tr: 'Kazdağları', en: 'Mount Ida', color: '#2f5f3c' },
+  { id: 'violet', tr: 'Mor Salkım', en: 'Wisteria', color: '#64459a' },
+  { id: 'coral', tr: 'Günbatımı', en: 'Sunset', color: '#a8462a' },
 ]
 
 function Header({
@@ -143,7 +144,11 @@ function Header({
                     >
                       <span className={`palette-swatch palette-swatch-${option.id}`} style={{ '--palette-swatch': option.color }} />
                       <span>{language === 'tr' ? option.tr : option.en}</span>
-                      {colorTheme === option.id && <span className="palette-check" aria-hidden="true">✓</span>}
+                      {colorTheme === option.id && (
+                        <svg className="palette-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                      )}
                     </button>
                   ))}
                 </div>

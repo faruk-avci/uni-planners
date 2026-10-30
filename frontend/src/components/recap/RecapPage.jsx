@@ -119,7 +119,6 @@ export default function RecapPage({ language }) {
   return (
     <main className="recap-page">
       <section className="recap-hero">
-        <span className="recap-eyebrow">UniPlanners</span>
         <h1>{tr('2026-2027 Güz Ders Kayıt Dönemi Özeti', '2026-2027 Fall Course Registration Recap')}</h1>
         <p>
           {tr(

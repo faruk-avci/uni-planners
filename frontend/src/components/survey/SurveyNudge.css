@@ -9,7 +9,7 @@
   padding: var(--space-4) var(--space-5);
   padding-right: calc(var(--space-5) + var(--space-4));
   background: var(--bg-secondary);
-  border: 1px solid var(--ozu-burgundy);
+  border: 1px solid var(--highlight);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
   animation: slideUp var(--duration-normal) var(--ease-out);

@@ -155,7 +155,7 @@ function SchedulePreview({ language, schedules = [], current = 0, onPrev, onNext
           {sharing
             ? (language === 'tr' ? 'Paylaşım hazırlanıyor…' : 'Creating share…')
             : shareCopied
-              ? (language === 'tr' ? 'Bağlantı Kopyalandı ✓' : 'Link Copied ✓')
+              ? (language === 'tr' ? 'Bağlantı kopyalandı' : 'Link copied')
               : <>{language === 'tr' ? 'Programı Paylaş' : 'Share Schedule'} <span className="badge badge-new">{language === 'tr' ? 'Yeni' : 'New'}</span></>}
         </button>
         <button className="btn btn-secondary btn-sm" onClick={onExportCalendar} disabled={!hasData || exportingCalendar}>

@@ -36,7 +36,6 @@ function DegreeAuditUpload({ language, result, onResult, onClose }) {
       <section className="audit-upload-panel" role="dialog" aria-modal="true" aria-labelledby="audit-upload-title">
         <header className="audit-upload-header">
           <div>
-            <span className="audit-upload-eyebrow">{tr('Gizli özellik', 'Hidden feature')}</span>
             <h2 id="audit-upload-title">{tr('Mezuniyet Denetim Raporu', 'Degree Audit Report')}</h2>
             <p>{tr(
               'PDF yalnızca sunucuda geçici olarak işlenir; hiçbir yerde saklanmaz. Sonuç sadece bu tarayıcıda tutulur.',

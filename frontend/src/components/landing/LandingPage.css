@@ -1,0 +1,456 @@
+/* ── Landing: a printed university index on registrar paper ──
+   The university names are the display type; everything else stays quiet so
+   the list reads as the page's one action. */
+
+.landing {
+  --landing-gutter: clamp(16px, 4vw, 56px);
+  --landing-max: 1320px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+}
+
+.landing main { flex: 1; }
+
+.landing-bar,
+
+.landing-index,
+.landing-proof,
+.landing-footer {
+  width: min(100% - 2 * var(--landing-gutter), var(--landing-max));
+  margin-inline: auto;
+}
+
+/* ── Top bar ── */
+.landing-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-5) 0;
+}
+
+.landing-wordmark {
+  color: var(--text-primary);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  letter-spacing: -0.02em;
+}
+
+
+.landing-wordmark:hover { color: var(--text-primary); }
+
+.landing-bar-actions {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.landing-icon-btn {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  color: var(--text-secondary);
+  border-radius: var(--radius-md);
+  transition: color var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out);
+}
+
+.landing-icon-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+}
+
+.landing-lang {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+}
+
+/* ── University index: the names are the page ── */
+.landing-index {
+  padding: clamp(24px, 6vh, 72px) 0 0;
+}
+
+.landing-intro {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 40ch);
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--space-4) var(--space-12);
+  padding-bottom: var(--space-5);
+  border-bottom: 2px solid var(--text-primary);
+}
+
+.landing-intro h1 {
+  font-size: clamp(1.5rem, 2.6vw, 2.25rem);
+  font-weight: var(--weight-bold);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.landing-intro p {
+  color: var(--text-secondary);
+  font-size: var(--text-md);
+  line-height: 1.5;
+}
+
+.landing-uni {
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.landing-uni-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 13rem;
+  align-items: end;
+  gap: var(--space-8);
+  padding: clamp(16px, 2vw, 30px) 0 clamp(12px, 1.6vw, 22px);
+  color: var(--text-primary);
+}
+
+.landing-uni-name {
+  display: flex;
+  align-items: center;
+  gap: 0.12em;
+  min-width: 0;
+  font-size: clamp(3rem, 9vw, 7.5rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+  transition: color 240ms var(--ease-out);
+}
+
+/* The arrow belongs to the name at display scale; it fades in on intent and
+   never moves, so the row stays still. */
+.landing-arrow {
+  flex: 0 0 auto;
+  width: 0.62em;
+  height: 0.62em;
+  margin-top: 0.06em;
+  opacity: 0;
+  transition: opacity 240ms var(--ease-out);
+}
+
+.landing-uni-live .landing-uni-row:hover .landing-uni-name,
+.landing-uni-live .landing-uni-row:focus-visible .landing-uni-name {
+  color: var(--accent-primary);
+}
+
+.landing-uni-live .landing-uni-row:hover .landing-arrow,
+.landing-uni-live .landing-uni-row:focus-visible .landing-arrow {
+  opacity: 1;
+}
+
+.landing-uni-live .landing-uni-row:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+}
+
+.landing-uni-aside {
+  display: grid;
+  gap: 2px;
+  padding-bottom: 0.4em;
+  font-size: var(--text-sm);
+  line-height: 1.4;
+  text-align: right;
+}
+
+.landing-uni-full {
+  color: var(--text-primary);
+  font-weight: var(--weight-medium);
+}
+
+.landing-uni-city {
+  color: var(--text-tertiary);
+}
+
+.landing-uni-status {
+  justify-self: end;
+  margin-top: var(--space-2);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+}
+
+.landing-uni-live .landing-uni-status {
+  color: var(--text-inverse);
+  background: var(--accent-primary);
+}
+
+/* Not open yet: the same name, drawn in outline only. */
+[data-theme="dark"] .landing-uni-soon .landing-uni-name {
+  -webkit-text-stroke-color: color-mix(in srgb, var(--text-primary) 48%, var(--bg-primary));
+}
+
+.landing-uni-soon .landing-uni-row {
+  cursor: default;
+}
+
+.landing-uni-soon .landing-uni-name {
+  color: transparent;
+  -webkit-text-stroke: 1.5px color-mix(in srgb, var(--text-primary) 38%, var(--bg-primary));
+}
+
+.landing-uni-soon .landing-uni-full {
+  color: var(--text-secondary);
+}
+
+.landing-uni-soon .landing-uni-status {
+  color: var(--text-secondary);
+  background: var(--bg-tertiary);
+}
+
+/* ── Proof: how it works + example week ── */
+.landing-proof {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(32px, 6vw, 96px);
+  align-items: start;
+  padding: clamp(48px, 8vh, 96px) 0;
+}
+
+.landing-proof h2 {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: var(--weight-bold);
+  letter-spacing: -0.03em;
+}
+
+.landing-steps {
+  display: grid;
+  gap: var(--space-6);
+  margin-top: var(--space-8);
+  counter-reset: step;
+}
+
+.landing-steps li {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  column-gap: var(--space-3);
+  counter-increment: step;
+}
+
+.landing-steps li::before {
+  content: counter(step);
+  grid-row: span 2;
+  color: var(--accent-primary);
+  font-size: var(--text-md);
+  font-weight: var(--weight-bold);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+}
+
+.landing-steps h3 {
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  line-height: 1.5;
+}
+
+.landing-steps p {
+  max-width: 44ch;
+  margin-top: 2px;
+  font-size: var(--text-base);
+}
+
+.landing-demo {
+  margin: 0;
+}
+
+.landing-demo-grid {
+  display: grid;
+  grid-template-columns: 3.25rem repeat(5, minmax(0, 1fr));
+  grid-template-rows: auto repeat(8, 2.75rem);
+  gap: 1px;
+  overflow: hidden;
+  background: var(--border-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.landing-demo-corner,
+.landing-demo-day,
+.landing-demo-hour {
+  background: var(--bg-secondary);
+}
+
+.landing-demo-day {
+  padding: var(--space-2) 0;
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  text-align: center;
+}
+
+.landing-demo-hour {
+  grid-column: 1;
+  padding: 4px var(--space-2) 0 0;
+  color: var(--text-tertiary);
+  font-size: 11px;
+  text-align: right;
+}
+
+/* Empty cells: every day column gets a plain surface behind the blocks. */
+.landing-demo-grid::before {
+  content: '';
+  grid-column: 2 / -1;
+  grid-row: 2 / -1;
+  background:
+    repeating-linear-gradient(to bottom, transparent 0 calc(2.75rem), var(--border-secondary) calc(2.75rem) calc(2.75rem + 1px)),
+    var(--bg-secondary);
+}
+
+.landing-demo-block {
+  --tone: var(--accent-primary);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 1px;
+  margin: 2px;
+  padding: 6px 8px;
+  color: color-mix(in srgb, var(--tone) 70%, var(--text-primary));
+  background: color-mix(in srgb, var(--tone) 15%, var(--bg-secondary));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tone) 32%, transparent);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  font-size: 11px;
+  line-height: 1.25;
+  animation: landingSettle 640ms var(--ease-out) both;
+  animation-delay: calc(140ms + var(--i, 0) * 90ms);
+}
+
+.landing-demo-block strong {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+}
+
+.landing-tone-accent { --tone: var(--accent-primary); }
+.landing-tone-info { --tone: var(--info); }
+.landing-tone-success { --tone: var(--success); }
+.landing-tone-warning { --tone: var(--warning); }
+
+.landing-demo-conflict {
+  --tone: var(--error);
+  z-index: 2;
+  margin-left: 18%;
+  background: color-mix(in srgb, var(--bg-secondary) 88%, transparent);
+  box-shadow: inset 0 0 0 1px var(--error);
+  border: 0;
+  color: var(--error);
+  text-decoration: line-through;
+  animation: landingDrop 900ms var(--ease-out) 900ms both;
+}
+
+.landing-demo-conflict em {
+  font-style: normal;
+  font-weight: var(--weight-semibold);
+  text-decoration: none;
+}
+
+.landing-demo figcaption {
+  margin-top: var(--space-3);
+  color: var(--text-tertiary);
+  font-size: var(--text-xs);
+}
+
+@keyframes landingSettle {
+  from { opacity: 0.25; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes landingDrop {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0.55; }
+}
+
+/* ── Footer ── */
+.landing-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-8);
+  padding: var(--space-6) 0 var(--space-8);
+  border-top: 1px solid var(--border-primary);
+  color: var(--text-tertiary);
+  font-size: var(--text-xs);
+}
+
+.landing-footer p {
+  max-width: 70ch;
+  color: inherit;
+  line-height: 1.55;
+}
+
+.landing-credit a { color: var(--text-primary); }
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .landing-intro {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .landing-uni-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2);
+  }
+
+  .landing-uni-aside {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 var(--space-2);
+    padding-bottom: 0;
+    text-align: left;
+  }
+
+  .landing-uni-city::before {
+    content: '· ';
+  }
+
+  .landing-uni-status {
+    margin: 0 0 0 auto;
+  }
+
+  .landing-proof {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 540px) {
+  .landing-uni-name {
+    font-size: clamp(2.75rem, 15vw, 4rem);
+  }
+
+  .landing-uni-soon .landing-uni-name {
+    -webkit-text-stroke-width: 1.2px;
+  }
+
+  .landing-demo-grid {
+    grid-template-columns: 2.6rem repeat(5, minmax(0, 1fr));
+    grid-template-rows: auto repeat(8, 2.4rem);
+  }
+
+  .landing-demo-grid::before {
+    background:
+      repeating-linear-gradient(to bottom, transparent 0 calc(2.4rem), var(--border-secondary) calc(2.4rem) calc(2.4rem + 1px)),
+      var(--bg-secondary);
+  }
+
+  .landing-demo-block {
+    padding: 4px 5px;
+    font-size: 10px;
+  }
+
+  .landing-demo-block strong { font-size: 10px; }
+  .landing-demo-conflict em { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-demo-block,
+  .landing-demo-conflict { animation: none; }
+  .landing-demo-conflict { opacity: 0.55; }
+  .landing-uni-name,
+  .landing-arrow { transition: none; }
+}

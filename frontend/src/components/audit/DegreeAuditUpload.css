@@ -5,8 +5,7 @@
   display: grid;
   place-items: center;
   padding: var(--space-5);
-  background: rgba(9, 9, 11, .56);
-  backdrop-filter: blur(6px);
+  background: rgba(28, 20, 16, .5);
   animation: fadeIn var(--duration-fast) var(--ease-out);
 }
 
@@ -34,8 +33,6 @@
   color: var(--accent-primary);
   font-size: 10px;
   font-weight: var(--weight-bold);
-  letter-spacing: .08em;
-  text-transform: uppercase;
 }
 
 .audit-upload-header h2 {

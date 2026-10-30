@@ -408,7 +408,6 @@ function CurriculumPage({ language, onAddCourse, major, auditResult }) {
           {auditActive && (
             <section className="curriculum-audit-summary">
               <header>
-                <span className="curriculum-audit-eyebrow">{tr('Mezuniyet denetimi', 'Degree audit')}</span>
                 <h3>{tr('Seçmeli ilerlemesi', 'Elective progress')}</h3>
               </header>
               <div className="curriculum-audit-types">
@@ -502,7 +501,6 @@ function CurriculumPage({ language, onAddCourse, major, auditResult }) {
               <section className="elective-modal" role="dialog" aria-modal="true" aria-labelledby="elective-modal-title">
                 <header className="elective-modal-header">
                   <div>
-                    <span className="elective-modal-eyebrow">{tr('Seçmeli ders havuzu', 'Elective course pool')}</span>
                     <h2 id="elective-modal-title">{electiveLabel(modalElectiveType)}</h2>
                     <p>{modalCourses.length} {tr('ders', 'courses')}</p>
                   </div>

@@ -3,7 +3,7 @@ import './ProfileBar.css'
 
 const CATALOG_NOTICE_DISMISSED_KEY = 'uniplanner_catalog_notice_dismissed_version'
 
-function ProfileBar({ language, majorLabel, grade, onMajorClick, onGradeChange, announcementUrl, surveyUrl, catalogNotice, catalogNoticeUpdatedAt }) {
+function ProfileBar({ language, majorLabel, grade, onMajorClick, onUniversityClick, onGradeChange, announcementUrl, surveyUrl, catalogNotice, catalogNoticeUpdatedAt }) {
   const tr = (trText, enText) => language === 'tr' ? trText : enText
   // Dismissal is keyed to *which* notice was dismissed (its updatedAt
   // timestamp), not just a yes/no flag -- so publishing a new notice from
@@ -28,30 +28,79 @@ function ProfileBar({ language, majorLabel, grade, onMajorClick, onGradeChange, 
     ? new Date(catalogNoticeUpdatedAt).toLocaleDateString(language === 'tr' ? 'tr-TR' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' })
     : ''
 
+  const notices = []
+  if (noticeVisible) {
+    notices.push({
+      key: 'catalog',
+      tone: 'info',
+      icon: 'info',
+      body: (
+        <>
+          {catalogNotice}
+          {lastUpdatedLabel && <span className="notice-meta"> · {tr('güncellendi', 'updated')} {lastUpdatedLabel}</span>}
+        </>
+      ),
+      onDismiss: dismissNotice,
+    })
+  }
+  // One slot: a catalog notice takes the place of the regular links (official
+  // site, survey) until it is dismissed, then those links come back.
+  if (!noticeVisible && announcementUrl) {
+    notices.push({
+      key: 'announcement',
+      tone: 'warning',
+      icon: 'megaphone',
+      body: tr('Bu site resmi ders kayıt sitesi değildir. Resmi duyurular ve ders kaydı için:', 'This is not the official course registration site. For official announcements and registration:'),
+      link: { href: announcementUrl, label: tr('Resmi siteye git', 'Go to the official site'), external: true },
+    })
+  }
+  if (!noticeVisible && surveyUrl) {
+    notices.push({
+      key: 'survey',
+      tone: 'neutral',
+      icon: 'survey',
+      body: tr('Lütfen anketi doldurmayı unutmayın.', 'Please don’t forget to fill out our survey.'),
+      link: { href: surveyUrl, label: tr('Ankete git', 'Go to survey'), external: true },
+    })
+  }
+
   return (
     <>
-    <section className="profile-bar" aria-label={tr('Akademik profil', 'Academic profile')}>
-      <div className="profile-university">
-        <span className="profile-university-mark" aria-hidden="true">Ö</span>
-        <span>
-          <small>{tr('Üniversite', 'University')}</small>
-          <strong>{tr('Özyeğin Üniversitesi', 'Özyeğin University')}</strong>
-        </span>
-      </div>
-
-      <div className="profile-fields">
-        <button className="profile-field profile-major-field" type="button" onClick={onMajorClick}>
-          <span>
-            <small>{tr('Bölümünüz', 'Your major')}</small>
-            <strong>{majorLabel || tr('Bölümünüzü seçin', 'Select your major')}</strong>
+      <nav className="context-strip" aria-label={tr('Akademik profil', 'Academic profile')}>
+        <a
+          className="context-segment context-university"
+          href="/"
+          title={tr('Üniversiteyi değiştir', 'Change university')}
+          onClick={event => {
+            if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return
+            event.preventDefault()
+            onUniversityClick()
+          }}
+        >
+          <span className="context-mark" aria-hidden="true">Ö</span>
+          <span className="context-copy">
+            <small>{tr('Üniversite', 'University')}</small>
+            <strong>{tr('Özyeğin Üniversitesi', 'Özyeğin University')}</strong>
           </span>
-          <span className="profile-field-arrow" aria-hidden="true">›</span>
+          <span className="context-action">{tr('Değiştir', 'Change')}</span>
+        </a>
+
+        <ContextDivider />
+
+        <button className="context-segment context-major" type="button" onClick={onMajorClick}>
+          <span className="context-copy">
+            <small>{tr('Bölüm', 'Major')}</small>
+            <strong className={majorLabel ? '' : 'context-placeholder'}>{majorLabel || tr('Bölümünü seç', 'Select your major')}</strong>
+          </span>
+          <svg className="context-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6" /></svg>
         </button>
 
-        <label className="profile-field profile-grade-field">
-          <span>
-            <small>{tr('Sınıfınız', 'Your year')}</small>
-            <select value={grade} onChange={event => onGradeChange(event.target.value)}>
+        <ContextDivider />
+
+        <label className="context-segment context-grade">
+          <span className="context-copy">
+            <small>{tr('Sınıf', 'Year')}</small>
+            <select value={grade} onChange={event => onGradeChange(event.target.value)} className={grade ? '' : 'context-placeholder'}>
               <option value="">{tr('İsteğe bağlı', 'Optional')}</option>
               <option value="prep">{tr('Hazırlık', 'Preparatory')}</option>
               <option value="1">{tr('1. sınıf', 'Year 1')}</option>
@@ -60,50 +109,55 @@ function ProfileBar({ language, majorLabel, grade, onMajorClick, onGradeChange, 
               <option value="4">{tr('4. sınıf', 'Year 4')}</option>
             </select>
           </span>
-          <span className="profile-select-arrow" aria-hidden="true">⌄</span>
+          <svg className="context-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
         </label>
-      </div>
-    </section>
-    {noticeVisible ? (
-      <div className="profile-notice-bar">
-        <span aria-hidden="true">ℹ️</span>
-        <span>{catalogNotice}</span>
-        <button
-          type="button"
-          className="profile-notice-close"
-          onClick={dismissNotice}
-          aria-label={tr('Kapat', 'Close')}
-        >
-          ×
-        </button>
-      </div>
-    ) : (announcementUrl || surveyUrl || lastUpdatedLabel) && (
-      <div className="profile-links">
-        {announcementUrl && (
-          <a href={announcementUrl} target="_blank" rel="noopener noreferrer" className="profile-link profile-link-announcement">
-            <span aria-hidden="true">📢</span>
-            <span>
-              {language === 'tr' ? (
-                <>Bu site resmi ders kayıt sitesi değildir — resmi duyurular ve ders kaydı için <span className="profile-link-emphasis">tıklayın <span aria-hidden="true">🔗</span></span></>
-              ) : (
-                <>This is not the official course registration site — <span className="profile-link-emphasis">click here <span aria-hidden="true">🔗</span></span> for official announcements and registration</>
+      </nav>
+
+      {notices.length > 0 && (
+        <div className="notice-rail">
+          {notices.map(notice => (
+            <div key={notice.key} className={`notice notice-${notice.tone}`} role={notice.tone === 'info' ? 'status' : undefined}>
+              <NoticeIcon name={notice.icon} />
+              <p className="notice-body">
+                {notice.body}
+                {notice.link && (
+                  <>
+                    {' '}
+                    <a href={notice.link.href} target={notice.link.external ? '_blank' : undefined} rel={notice.link.external ? 'noopener noreferrer' : undefined} className="notice-link">
+                      {notice.link.label}
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg>
+                    </a>
+                  </>
+                )}
+              </p>
+              {notice.onDismiss && (
+                <button type="button" className="notice-close" onClick={notice.onDismiss} aria-label={tr('Kapat', 'Close')}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+                </button>
               )}
-            </span>
-          </a>
-        )}
-        {surveyUrl && (
-          <a href={surveyUrl} target="_blank" rel="noopener noreferrer" className="profile-link profile-link-survey">
-            <span>{tr('Lütfen anketi doldurmayı unutmayın', 'Please don’t forget to fill out our survey')} <strong>{tr('→ Ankete git', '→ Go to survey')}</strong></span>
-          </a>
-        )}
-        {lastUpdatedLabel && (
-          <span className="profile-notice-updated">
-            {tr('Katalog son güncelleme:', 'Catalog last updated:')} {lastUpdatedLabel}
-          </span>
-        )}
-      </div>
-    )}
+            </div>
+          ))}
+        </div>
+      )}
     </>
+  )
+}
+
+function ContextDivider() {
+  return <span className="context-divider" aria-hidden="true" />
+}
+
+const NOTICE_ICON_PATHS = {
+  info: <><circle cx="12" cy="12" r="9" /><path d="M12 11v5" /><path d="M12 8h.01" /></>,
+  megaphone: <><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z" /><path d="M15.5 8.5a5 5 0 0 1 0 7" /><path d="M18.5 5.5a9 9 0 0 1 0 13" /></>,
+  survey: <><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" /><rect x="9" y="3" width="6" height="4" rx="1" /><path d="m9 14 2 2 4-4" /></>,
+}
+
+function NoticeIcon({ name }) {
+  return (
+    <svg className="notice-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {NOTICE_ICON_PATHS[name]}
+    </svg>
   )
 }
 

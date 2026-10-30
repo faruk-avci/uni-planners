@@ -26,6 +26,7 @@ import { courseService } from './services/courseService'
 import { scheduleImagePng } from './utils/scheduleImageSvg'
 import { recordGenerateSuccess, shouldQueueSurveyNudge, markSurveyNudgeShown, markSurveyNudgeDone } from './utils/surveyNudge'
 import { canonicalProgramCode, groupMajorOptions } from './data/programs'
+import LandingPage from './components/landing/LandingPage'
 
 const isUndergraduateMajor = value => Boolean(value && !['none', 'master', 'doctorate'].includes(value))
 const sharedIdFromPath = pathname => String(pathname || '').match(/^\/share\/([A-Za-z0-9]{8})\/?$/)?.[1] || ''
@@ -43,16 +44,20 @@ const routeFromLocation = () => {
   if (/^\/curriculum\/?$/.test(pathname)) return { page: 'curriculum', sharedId: '' }
   if (/^\/how-to\/?$/.test(pathname)) return { page: 'howto', sharedId: '' }
   if (/^\/ozyegin\/recap\/26-27-guz\/?$/.test(pathname)) return { page: 'recap', sharedId: '' }
-  return { page: 'planner', sharedId: '' }
+  if (/^\/ozyegin\/?$/.test(pathname)) return { page: 'planner', sharedId: '' }
+  // `/` and any university that has no planner yet land on the index.
+  return { page: 'landing', sharedId: '' }
 }
-const PUBLIC_COLOR_THEMES = new Set(['iris', 'neutral', 'ocean', 'forest', 'violet', 'coral'])
+const PUBLIC_COLOR_THEMES = new Set(['petrol', 'iris', 'neutral', 'ocean', 'forest', 'violet', 'coral'])
+const DEFAULT_COLOR_THEME = 'petrol'
 const FAVICON_COLORS = {
-  iris: '#6658e8',
-  neutral: '#18181b',
-  ocean: '#2563eb',
-  forest: '#15803d',
-  violet: '#7c3aed',
-  coral: '#d94f3d',
+  petrol: '#1d5e66',
+  iris: '#3b3f9a',
+  neutral: '#23262b',
+  ocean: '#1f5a96',
+  forest: '#2f5f3c',
+  violet: '#64459a',
+  coral: '#a8462a',
 }
 const AUTO_COREQ_ADD_SOURCES = new Set(['fitting', 'curriculum', 'curriculum_elective', 'elective_popup'])
 const ENGLISH_DAY_NAMES = {
@@ -63,15 +68,31 @@ const ENGLISH_DAY_NAMES = {
   Cuma: 'Friday',
 }
 
+function HeartIcon() {
+  return (
+    <svg className="footer-heart" width="12" height="12" viewBox="0 0 24 24" role="img" aria-label="love">
+      <path fill="currentColor" d="M12 21s-7.5-4.6-9.6-9.3C.9 8.4 2.9 4.5 6.6 4.5c2.2 0 3.6 1.2 4.4 2.5.8-1.3 2.2-2.5 4.4-2.5 3.7 0 5.7 3.9 4.2 7.2C19.5 16.4 12 21 12 21z" />
+    </svg>
+  )
+}
+
 function App() {
   const initialRoute = useRef(routeFromLocation()).current
   const [language, setLanguage] = useState('tr')
-  const [siteSettings, setSiteSettings] = useState({ mainFont: 'system', catalogTerm: '2025-2026 Yaz', surveyUrl: '', announcementUrl: '', catalogNotice: '', catalogNoticeUpdatedAt: '' })
+  const [siteSettings, setSiteSettings] = useState({ mainFont: 'grotesk', catalogTerm: '2026-2027 Güz', surveyUrl: '', announcementUrl: '', catalogNotice: '', catalogNoticeUpdatedAt: '' })
   const appVersionRef = useRef(null)
   const [disclaimerKey, setDisclaimerKey] = useState(0)
   const [colorTheme, setColorTheme] = useState(() => {
     const saved = localStorage.getItem('uniplanner_color_theme')
-    return PUBLIC_COLOR_THEMES.has(saved) ? saved : 'iris'
+    // Iris used to be the default and was written back on every visit, so a
+    // stored 'iris' almost never means a deliberate pick. Move those visitors
+    // to the new default once; anyone choosing Iris again afterwards keeps it.
+    if (saved === 'iris' && !localStorage.getItem('uniplanner_palette_v2')) {
+      localStorage.setItem('uniplanner_palette_v2', '1')
+      return DEFAULT_COLOR_THEME
+    }
+    localStorage.setItem('uniplanner_palette_v2', '1')
+    return PUBLIC_COLOR_THEMES.has(saved) ? saved : DEFAULT_COLOR_THEME
   })
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem('uniplanner_dark_mode')
@@ -226,7 +247,8 @@ function App() {
   }, [])
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-site-font', siteSettings.mainFont || 'system')
+    // VITE_SITE_FONT_OVERRIDE is a local-preview aid only; production leaves it unset.
+    document.documentElement.setAttribute('data-site-font', import.meta.env.VITE_SITE_FONT_OVERRIDE || siteSettings.mainFont || 'system')
   }, [siteSettings.mainFont])
 
   useEffect(() => {
@@ -234,7 +256,7 @@ function App() {
     localStorage.setItem('uniplanner_color_theme', colorTheme)
 
     const favicon = document.querySelector('link[rel="icon"]')
-    const faviconColor = FAVICON_COLORS[colorTheme] || FAVICON_COLORS.iris
+    const faviconColor = FAVICON_COLORS[colorTheme] || FAVICON_COLORS[DEFAULT_COLOR_THEME]
     if (favicon) {
       const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="${faviconColor}"/></svg>`
       favicon.href = `data:image/svg+xml,${encodeURIComponent(svg)}`
@@ -276,7 +298,7 @@ function App() {
   }, [mobileBasketOpen])
 
   const navigate = page => {
-    const path = page === 'curriculum' ? '/curriculum' : page === 'howto' ? '/how-to' : page === 'recap' ? '/ozyegin/recap/26-27-guz' : '/'
+    const path = page === 'curriculum' ? '/curriculum' : page === 'howto' ? '/how-to' : page === 'recap' ? '/ozyegin/recap/26-27-guz' : page === 'landing' ? '/' : '/ozyegin'
     window.history.pushState(null, '', path)
     setSharedScheduleId('')
     setActivePage(page)
@@ -1036,6 +1058,28 @@ function App() {
           ? tr('Paylaşılmadı', 'Not shared')
           : '')
 
+  const footerCredit = (
+    <>
+      UniPlanners · Designed and coded with <HeartIcon /> by{' '}
+      <a href="https://omer.farukavci.me" target="_blank" rel="noopener noreferrer" className="footer-link" onClick={trackFooterLinkClick}>
+        @omer-faruk-avci
+      </a>
+    </>
+  )
+
+  if (activePage === 'landing') {
+    return (
+      <LandingPage
+        language={language}
+        toggleLanguage={toggleLanguage}
+        darkMode={darkMode}
+        onToggleDarkMode={toggleDarkMode}
+        onOpenUniversity={() => navigate('planner')}
+        footerCredit={footerCredit}
+      />
+    )
+  }
+
   return (
     <div className="app">
       {notice && (
@@ -1088,6 +1132,7 @@ function App() {
           majorLabel={selectedMajorLabel}
           grade={grade}
           onMajorClick={() => setMajorPromptReason('profile')}
+          onUniversityClick={() => navigate('landing')}
           onGradeChange={saveGradePreference}
           announcementUrl={siteSettings.announcementUrl}
           surveyUrl={siteSettings.surveyUrl}
@@ -1519,7 +1564,7 @@ function App() {
             </button>
           </div>
           <p className="mobile-basket-footer">
-            Designed and coded with <span>❤️</span> by{' '}
+            Designed and coded with <HeartIcon /> by{' '}
             <a href="https://omer.farukavci.me" target="_blank" rel="noopener noreferrer" onClick={trackFooterLinkClick}>@omer-faruk-avci</a>
           </p>
 
@@ -1583,7 +1628,7 @@ function App() {
       <footer className={`footer ${activePage !== 'shared' && activePage !== 'recap' ? 'footer-mobile-basket' : ''}`}>
         <div className="container footer-content">
           <p className="footer-credit">
-            UniPlanners · Designed and coded with <span>❤️</span> by{' '}
+            UniPlanners · Designed and coded with <HeartIcon /> by{' '}
             <a href="https://omer.farukavci.me" target="_blank" rel="noopener noreferrer" className="footer-link" onClick={trackFooterLinkClick}>
               @omer-faruk-avci
             </a>

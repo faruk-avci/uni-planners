@@ -46,7 +46,7 @@ function MajorsChart() {
   return (
     <section className="content-card analytics-card">
       <div className="section-heading">
-        <div><span className="step-number neutral">◔</span><div><h2>Seçilen bölümler</h2><p>İlk seçilen ve şu anda seçili olan bölüm dağılımı.</p></div></div>
+        <div><span className="step-number neutral"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="6" y1="20" x2="6" y2="12" /><line x1="12" y1="20" x2="12" y2="5" /><line x1="18" y1="20" x2="18" y2="14" /></svg></span><div><h2>Seçilen bölümler</h2><p>İlk seçilen ve şu anda seçili olan bölüm dağılımı.</p></div></div>
         <button className="secondary-button" onClick={loadMajors} disabled={busy}>{busy ? 'Yükleniyor…' : 'Yenile'}</button>
       </div>
       {error && <div className="alert alert-error">{error}<button onClick={() => setError('')}>×</button></div>}
@@ -84,7 +84,7 @@ function GradesChart() {
   return (
     <section className="content-card analytics-card">
       <div className="section-heading">
-        <div><span className="step-number neutral">◔</span><div><h2>Sınıf dağılımı</h2><p>Kullanıcıların seçtiği sınıf/yıl dağılımı.</p></div></div>
+        <div><span className="step-number neutral"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="6" y1="20" x2="6" y2="12" /><line x1="12" y1="20" x2="12" y2="5" /><line x1="18" y1="20" x2="18" y2="14" /></svg></span><div><h2>Sınıf dağılımı</h2><p>Kullanıcıların seçtiği sınıf/yıl dağılımı.</p></div></div>
         <button className="secondary-button" onClick={loadGrades} disabled={busy}>{busy ? 'Yükleniyor…' : 'Yenile'}</button>
       </div>
       {error && <div className="alert alert-error">{error}<button onClick={() => setError('')}>×</button></div>}
@@ -146,7 +146,7 @@ function EventLog() {
   return (
     <section className="content-card analytics-card">
       <div className="section-heading">
-        <div><span className="step-number neutral">▤</span><div><h2>Etkinlik günlüğü</h2><p>Site genelinde arama, ders ekleme/çıkarma, program oluşturma, bağlantı tıklamaları ve daha fazlası.</p></div></div>
+        <div><span className="step-number neutral"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" /><circle cx="4" cy="6" r="1" fill="currentColor" /><circle cx="4" cy="12" r="1" fill="currentColor" /><circle cx="4" cy="18" r="1" fill="currentColor" /></svg></span><div><h2>Etkinlik günlüğü</h2><p>Site genelinde arama, ders ekleme/çıkarma, program oluşturma, bağlantı tıklamaları ve daha fazlası.</p></div></div>
         <button className={watching ? 'primary-button' : 'secondary-button'} onClick={toggleWatch}>
           {watching ? 'İzlemeyi durdur' : 'Canlı izlemeyi başlat'}
         </button>

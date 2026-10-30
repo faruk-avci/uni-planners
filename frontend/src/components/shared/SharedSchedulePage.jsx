@@ -118,8 +118,7 @@ function SharedSchedulePage({ id, language, onHome }) {
         <div className="shared-content">
           <section className="shared-intro">
             <div>
-              <span className="shared-eyebrow">{tr('Paylaşılan program', 'Shared schedule')} · {share.id}</span>
-              <h1>{tr('Ders Programı', 'Course Schedule')}</h1>
+              <h1>{tr('Paylaşılan Ders Programı', 'Shared Course Schedule')}</h1>
               <p>
                 {lessons.length} {tr('ders', 'courses')} · {share.schedule.totalCredits} {tr('Kredi', 'ECTS')}
                 {createdAt && ` · ${createdAt}`}

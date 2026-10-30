@@ -2,12 +2,13 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import Analytics from './Analytics.jsx'
 
 const API = '/api/admin'
-const DEFAULT_SITE_SETTINGS = { mainFont: 'system', catalogTerm: '2025-2026 Yaz', surveyUrl: '', announcementUrl: '', catalogNotice: '', catalogNoticeUpdatedAt: '' }
+const DEFAULT_SITE_SETTINGS = { mainFont: 'grotesk', catalogTerm: '2026-2027 Güz', surveyUrl: '', announcementUrl: '', catalogNotice: '', catalogNoticeUpdatedAt: '' }
 const FONT_PREVIEWS = {
   system: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
   inter: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
   arial: 'Arial, Helvetica, sans-serif',
   rounded: '"Trebuchet MS", ui-rounded, system-ui, sans-serif',
+  grotesk: '"Schibsted Grotesk", ui-sans-serif, system-ui, sans-serif',
 }
 
 export async function request(path, options = {}) {
@@ -53,7 +54,6 @@ function Login({ onLogin }) {
     <main className="login-shell">
       <form className="login-card" onSubmit={submit}>
         <div className="brand-mark">U</div>
-        <p className="eyebrow">UNIPLANNER</p>
         <h1>Yönetim paneli</h1>
         <p className="muted">Devam etmek için sunucudaki yönetici anahtarını girin.</p>
         <label>
@@ -71,7 +71,7 @@ function FilePicker({ label, hint, onFile, busy, compact = false, disabled = fal
   const input = useRef(null)
   return (
     <button type="button" className={`file-picker ${compact ? 'file-picker-compact' : ''}`} onClick={() => input.current?.click()} disabled={busy || disabled}>
-      <span className="file-picker-icon">↑</span>
+      <span className="file-picker-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 16V4" /><polyline points="7 9 12 4 17 9" /><path d="M4 20h16" /></svg></span>
       <span><strong>{busy ? 'Dosya okunuyor…' : label}</strong><small>{hint}</small></span>
       <input ref={input} type="file" accept=".xls,.xlsx" onChange={event => {
         const file = event.target.files?.[0]
@@ -89,7 +89,6 @@ function CurriculumPreview({ curriculum, onClose }) {
     <section className="preview-panel">
       <header className="preview-header">
         <div>
-          <p className="eyebrow">MÜFREDAT ÖNİZLEMESİ</p>
           <h2>{curriculum.title_tr}</h2>
           <p className="muted">{curriculum.programCodes?.join(' / ')} · {countCourses(curriculum)} satır</p>
         </div>
@@ -273,16 +272,16 @@ function Dashboard({ onLogout }) {
       <aside className="side-nav">
         <a className="panel-brand" href="/"><span>U</span><strong>UniPlanner</strong><small>Panel</small></a>
         <nav>
-          <button className="nav-active" onClick={() => document.getElementById('curriculum-management')?.scrollIntoView({ behavior: 'smooth' })}><span>▦</span>Müfredatlar</button>
-          <button onClick={() => document.getElementById('site-settings')?.scrollIntoView({ behavior: 'smooth' })}><span>⚙</span>Site ayarları</button>
-          <button onClick={() => document.getElementById('analytics')?.scrollIntoView({ behavior: 'smooth' })}><span>◔</span>Analitik</button>
+          <button className="nav-active" onClick={() => document.getElementById('curriculum-management')?.scrollIntoView({ behavior: 'smooth' })}><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></svg>Müfredatlar</button>
+          <button onClick={() => document.getElementById('site-settings')?.scrollIntoView({ behavior: 'smooth' })}><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6" /><line x1="4" y1="12" x2="20" y2="12" /><line x1="4" y1="18" x2="20" y2="18" /><circle cx="9" cy="6" r="2" fill="currentColor" /><circle cx="15" cy="12" r="2" fill="currentColor" /><circle cx="8" cy="18" r="2" fill="currentColor" /></svg>Site ayarları</button>
+          <button onClick={() => document.getElementById('analytics')?.scrollIntoView({ behavior: 'smooth' })}><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="6" y1="20" x2="6" y2="12" /><line x1="12" y1="20" x2="12" y2="5" /><line x1="18" y1="20" x2="18" y2="14" /></svg>Analitik</button>
         </nav>
-        <div className="side-footer"><a href="https://uniplanner.org">Siteye git ↗</a><button onClick={onLogout}>Çıkış yap</button></div>
+        <div className="side-footer"><a href="https://uniplanners.org">Siteye git</a><button onClick={onLogout}>Çıkış yap</button></div>
       </aside>
 
       <main className="panel-main">
         <header className="page-header">
-          <div><p className="eyebrow">İÇERİK YÖNETİMİ</p><h1>Müfredatlar</h1><p className="muted">Ders planlarını ve ortak seçmeli havuzlarını yönetin.</p></div>
+          <div><h1>Müfredatlar</h1><p className="muted">Ders planlarını ve ortak seçmeli havuzlarını yönetin.</p></div>
           <div className="header-status"><span className="status-dot" />Sunucuya bağlı</div>
         </header>
 
@@ -296,12 +295,13 @@ function Dashboard({ onLogout }) {
 
         <section className="content-card settings-card" id="site-settings">
           <div className="section-heading">
-            <div><span className="step-number neutral">⚙</span><div><h2>Site ayarları</h2><p>Kullanıcıların gördüğü ana sitenin görünümünü ve küçük içeriklerini yönetin.</p></div></div>
+            <div><span className="step-number neutral"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6" /><line x1="4" y1="12" x2="20" y2="12" /><line x1="4" y1="18" x2="20" y2="18" /><circle cx="9" cy="6" r="2" fill="currentColor" /><circle cx="15" cy="12" r="2" fill="currentColor" /><circle cx="8" cy="18" r="2" fill="currentColor" /></svg></span><div><h2>Site ayarları</h2><p>Kullanıcıların gördüğü ana sitenin görünümünü ve küçük içeriklerini yönetin.</p></div></div>
             <span className="format-chip">CANLI</span>
           </div>
           <form onSubmit={saveSiteSettings}>
             <div className="settings-grid">
               <label className="select-field"><span>Ana sitenin yazı tipi</span><select value={settingsDraft.mainFont} onChange={event => setSettingsDraft(current => ({ ...current, mainFont: event.target.value }))}>
+                <option value="grotesk">Schibsted Grotesk (önerilen)</option>
                 <option value="system">Sistem</option>
                 <option value="inter">Inter (panel yazı tipi)</option>
                 <option value="arial">Arial</option>
@@ -355,7 +355,9 @@ function Dashboard({ onLogout }) {
                 {draft.electiveRequirements.map(requirement => {
                   const mapped = mappings[requirement.key]
                   return <article className={`requirement-row ${mapped ? 'requirement-ready' : ''}`} key={requirement.key}>
-                    <div className="requirement-state">{mapped ? '✓' : '!'}</div>
+                    <div className="requirement-state">{mapped
+                      ? <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12" /></svg>
+                      : '!'}</div>
                     <div className="requirement-copy"><strong>{requirement.label}</strong><span>{requirement.occurrences.map(item => `${item.year}. yıl ${termLabel(item.term)} · ${item.credits} Kredi`).join(' · ')}</span></div>
                     <label className="pool-select"><span>Mevcut havuz</span><select value={mapped || ''} onChange={event => setMappings(current => ({ ...current, [requirement.key]: event.target.value }))}><option value="">Havuz seçin</option>{pools.map(pool => <option key={pool.key} value={pool.key}>{pool.label} ({pool.courseCount})</option>)}</select></label>
                     <FilePicker compact label={mapped ? 'Dosyayı yenile' : 'Excel yükle'} hint="Seçmeli ders listesi" onFile={file => uploadElective(requirement, file)} busy={busy === `elective:${requirement.key}`} />

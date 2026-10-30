@@ -59,7 +59,7 @@ LOG_FLUSH_MS='250'
 LOG_BATCH_SIZE='500'
 LOG_QUEUE_MAX='20000'
 ADMIN_SECRET='${ADMIN_SECRET}'
-CATALOG_TERM='2025 - 2026 Bahar'
+CATALOG_TERM='2026 - 2027 Güz'
 EOF
 chmod 0600 /etc/uniplanner/backend.env
 echo "Database and /etc/uniplanner/backend.env are ready. Save a secure backup of this file."

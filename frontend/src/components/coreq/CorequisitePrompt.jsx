@@ -20,7 +20,6 @@ function CorequisitePrompt({ prompt, language, onCancel, onContinue, onAddCorequ
       <section className="coreq-prompt" role="dialog" aria-modal="true" aria-labelledby="coreq-prompt-title">
         <header className="coreq-prompt-header">
           <div>
-            <span className="coreq-prompt-eyebrow">{tr('Eksik yan koşul', 'Missing corequisite')}</span>
             <h2 id="coreq-prompt-title">
               {tr('Sepetinizde eksik yan koşul var.', 'Your basket has a missing corequisite.')}
             </h2>

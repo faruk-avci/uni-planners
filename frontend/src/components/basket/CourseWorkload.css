@@ -61,9 +61,7 @@
   background: var(--bg-secondary);
   font-weight: var(--weight-bold);
   color: var(--text-secondary);
-  text-transform: uppercase;
   font-size: var(--text-xs);
-  letter-spacing: 0.05em;
 }
 
 .workload-th-course {
@@ -150,8 +148,9 @@
   justify-content: center;
   gap: 3px;
   padding: 6px 8px;
-  background: color-mix(in srgb, var(--item-color) 12%, var(--bg-secondary));
-  border-left: 3px solid var(--item-color);
+  background: color-mix(in srgb, var(--item-color) 14%, var(--bg-secondary));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--item-color) 30%, transparent);
+  border-radius: var(--radius-sm);
   text-align: center;
 }
 

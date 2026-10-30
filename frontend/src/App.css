@@ -77,7 +77,6 @@
   border: 1px solid var(--border-secondary);
   border-radius: var(--radius-lg);
   padding: var(--space-6);
-  animation: slideUp var(--duration-slow) var(--ease-out);
 }
 
 .section-header {
@@ -96,17 +95,15 @@
 .badge {
   display: inline-flex;
   align-items: center;
-  padding: var(--space-1) var(--space-3);
-  border-radius: var(--radius-full);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
   font-size: var(--text-xs);
   font-weight: var(--weight-medium);
-  letter-spacing: 0.02em;
 }
 
 .badge-purple {
-  background: var(--accent-soft);
-  color: var(--accent-primary);
-  border: 1px solid var(--border-accent);
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
 }
 
 .badge-success {
@@ -208,7 +205,7 @@
   padding: var(--space-4) var(--space-6);
   font-size: var(--text-md);
   font-weight: var(--weight-semibold);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   background: var(--accent-primary);
 }
 
@@ -238,7 +235,9 @@
 }
 
 .footer-heart {
-  color: var(--error);
+  display: inline-block;
+  vertical-align: -1px;
+  color: var(--accent-primary);
 }
 
 .footer-link {
@@ -288,25 +287,17 @@
   }
 }
 
-/* ── New-feature accent (small, subtle ozu burgundy) ── */
+/* ── New-feature marker: a quiet word in the accent, not a pill ── */
 .badge-new {
-  background: var(--ozu-burgundy-soft);
-  color: var(--ozu-burgundy);
-  border: 1px solid var(--ozu-burgundy);
+  padding: 0 0 0 var(--space-1);
+  background: transparent;
+  color: var(--accent-primary);
+  border: 0;
   font-size: var(--text-xs);
   font-weight: var(--weight-semibold);
 }
 
-/* The burgundy accent doesn't read well against dark surfaces -- green
-   (reusing the theme's own success token, already dark-mode-tuned) shows
-   up much more clearly. */
-[data-theme="dark"] .badge-new {
-  background: var(--success-bg);
-  color: var(--success);
-  border-color: var(--success);
-}
-
-/* New-feature panels: normal surface with an ozu-burgundy border. */
+/* New-feature panels: normal surface, quiet border. */
 .section-new {
   background: var(--bg-secondary);
   border: 1px solid var(--border-secondary);
@@ -453,8 +444,8 @@
   color: var(--text-tertiary);
 }
 .fit-req strong { color: var(--text-secondary); font-weight: var(--weight-semibold); }
-.fit-req-coreq { color: var(--ozu-burgundy); }
-.fit-req-coreq strong { color: var(--ozu-burgundy); }
+.fit-req-coreq { color: var(--highlight); }
+.fit-req-coreq strong { color: var(--highlight); }
 
 .fit-show-more {
   align-self: flex-start;
@@ -510,7 +501,7 @@
   background: var(--gray-150);
   color: var(--gray-600);
 }
-.fit-type-required { background: var(--ozu-burgundy-soft); color: var(--ozu-burgundy); }
+.fit-type-required { background: var(--highlight-soft); color: var(--highlight); }
 .fit-type-elective { background: var(--success-bg); color: var(--success); }
 
 /* Elective-type tags (from the major's curriculum) */
@@ -632,19 +623,19 @@
 }
 
 .toast-success {
-  background: var(--success-bg);
+  background: linear-gradient(var(--success-bg), var(--success-bg)), var(--bg-elevated);
   color: var(--success);
   border-color: var(--success);
 }
 
 .toast-error {
-  background: var(--error-bg);
+  background: linear-gradient(var(--error-bg), var(--error-bg)), var(--bg-elevated);
   color: var(--error);
   border-color: var(--error);
 }
 
 .toast-info {
-  background: var(--info-bg);
+  background: linear-gradient(var(--info-bg), var(--info-bg)), var(--bg-elevated);
   color: var(--info);
   border-color: var(--info);
 }
@@ -736,9 +727,8 @@
   padding: var(--space-3) var(--space-4);
   background: var(--bg-secondary);
   border: 1px solid var(--border-secondary);
-  border-left: 3px solid var(--error);
+  border-color: color-mix(in srgb, var(--error) 35%, var(--border-primary));
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-xs);
 }
 
 .conflict-pair-list li > div {
@@ -1040,8 +1030,7 @@
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    background: rgba(9, 9, 11, .55);
-    backdrop-filter: blur(4px);
+    background: rgba(28, 20, 16, .5);
     animation: fadeIn var(--duration-fast) var(--ease-out);
   }
 
