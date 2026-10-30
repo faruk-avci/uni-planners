@@ -71,6 +71,7 @@ function ProfileBar({ language, majorLabel, grade, onMajorClick, onUniversityCli
           className="context-segment context-university"
           href="/"
           title={tr('Üniversiteyi değiştir', 'Change university')}
+          aria-label={tr('Özyeğin Üniversitesi, üniversiteyi değiştir', 'Özyeğin University, change university')}
           onClick={event => {
             if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return
             event.preventDefault()

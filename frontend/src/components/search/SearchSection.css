@@ -51,7 +51,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  background: #ffffff;
+  background: var(--bg-elevated);
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-md);
   padding: var(--space-3) var(--space-4);
@@ -540,12 +540,12 @@
 @media (max-width: 640px) {
   .search-bar {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr) auto;
     gap: var(--space-2);
+    margin-bottom: var(--space-3);
   }
 
   .search-input-wrapper {
-    grid-column: 1 / -1;
     min-width: 0;
     min-height: 46px;
     padding: var(--space-2) var(--space-3);
@@ -556,9 +556,25 @@
     font-size: 16px;
   }
 
-  .search-btn, .clear-btn {
-    width: 100%;
-    height: 42px;
+  .search-btn {
+    height: 46px;
+    padding: 0 var(--space-4);
+  }
+
+  .clear-btn {
+    grid-column: 1 / -1;
+    justify-self: end;
+    height: auto;
+    padding: 0 var(--space-1);
+    color: var(--text-secondary);
+    background: none;
+    border: 0;
+    font-size: var(--text-sm);
+  }
+
+  .clear-btn:hover {
+    background: none;
+    transform: none;
   }
 
   .search-filters {
@@ -583,7 +599,7 @@
   .course-header {
     flex-direction: column;
     gap: var(--space-2);
-    padding: var(--space-3);
+    padding: var(--space-3) 0;
   }
 
   .course-actions {

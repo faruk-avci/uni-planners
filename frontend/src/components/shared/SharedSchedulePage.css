@@ -57,7 +57,7 @@
   font-weight: var(--weight-semibold);
   transition: background var(--duration-fast);
 }
-.shared-card-toggle:hover .shared-card-toggle-pill { background: color-mix(in srgb, var(--accent-soft), var(--accent-primary) 12%); }
+.shared-card-toggle:hover .shared-card-toggle-pill { background: var(--accent-soft); background: color-mix(in srgb, var(--accent-soft), var(--accent-primary) 12%); }
 .shared-card-chevron { display: inline-block; font-size: 16px; line-height: 1; transition: transform var(--duration-fast); }
 .shared-card-chevron-open { transform: rotate(90deg); }
 .shared-export-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-2); }

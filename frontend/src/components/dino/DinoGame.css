@@ -241,6 +241,7 @@
   gap: var(--space-1);
   padding: var(--space-3) var(--space-4);
   color: var(--text-primary);
+  background: var(--bg-elevated);
   background: color-mix(in srgb, var(--bg-elevated), transparent 8%);
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-md);

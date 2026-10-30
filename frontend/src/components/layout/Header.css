@@ -211,6 +211,7 @@
   background: var(--palette-swatch);
   border: 2px solid var(--bg-elevated);
   border-radius: var(--radius-full);
+  box-shadow: 0 0 0 1px var(--border-primary);
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--palette-swatch), transparent 60%);
 }
 
@@ -378,6 +379,10 @@
   .action-btn.howto-mobile {
     padding-inline: 6px;
     font-size: 10px;
+  }
+
+  a.action-btn.howto-mobile {
+    display: none;
   }
 }
 

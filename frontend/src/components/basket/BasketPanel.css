@@ -74,6 +74,7 @@
   padding: var(--space-2) var(--space-3);
   color: var(--warning);
   background: var(--warning-bg);
+  border: 1px solid var(--border-primary);
   border: 1px solid color-mix(in srgb, var(--warning), transparent 55%);
   border-radius: var(--radius-md);
   font-size: 11px;
@@ -94,6 +95,7 @@
 .basket-credit-danger {
   color: var(--error);
   background: var(--error-bg);
+  border-color: var(--border-primary);
   border-color: color-mix(in srgb, var(--error), transparent 45%);
 }
 .basket-item-code-row {

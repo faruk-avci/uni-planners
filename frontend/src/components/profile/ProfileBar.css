@@ -202,6 +202,7 @@
 
 .notice-close:hover {
   color: var(--text-primary);
+  background: var(--bg-tertiary);
   background: color-mix(in srgb, var(--notice-color), transparent 85%);
 }
 
@@ -217,31 +218,34 @@
 }
 
 @media (max-width: 680px) {
-  /* University on its own line, major and year side by side beneath it. */
+  /* One compact row: the university mark (tap to switch), major, year. */
   .context-strip {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 132px);
+    grid-template-columns: auto 1px minmax(0, 1fr) 1px minmax(0, 112px);
+    margin-top: var(--space-3);
   }
-
-  .context-divider { display: none; }
 
   .context-university {
-    grid-column: 1 / -1;
-    border-bottom: 1px solid var(--border-secondary);
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding-inline: var(--space-3) var(--space-2);
   }
 
-  .context-major {
-    border-right: 1px solid var(--border-secondary);
-    border-radius: 0 0 0 var(--radius-lg);
-  }
-
-  .context-grade {
-    border-radius: 0 0 var(--radius-lg) 0;
+  .context-university .context-copy,
+  .context-university .context-action {
+    display: none;
   }
 
   .context-segment {
-    min-height: 54px;
+    min-height: 52px;
+    gap: var(--space-2);
     padding-inline: var(--space-3);
+  }
+
+  .context-copy small {
+    font-size: 11px;
+  }
+
+  .context-copy strong,
+  .context-copy select {
+    font-size: var(--text-sm);
   }
 
   .notice {
@@ -249,9 +253,11 @@
     font-size: var(--text-xs);
   }
 
+  .notice-meta { display: none; }
+
   .notice-link { white-space: normal; }
 }
 
-@media (max-width: 390px) {
-  .context-strip { grid-template-columns: minmax(0, 1fr) minmax(0, 116px); }
+@media (max-width: 360px) {
+  .context-strip { grid-template-columns: auto 1px minmax(0, 1fr) 1px minmax(0, 96px); }
 }

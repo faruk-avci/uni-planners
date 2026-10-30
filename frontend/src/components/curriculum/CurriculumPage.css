@@ -99,7 +99,7 @@
 .curriculum-semester,
 .curriculum-elective-group { overflow: hidden; background: var(--bg-secondary); border: 1px solid var(--border-primary); border-radius: var(--radius-lg); box-shadow: var(--shadow-xs); }
 .curriculum-semester > header,
-.curriculum-elective-group > header { display: flex; justify-content: space-between; align-items: center; padding: var(--space-3) var(--space-4); background: color-mix(in srgb, var(--accent-soft) 55%, var(--bg-secondary)); border-bottom: 1px solid var(--border-primary); }
+.curriculum-elective-group > header { display: flex; justify-content: space-between; align-items: center; padding: var(--space-3) var(--space-4); background: var(--accent-soft); background: color-mix(in srgb, var(--accent-soft) 55%, var(--bg-secondary)); border-bottom: 1px solid var(--border-primary); }
 .curriculum-semester > header h4,
 .curriculum-elective-group > header h3 { color: var(--text-primary); font-weight: var(--weight-bold); }
 .curriculum-semester > header span,
@@ -131,7 +131,7 @@
 .curriculum-add-btn:hover:not(:disabled) { background: var(--accent-primary); border-color: var(--accent-primary); color: var(--text-inverse); }
 .curriculum-add-btn:disabled { cursor: not-allowed; color: var(--text-tertiary); background: transparent; border-color: var(--border-secondary); }
 .course-status-dot { width: 8px; height: 8px; align-self: center; border-radius: 50%; background: var(--text-tertiary); }
-.course-status-open { background: var(--success); box-shadow: 0 0 0 3px color-mix(in srgb, var(--success) 14%, transparent); }
+.course-status-open { background: var(--success); box-shadow: 0 0 0 3px var(--success-bg); box-shadow: 0 0 0 3px color-mix(in srgb, var(--success) 14%, transparent); }
 .course-status-closed { background: var(--text-tertiary); }
 .curriculum-requisites { display: grid; grid-column: 1 / -1; gap: 2px; margin-top: var(--space-2); padding-left: 114px; color: var(--text-tertiary); font-size: var(--text-xs); }
 .curriculum-empty { padding: var(--space-6); text-align: center; font-size: var(--text-sm); }
@@ -183,7 +183,7 @@
 .offered-first-toggle.active .offered-first-switch { background: var(--success); }
 .offered-first-toggle.active .offered-first-switch > span { transform: translateX(12px); }
 
-.curriculum-elective-slot { display: block; padding: 0; background: color-mix(in srgb, var(--accent-soft) 28%, var(--bg-secondary)); }
+.curriculum-elective-slot { display: block; padding: 0; background: var(--bg-secondary); background: color-mix(in srgb, var(--accent-soft) 28%, var(--bg-secondary)); }
 .elective-slot-button {
   display: grid;
   width: 100%;
@@ -339,14 +339,17 @@
 
 /* ── Degree-audit overlay (hidden feature) ── */
 .curriculum-course-taken {
+  background: var(--success-bg);
   background: color-mix(in srgb, var(--success) 8%, var(--bg-secondary));
 }
 
 .curriculum-course-missing:not(.curriculum-course-taken) {
+  background: var(--warning-bg);
   background: color-mix(in srgb, var(--warning) 7%, var(--bg-secondary));
 }
 
 .curriculum-elective-slot-filled {
+  background: var(--success-bg);
   background: color-mix(in srgb, var(--success) 8%, var(--bg-secondary));
 }
 
@@ -404,8 +407,8 @@
   border-radius: var(--radius-md);
 }
 
-.curriculum-audit-type-complete { border-color: color-mix(in srgb, var(--success) 40%, var(--border-secondary)); }
-.curriculum-audit-type-incomplete { border-color: color-mix(in srgb, var(--warning) 40%, var(--border-secondary)); }
+.curriculum-audit-type-complete { border-color: var(--border-secondary); border-color: color-mix(in srgb, var(--success) 40%, var(--border-secondary)); }
+.curriculum-audit-type-incomplete { border-color: var(--border-secondary); border-color: color-mix(in srgb, var(--warning) 40%, var(--border-secondary)); }
 
 .curriculum-audit-type-head {
   display: flex;

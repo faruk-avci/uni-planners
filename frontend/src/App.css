@@ -181,6 +181,7 @@
 .btn-danger {
   color: var(--error);
   background: var(--error-bg);
+  border: 1px solid var(--border-primary);
   border: 1px solid color-mix(in srgb, var(--error), transparent 70%);
 }
 
@@ -727,6 +728,7 @@
   padding: var(--space-3) var(--space-4);
   background: var(--bg-secondary);
   border: 1px solid var(--border-secondary);
+  border-color: var(--border-primary);
   border-color: color-mix(in srgb, var(--error) 35%, var(--border-primary));
   border-radius: var(--radius-md);
 }
@@ -944,6 +946,7 @@
     padding: var(--space-2) var(--space-4);
     color: var(--text-inverse);
     background: var(--accent-primary);
+    border: 1px solid var(--accent-primary);
     border: 1px solid color-mix(in srgb, var(--accent-primary), white 12%);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-xl);
@@ -967,6 +970,7 @@
     font-weight: var(--weight-semibold);
     line-height: 1.2;
     background: var(--text-inverse);
+    border: 1px solid var(--accent-primary);
     border: 1px solid color-mix(in srgb, var(--accent-primary), white 12%);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-xl);

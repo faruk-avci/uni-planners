@@ -148,10 +148,29 @@
   justify-content: center;
   gap: 3px;
   padding: 6px 8px;
-  background: color-mix(in srgb, var(--item-color) 14%, var(--bg-secondary));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--item-color) 30%, transparent);
+  position: relative;
+  isolation: isolate;
+  background: var(--bg-secondary);
   border-radius: var(--radius-sm);
   text-align: center;
+}
+
+.workload-item-row::before,
+.workload-item-row::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.workload-item-row::before {
+  background: var(--item-color);
+  opacity: 0.14;
+}
+.workload-item-row::after {
+  border: 1px solid var(--item-color);
+  opacity: 0.32;
 }
 
 .workload-item-type {

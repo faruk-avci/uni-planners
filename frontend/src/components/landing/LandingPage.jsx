@@ -79,13 +79,6 @@ function LandingPage({ language, toggleLanguage, darkMode, onToggleDarkMode, onO
                     {uni.short}
                     {live && <ArrowIcon />}
                   </span>
-                  <span className="landing-uni-aside">
-                    <span className="landing-uni-full">{uni.name[language] || uni.name.tr}</span>
-                    <span className="landing-uni-city">{uni.city[language] || uni.city.tr}</span>
-                    <span className="landing-uni-status">
-                      {live ? tr('Planlayıcı açık', 'Planner open') : tr('Yakında', 'Coming soon')}
-                    </span>
-                  </span>
                 </>
               )
               return (
@@ -104,7 +97,7 @@ function LandingPage({ language, toggleLanguage, darkMode, onToggleDarkMode, onO
                       {content}
                     </a>
                   ) : (
-                    <div className="landing-uni-row" aria-disabled="true">{content}</div>
+                    <div className="landing-uni-row" aria-disabled="true" aria-label={`${uni.name[language] || uni.name.tr} - ${tr('yakında', 'coming soon')}`}>{content}</div>
                   )}
                 </li>
               )
