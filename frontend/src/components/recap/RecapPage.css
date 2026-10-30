@@ -7,8 +7,9 @@
   color: var(--text-primary);
 }
 
-/* Typography Enhancements */
-h1, h2, h3, strong {
+/* Typography Enhancements (scoped: an unscoped rule here leaked into every
+   page, e.g. darkening bold text inside accent-colored buttons) */
+.recap-page :is(h1, h2, h3, strong) {
   color: var(--text-primary);
 }
 
