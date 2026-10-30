@@ -28,11 +28,11 @@ function GradeSelect({ grade, onGradeChange, language, emptyLabel, className = '
   )
 }
 
-/* University › Major › Year as one bar (design 1, and the workbench pane). */
-export function ContextStrip({ language, majorLabel, grade, onMajorClick, onUniversityClick, onGradeChange, compact = false }) {
+/* University › Major › Year as one bar. */
+export function ContextStrip({ language, majorLabel, grade, onMajorClick, onUniversityClick, onGradeChange }) {
   const tr = (trText, enText) => language === 'tr' ? trText : enText
   return (
-    <nav className={`context-strip ${compact ? 'context-strip-compact' : ''}`} aria-label={tr('Akademik profil', 'Academic profile')}>
+    <nav className="context-strip" aria-label={tr('Akademik profil', 'Academic profile')}>
       <a
         className="context-segment context-university"
         href="/"
@@ -72,7 +72,7 @@ export function ContextStrip({ language, majorLabel, grade, onMajorClick, onUniv
 }
 
 /* One slot for everything the site needs to say. */
-export function NoticeRail({ language, announcementUrl, surveyUrl, catalogNotice, catalogNoticeUpdatedAt, inline = false }) {
+export function NoticeRail({ language, announcementUrl, surveyUrl, catalogNotice, catalogNoticeUpdatedAt }) {
   const tr = (trText, enText) => language === 'tr' ? trText : enText
   // Dismissal is keyed to *which* notice was dismissed (its updatedAt
   // timestamp), not just a yes/no flag -- so publishing a new notice from
@@ -135,7 +135,7 @@ export function NoticeRail({ language, announcementUrl, surveyUrl, catalogNotice
 
   if (notices.length === 0) return null
   return (
-    <div className={`notice-rail ${inline ? 'notice-rail-inline' : ''}`}>
+    <div className="notice-rail">
       {notices.map(notice => (
         <div key={notice.key} className={`notice notice-${notice.tone}`} role={notice.tone === 'info' ? 'status' : undefined}>
           <NoticeIcon name={notice.icon} />

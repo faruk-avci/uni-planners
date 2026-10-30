@@ -623,6 +623,20 @@
   animation: slideUp var(--duration-normal) var(--ease-out);
 }
 
+/* Keep messages clear of whatever is pinned to the bottom: the design 2
+   tray on desktop, the basket dock on phones. */
+[data-tray] .toast {
+  bottom: 104px;
+}
+
+@media (max-width: 900px) {
+  .toast,
+  [data-tray] .toast {
+    bottom: calc(100px + env(safe-area-inset-bottom));
+    max-width: calc(100vw - 2 * var(--space-4));
+  }
+}
+
 .toast-success {
   background: linear-gradient(var(--success-bg), var(--success-bg)), var(--bg-elevated);
   color: var(--success);

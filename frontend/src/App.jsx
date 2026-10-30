@@ -7,7 +7,6 @@ import Header from './components/layout/Header'
 import ProfileBar from './components/profile/ProfileBar'
 import SearchSection from './components/search/SearchSection'
 import BasketPanel from './components/basket/BasketPanel'
-import CourseWorkload from './components/basket/CourseWorkload'
 import SchedulePreview from './components/schedule/SchedulePreview'
 import FreeDaySelector from './components/schedule/FreeDaySelector'
 import CurriculumPage from './components/curriculum/CurriculumPage'
@@ -27,9 +26,8 @@ import { scheduleImagePng } from './utils/scheduleImageSvg'
 import { recordGenerateSuccess, shouldQueueSurveyNudge, markSurveyNudgeShown, markSurveyNudgeDone } from './utils/surveyNudge'
 import { canonicalProgramCode, groupMajorOptions } from './data/programs'
 import LandingPage from './components/landing/LandingPage'
-import { ContextStrip, NoticeRail } from './components/profile/ProfileBar'
+import { ContextStrip } from './components/profile/ProfileBar'
 import BasketTray from './components/layouts/BasketTray'
-import WeekPlaceholder from './components/layouts/WeekPlaceholder'
 import './components/layouts/layouts.css'
 
 const isUndergraduateMajor = value => Boolean(value && !['none', 'master', 'doctorate'].includes(value))
@@ -54,7 +52,7 @@ const routeFromLocation = () => {
 }
 const PUBLIC_COLOR_THEMES = new Set(['petrol', 'iris', 'neutral', 'ocean', 'forest', 'violet', 'coral'])
 const DEFAULT_COLOR_THEME = 'petrol'
-const PLANNER_LAYOUTS = ['1', '2', '3']
+const PLANNER_LAYOUTS = ['1', '2']
 const FAVICON_COLORS = {
   petrol: '#1d5e66',
   iris: '#3b3f9a',
@@ -99,8 +97,8 @@ function App() {
     localStorage.setItem('uniplanner_palette_v2', '1')
     return PUBLIC_COLOR_THEMES.has(saved) ? saved : DEFAULT_COLOR_THEME
   })
-  // Planner layout: 1 = classic, 2 = focus (search hero + checkout tray),
-  // 3 = workbench (control pane + week stage). Remembered per browser.
+  // Planner layout: 1 = classic, 2 = focus (search first + checkout tray).
+  // Remembered per browser; anything else (e.g. the retired '3') falls back to 1.
   const [layout, setLayout] = useState(() => {
     try {
       const saved = localStorage.getItem('uniplanner_layout')
@@ -218,6 +216,10 @@ function App() {
   const trackSurveyHeaderClick = () => {
     courseService.trackSiteEvent('survey', 'header_click')
   }
+
+  useEffect(() => {
+    document.documentElement.toggleAttribute('data-tray', layout === '2' && activePage === 'planner')
+  }, [layout, activePage])
 
   useEffect(() => {
     document.documentElement.setAttribute('data-layout', layout)
@@ -1434,17 +1436,6 @@ function App() {
                   </div>
                 )}
 
-                {schedules.length > 0 && (() => {
-                  const normalizeCode = value => String(value || '').replace(/\s+/g, '').toUpperCase()
-                  const workloadCourses = schedules[currentSchedule].lessons
-                    .filter(lesson => !normalizeCode(lesson.code).endsWith('L'))
-                    .map(lesson => ({
-                      code: lesson.code,
-                      name: lesson.name,
-                      assessments: basket.find(item => normalizeCode(item.code) === normalizeCode(lesson.code))?.assessments || [],
-                    }))
-                  return <CourseWorkload basket={workloadCourses} language={language} />
-                })()}
               </section>
   ) : null
 
@@ -1461,8 +1452,14 @@ function App() {
       afterForm={layout === '2' ? schedulesSection : null}
       clearToken={searchClearToken}
       onSearch={layout === '2' ? () => {
-        // Design 2: bring the search to the top so the profile strip scrolls
-        // out of view; scrolling back up reveals it again.
+        // Design 2: a new search replaces earlier generated schedules (they
+        // sit where results go), then the search scrolls to the top so the
+        // profile strip moves out of view; scrolling up reveals it again.
+        setSchedules([])
+        setGenMessage(null)
+        setGenerationInsights(null)
+        setFreeDayFallback(null)
+        setFittingShown(false)
         window.requestAnimationFrame(() => focusSearchRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
       } : null}
     />
@@ -1602,23 +1599,6 @@ function App() {
           basketOpen={trayBasketOpen}
           onToggleBasket={() => setTrayBasketOpen(open => !open)}
         />
-      </main>
-      ) : layout === '3' ? (
-      <main className="main planner-workbench">
-        <aside className="workbench-pane" aria-label={tr('Ders seçimi', 'Course selection')}>
-          <div className="workbench-pane-scroll">
-            <ContextStrip {...profileProps} compact />
-            <NoticeRail {...profileProps} inline />
-            {searchNode}
-            {basketNode}
-          </div>
-          <div className="workbench-pane-actions">{controlsNode}</div>
-        </aside>
-        <div className="workbench-stage">
-          {schedulesSection || (
-            <WeekPlaceholder language={language} basketCount={basket.length} onGenerate={handleGenerate} generating={generating} />
-          )}
-        </div>
       </main>
       ) : (
       <main className="main">
