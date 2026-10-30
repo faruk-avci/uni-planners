@@ -1467,6 +1467,11 @@ function App() {
     />
   )
 
+  // The survey stands on its own: no header, profile bar, dock or footer.
+  if (activePage === 'survey') {
+    return <SurveyPage language={language} university="ozyegin" layout={layout} onBack={() => navigate('planner')} />
+  }
+
   if (activePage === 'landing') {
     return (
       <LandingPage
@@ -1528,7 +1533,7 @@ function App() {
         />
       )}
 
-      {activePage !== 'shared' && activePage !== 'recap' && activePage !== 'survey' && !(activePage === 'planner' && layout !== '1') && (
+      {activePage !== 'shared' && activePage !== 'recap' && !(activePage === 'planner' && layout !== '1') && (
         <ProfileBar
           language={language}
           majorLabel={selectedMajorLabel}
@@ -1543,7 +1548,7 @@ function App() {
         />
       )}
 
-      {activePage !== 'shared' && activePage !== 'recap' && activePage !== 'survey' && majorPromptReason && (
+      {activePage !== 'shared' && activePage !== 'recap' && majorPromptReason && (
         <MajorPrompt
           language={language}
           groups={majorGroups}
@@ -1576,8 +1581,7 @@ function App() {
         <HowToPage language={language} onNavigate={navigate} />
       ) : activePage === 'recap' ? (
         <RecapPage language={language} />
-      ) : activePage === 'survey' ? (
-        <SurveyPage language={language} university="ozyegin" layout={layout} onBack={() => navigate('planner')} />
+
       ) : (
       layout === '2' ? (
       <main className="main planner-focus">
@@ -1621,7 +1625,7 @@ function App() {
       )
       )}
 
-      {activePage !== 'shared' && activePage !== 'recap' && activePage !== 'survey' && (
+      {activePage !== 'shared' && activePage !== 'recap' && (
         <>
           <div className="mobile-basket-dock">
             <button
@@ -1716,7 +1720,7 @@ function App() {
         </>
       )}
 
-      <footer className={`footer ${activePage !== 'shared' && activePage !== 'recap' && activePage !== 'survey' ? 'footer-mobile-basket' : ''}`}>
+      <footer className={`footer ${activePage !== 'shared' && activePage !== 'recap' ? 'footer-mobile-basket' : ''}`}>
         <div className="container footer-content">
           <p className="footer-credit">
             UniPlanners · Designed and coded with <HeartIcon /> by{' '}

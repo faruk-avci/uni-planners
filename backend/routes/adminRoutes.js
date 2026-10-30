@@ -406,6 +406,7 @@ router.get('/survey/:university', async (req, res) => {
           other,
         }
       }
+      // text and e-mail questions: list the answers themselves
       const answers = rows
         .filter(row => row.answers?.[question.key])
         .map(row => ({ text: row.answers[question.key], date: isoDate(row.submitted_on), major: row.major_code, grade: row.grade_level, layout: row.layout }))

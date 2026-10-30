@@ -1,5 +1,6 @@
 // In-site surveys, one per university. The questions mirror the original
-// Google Form (minus its optional e-mail field: responses are anonymous).
+// Google Form. Responses carry no session/IP; only people who choose to fill
+// in the optional e-mail question are identifiable.
 // Bump `version` whenever questions change so results stay comparable.
 
 const OZYEGIN_FAVORITES = [
@@ -44,11 +45,16 @@ export const SURVEYS = {
         key: 'comments', type: 'text', maxLength: 1000, required: false,
         label: { tr: 'Varsa, uygulama hakkındaki diğer düşüncelerin', en: 'Any other thoughts about the app' },
       },
+      {
+        key: 'email', type: 'email', maxLength: 200, required: false,
+        label: { tr: 'E-posta adresin (isteğe bağlı - geri bildirimin hakkında sana ulaşmamızı istersen)', en: 'Your e-mail (optional - if you would like us to get back to you about your feedback)' },
+      },
     ],
   },
 }
 
 const OTHER_MAX_LENGTH = 200
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 // Returns { answers } with only known keys and clean values, or { error }.
 export function validateSurveyAnswers(survey, input) {
@@ -71,6 +77,11 @@ export function validateSurveyAnswers(survey, input) {
       const other = question.allowOther ? String(value?.other || '').trim().slice(0, OTHER_MAX_LENGTH) : ''
       if (question.required && selected.length === 0 && !other) return { error: `missing:${question.key}` }
       if (selected.length > 0 || other) answers[question.key] = { selected, ...(other ? { other } : {}) }
+    } else if (question.type === 'email') {
+      const email = String(value || '').trim().slice(0, question.maxLength)
+      if (question.required && !email) return { error: `missing:${question.key}` }
+      if (email && !EMAIL_PATTERN.test(email)) return { error: `invalid:${question.key}` }
+      if (email) answers[question.key] = email.toLowerCase()
     } else if (question.type === 'text') {
       const text = String(value || '').trim().slice(0, question.maxLength)
       if (question.required && !text) return { error: `missing:${question.key}` }

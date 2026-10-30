@@ -33,7 +33,12 @@ function SurveyPage({ language, university, layout, onBack }) {
 
   const submit = async event => {
     event.preventDefault()
-    const required = state.survey.questions.filter(question => question.required && (answers[question.key] === undefined || answers[question.key] === ''))
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const required = state.survey.questions.filter(question => {
+      const value = answers[question.key]
+      if (question.type === 'email' && value && !emailPattern.test(String(value).trim())) return true
+      return question.required && (value === undefined || value === '')
+    })
     if (required.length > 0) {
       setMissing(required.map(question => question.key))
       document.getElementById(`survey-q-${required[0].key}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
@@ -51,44 +56,43 @@ function SurveyPage({ language, university, layout, onBack }) {
     }
   }
 
+  // Standalone page: only the wordmark above the survey, no site chrome.
+  const shell = content => (
+    <div className="survey-shell">
+      <div className="survey-brand">UniPlanners</div>
+      {content}
+    </div>
+  )
+
   if (state.status === 'loading') {
-    return <main className="survey-page"><p className="survey-muted">{tr('Anket yükleniyor…', 'Loading survey…')}</p></main>
+    return shell(<main className="survey-page"><p className="survey-muted">{tr('Anket yükleniyor…', 'Loading survey…')}</p></main>)
   }
   if (state.status === 'error') {
-    return (
+    return shell(
       <main className="survey-page">
         <h1>{tr('Anket bulunamadı', 'Survey not found')}</h1>
         <p className="survey-muted">{tr('Bu anket şu anda açık değil.', 'This survey is not open right now.')}</p>
-        <button type="button" className="btn btn-secondary" onClick={onBack}>{tr('Planlayıcıya dön', 'Back to the planner')}</button>
+        <button type="button" className="survey-back" onClick={onBack}>{tr('Planlayıcıya dön', 'Back to the planner')}</button>
       </main>
     )
   }
   if (state.status === 'done') {
-    return (
+    return shell(
       <main className="survey-page survey-done">
         <h1>{state.already && !submitting ? tr('Bu anketi zaten doldurdun', 'You have already answered this survey') : tr('Teşekkürler!', 'Thank you!')}</h1>
         <p className="survey-muted">
           {tr('Cevapların UniPlanners’ı geliştirmemize doğrudan yardım ediyor.', 'Your answers directly help us improve UniPlanners.')}
         </p>
-        <button type="button" className="btn btn-primary" onClick={onBack}>{tr('Planlayıcıya dön', 'Back to the planner')}</button>
+        <button type="button" className="survey-back" onClick={onBack}>{tr('Planlayıcıya dön', 'Back to the planner')}</button>
       </main>
     )
   }
 
   const { survey } = state
-  return (
+  return shell(
     <main className="survey-page">
       <header className="survey-header">
         <h1>{label(survey.title)}</h1>
-        <p className="survey-privacy">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
-          <span>
-            {tr(
-              'Anonim: adın, e-postan ya da IP adresin cevaplarınla birlikte kaydedilmez. Cevaplara yalnızca bölümün, sınıfın, kullandığın görünüm ve gönderdiğin gün eklenir.',
-              'Anonymous: your name, e-mail and IP address are never stored with your answers. Only your major, year, the view you use and the day you submit are attached.'
-            )}
-          </span>
-        </p>
       </header>
 
       <form className="survey-form" onSubmit={submit} noValidate>
@@ -143,6 +147,19 @@ function SurveyPage({ language, university, layout, onBack }) {
                 </div>
               )}
 
+              {question.type === 'email' && (
+                <input
+                  type="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  className="survey-other"
+                  maxLength={question.maxLength}
+                  placeholder={tr('ornek@ozu.edu.tr', 'name@example.com')}
+                  value={answers[question.key] || ''}
+                  onChange={event => setAnswer(question.key, event.target.value)}
+                />
+              )}
+
               {question.type === 'text' && (
                 <div className="survey-text">
                   <textarea
@@ -156,7 +173,13 @@ function SurveyPage({ language, university, layout, onBack }) {
                 </div>
               )}
 
-              {isMissing && <p className="survey-error">{tr('Bu soruyu cevaplaman gerekiyor.', 'Please answer this question.')}</p>}
+              {isMissing && (
+                <p className="survey-error">
+                  {question.type === 'email'
+                    ? tr('Geçerli bir e-posta adresi yaz ya da bu alanı boş bırak.', 'Enter a valid e-mail address or leave this empty.')
+                    : tr('Bu soruyu cevaplaman gerekiyor.', 'Please answer this question.')}
+                </p>
+              )}
             </fieldset>
           )
         })}
