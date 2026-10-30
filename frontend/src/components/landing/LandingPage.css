@@ -331,12 +331,6 @@
   text-decoration: none;
 }
 
-.landing-demo figcaption {
-  margin-top: var(--space-3);
-  color: var(--text-tertiary);
-  font-size: var(--text-xs);
-}
-
 @keyframes landingSettle {
   from { opacity: 0.25; transform: translateY(10px); }
   to { opacity: 1; transform: none; }

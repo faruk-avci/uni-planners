@@ -148,15 +148,14 @@ function LandingPage({ language, toggleLanguage, darkMode, onToggleDarkMode, onO
                 <em>{tr('çakışıyor', 'clashes')}</em>
               </span>
             </div>
-            <figcaption>{tr('Örnek hafta: çakışan şube elenir, kalanlar programa yerleşir.', 'Example week: the clashing section is dropped, the rest fall into place.')}</figcaption>
           </figure>
         </section>
       </main>
 
       <footer className="landing-footer">
         <p>{tr(
-          'UniPlanners bağımsız bir öğrenci projesidir; listelenen üniversitelerle resmi bir bağı yoktur. Ders kaydı için üniversitenin resmi sistemini kullan.',
-          'UniPlanners is an independent student project and is not affiliated with the universities listed. Use your university’s official system to register.'
+          'UniPlanners bağımsız bir öğrenci projesidir; listelenen üniversitelerle resmi bir bağı yoktur. Ders kaydı yalnızca üniversitenin resmi sistemi üzerinden yapılır.',
+          'UniPlanners is an independent student project and is not affiliated with the universities listed. Course registration is done only through the university’s official system.'
         )}</p>
         <p className="landing-credit">{footerCredit}</p>
       </footer>
