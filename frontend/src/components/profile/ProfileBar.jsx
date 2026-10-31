@@ -71,6 +71,31 @@ export function ContextStrip({ language, majorLabel, grade, onMajorClick, onUniv
   )
 }
 
+/* The same profile stacked as a card, for the top of the Odak basket panel. */
+export function ProfileCard({ language, majorLabel, grade, onMajorClick, onUniversityClick, onGradeChange }) {
+  const tr = (trText, enText) => language === 'tr' ? trText : enText
+  return (
+    <section className="profile-card" aria-label={tr('Profilin', 'Your profile')}>
+      <h3 className="profile-card-title">{tr('Profilin', 'Your profile')}</h3>
+      <a className="profile-card-row profile-card-university" href="/" onClick={universityClick(onUniversityClick)}>
+        <span className="context-mark" aria-hidden="true">Ö</span>
+        <span className="profile-card-value">{tr('Özyeğin Üniversitesi', 'Özyeğin University')}</span>
+        <span className="context-action">{tr('Değiştir', 'Change')}</span>
+      </a>
+      <button type="button" className="profile-card-row" onClick={onMajorClick}>
+        <span className="profile-card-label">{tr('Bölüm', 'Major')}</span>
+        <span className={`profile-card-value ${majorLabel ? '' : 'context-placeholder'}`}>{majorLabel || tr('Bölümünü seç', 'Select your major')}</span>
+        <svg className="context-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6" /></svg>
+      </button>
+      <label className="profile-card-row profile-card-grade">
+        <span className="profile-card-label">{tr('Sınıf', 'Year')}</span>
+        <GradeSelect grade={grade} onGradeChange={onGradeChange} language={language} emptyLabel={tr('İsteğe bağlı', 'Optional')} className="profile-card-select" />
+        <svg className="context-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+      </label>
+    </section>
+  )
+}
+
 /* One slot for everything the site needs to say. */
 export function NoticeRail({ language, announcementUrl, catalogNotice, catalogNoticeUpdatedAt }) {
   const tr = (trText, enText) => language === 'tr' ? trText : enText

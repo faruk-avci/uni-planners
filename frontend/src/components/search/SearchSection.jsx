@@ -85,6 +85,8 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
   const [searchResults, setSearchResults] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [queryTooShort, setQueryTooShort] = useState(false)
+  // "No results" only makes sense once a search has actually run.
+  const [hasSearched, setHasSearched] = useState(false)
 
   useEffect(() => {
     const closeSuggestions = event => {
@@ -150,6 +152,7 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
       return
     }
     onSearch?.()
+    setHasSearched(true)
     setQueryTooShort(false)
     setIsLoading(true)
     setShowSuggestions(false)
@@ -243,6 +246,7 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
     setActiveSuggestionIndex(-1);
     setSearchResults([]);
     setQueryTooShort(false);
+    setHasSearched(false);
   }
 
   // A parent can ask the search to reset itself (design 2 clears it when
@@ -371,7 +375,7 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
       {afterForm}
 
       {/* Results */}
-      {!(afterForm && !isLoading && !queryTooShort && searchResults.length === 0) && (
+      {!(!isLoading && !queryTooShort && searchResults.length === 0 && (afterForm || !hasSearched)) && (
       <div className="search-results">
         {isLoading ? (
           <p className="no-results-msg">{t.loading}</p>

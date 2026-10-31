@@ -7,10 +7,24 @@
    Design 2 · Odak (focus)
    One question, one search, a checkout tray.
    ───────────────────────────────────────────── */
+/* The shell gives way on the right when the basket panel opens, so the
+   centered column slides left and comes back to center when it closes. */
+.planner-focus-shell {
+  --focus-panel: 400px;
+  --focus-tab: 48px;
+  /* room for the vertical tab so it never sits on the results */
+  padding-right: var(--focus-tab);
+  transition: padding-right 360ms var(--ease-out);
+}
+
+.focus-basket-open {
+  padding-right: calc(var(--focus-panel) + var(--focus-tab));
+}
+
 .planner-focus {
-  width: min(100% - 2 * var(--space-4), 920px);
+  width: min(100% - 2 * var(--space-4), 1080px);
   margin: 0 auto;
-  padding: clamp(24px, 6vh, 64px) 0 160px;
+  padding: clamp(12px, 2.5vh, 28px) 0 160px;
 }
 
 /* Search sits in the hero: no card, a larger field. */
@@ -79,10 +93,10 @@
 
 .basket-tray-inner {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  grid-template-columns: auto auto minmax(0, 1fr) auto auto;
   align-items: center;
   gap: var(--space-4);
-  width: min(100%, 1100px);
+  width: min(100%, 1080px);
   margin: 0 auto;
   padding: var(--space-2) var(--space-2) var(--space-2) var(--space-3);
   background: var(--bg-elevated);
@@ -90,6 +104,45 @@
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-xl);
   pointer-events: auto;
+}
+
+/* Identity chip: university, major code and year at a glance */
+.tray-profile {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3) var(--space-1) var(--space-1);
+  color: var(--text-primary);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.tray-profile:hover {
+  background: var(--bg-tertiary);
+}
+
+.tray-profile-mark {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  color: var(--accent-primary);
+  background: var(--accent-soft);
+  border-radius: var(--radius-md);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+}
+
+.tray-profile-grade {
+  color: var(--text-secondary);
+  font-weight: var(--weight-medium);
+}
+
+.tray-profile-empty .tray-profile-text {
+  color: var(--accent-primary);
 }
 
 .tray-basket-toggle {
@@ -128,11 +181,6 @@
 
 .tray-basket-copy strong {
   font-size: var(--text-sm);
-}
-
-.tray-basket-copy span {
-  color: var(--text-secondary);
-  font-size: var(--text-xs);
 }
 
 .tray-chips {
@@ -234,23 +282,165 @@
   font-weight: var(--weight-semibold);
 }
 
-.focus-basket-drawer {
+.focus-basket-panel {
   position: fixed;
-  right: max(var(--space-4), calc((100vw - 1100px) / 2));
-  bottom: 96px;
-  z-index: 81;
+  top: var(--header-height);
+  right: 0;
+  bottom: 0;
+  z-index: 85;
   display: flex;
-  width: min(400px, calc(100vw - 2 * var(--space-4)));
-  max-height: min(64vh, 620px);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-xl);
-  animation: slideUp var(--duration-normal) var(--ease-out);
+  width: var(--focus-panel);
+  flex-direction: column;
+  padding: var(--space-4);
+  background: var(--bg-secondary);
+  border-left: 1px solid var(--border-primary);
+  box-shadow: var(--shadow-lg);
+  transform: translateX(100%);
+  visibility: hidden;
+  transition: transform 360ms var(--ease-out), visibility 0s linear 360ms;
 }
 
-.focus-basket-drawer > .basket-panel {
+.focus-basket-open .focus-basket-panel {
+  transform: none;
+  visibility: visible;
+  transition: transform 360ms var(--ease-out), visibility 0s linear 0s;
+}
+
+/* Desktop: the profile lives in the panel, the main column is just search. */
+.focus-mobile-strip {
+  display: none;
+}
+
+.profile-card {
+  flex: 0 0 auto;
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.profile-card-title {
+  margin-bottom: var(--space-2);
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0;
+}
+
+.profile-card-row {
+  display: flex;
+  width: 100%;
+  min-height: 44px;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2);
+  color: var(--text-primary);
+  border-radius: var(--radius-md);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.profile-card-row:hover,
+.profile-card-row:focus-within {
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+}
+
+.profile-card-label {
+  flex: 0 0 52px;
+  color: var(--text-tertiary);
+  font-size: var(--text-xs);
+}
+
+.profile-card-value,
+.profile-card-select {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-card-select {
+  padding: 0;
+  color: var(--text-primary);
+  background: transparent;
+  border: 0;
+  outline: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.profile-card-select option {
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
+}
+
+.focus-basket-panel > .basket-panel {
   flex: 1;
   min-height: 0;
-  overflow: auto;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+.focus-basket-tab {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  z-index: 86;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-2);
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-primary);
+  border-right: 0;
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  writing-mode: vertical-rl;
+  transform: translateY(-50%);
+  transition: right 360ms var(--ease-out), background-color var(--duration-fast) var(--ease-out);
+}
+
+.focus-basket-tab:hover {
+  background: var(--bg-tertiary);
+}
+
+.focus-basket-open .focus-basket-tab {
+  right: var(--focus-panel);
+}
+
+.focus-basket-tab-count {
+  display: grid;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 var(--space-1);
+  place-items: center;
+  color: var(--text-inverse);
+  background: var(--accent-primary);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  writing-mode: horizontal-tb;
+}
+
+/* The tray shares the column's box: same width, same center, open or closed. */
+.planner-focus-shell .basket-tray {
+  right: var(--focus-tab);
+  transition: right 360ms var(--ease-out);
+}
+
+.focus-basket-open .basket-tray {
+  right: calc(var(--focus-panel) + var(--focus-tab));
 }
 
 @media (max-width: 1100px) {
@@ -260,7 +450,13 @@
 @media (max-width: 900px) {
   /* Phones use the shared bottom dock and basket sheet instead. */
   .basket-tray,
-  .focus-basket-drawer { display: none; }
+  .focus-basket-tab,
+  .focus-basket-panel { display: none; }
+
+  .focus-mobile-strip { display: block; }
+
+  .planner-focus-shell,
+  .focus-basket-open { padding-right: 0; }
 
   .planner-focus {
     width: calc(100% - 2 * var(--space-3));

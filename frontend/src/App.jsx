@@ -27,7 +27,7 @@ import { recordGenerateSuccess, shouldQueueSurveyNudge, markSurveyNudgeShown, ma
 import { canonicalProgramCode, groupMajorOptions } from './data/programs'
 import LandingPage from './components/landing/LandingPage'
 import SurveyPage from './components/survey/SurveyPage'
-import { ContextStrip } from './components/profile/ProfileBar'
+import { ContextStrip, ProfileCard } from './components/profile/ProfileBar'
 import BasketTray from './components/layouts/BasketTray'
 import './components/layouts/layouts.css'
 
@@ -1597,17 +1597,36 @@ function App() {
 
       ) : (
       effectiveLayout === '2' ? (
-      <main className="main planner-focus">
-        <section className="focus-hero">
-          <ContextStrip {...profileProps} />
-          <div className="focus-search" ref={focusSearchRef}>{searchNode}</div>
-        </section>
+      <main className={`main planner-focus-shell ${trayBasketOpen ? 'focus-basket-open' : ''}`}>
+        <div className="planner-focus">
+          <section className="focus-hero">
+            {/* Phones keep the strip here; on desktop it lives in the basket panel. */}
+            <div className="focus-mobile-strip"><ContextStrip {...profileProps} /></div>
+            <div className="focus-search" ref={focusSearchRef}>{searchNode}</div>
+          </section>
+        </div>
 
-        {trayBasketOpen && (
-          <div className="focus-basket-drawer" role="dialog" aria-label={tr('Sepet', 'Basket')}>
-            {basketNode}
-          </div>
-        )}
+        {/* Vertical tab on the right edge; it rides along with the panel. */}
+        <button
+          type="button"
+          className="focus-basket-tab"
+          onClick={() => setTrayBasketOpen(open => !open)}
+          aria-expanded={trayBasketOpen}
+          aria-controls="focus-basket-panel"
+        >
+          <span className="focus-basket-tab-count">{basket.length}</span>
+          <span className="focus-basket-tab-label">{trayBasketOpen ? tr('Kapat', 'Close') : tr('Sepet', 'Basket')}</span>
+        </button>
+        <aside
+          id="focus-basket-panel"
+          className="focus-basket-panel"
+          aria-label={tr('Sepet', 'Basket')}
+          aria-hidden={!trayBasketOpen}
+        >
+          <ProfileCard {...profileProps} />
+          {basketNode}
+        </aside>
+
         <BasketTray
           language={language}
           basket={basket}
@@ -1619,6 +1638,8 @@ function App() {
           generating={generating}
           basketOpen={trayBasketOpen}
           onToggleBasket={() => setTrayBasketOpen(open => !open)}
+          profile={{ major: isUndergraduateMajor(major) ? major : '', grade }}
+          onOpenProfile={() => setTrayBasketOpen(open => !open)}
         />
       </main>
       ) : (

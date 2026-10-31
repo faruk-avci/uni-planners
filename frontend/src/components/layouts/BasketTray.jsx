@@ -8,13 +8,29 @@ const DAYS = [
 
 /* Design 2's checkout bar: everything needed to go from "these courses" to
    "show me schedules" in one strip pinned to the bottom of the screen. */
-function BasketTray({ language, basket, totalCredits, onRemoveCourse, freeDays, setFreeDays, onGenerate, generating, basketOpen, onToggleBasket }) {
+function BasketTray({ language, basket, totalCredits, onRemoveCourse, freeDays, setFreeDays, onGenerate, generating, basketOpen, onToggleBasket, profile, onOpenProfile }) {
   const tr = (trText, enText) => language === 'tr' ? trText : enText
   const toggleDay = id => setFreeDays(prev => prev.includes(id) ? prev.filter(day => day !== id) : [...prev, id])
 
   return (
     <div className="basket-tray" role="region" aria-label={tr('Sepet ve program oluşturma', 'Basket and schedule generation')}>
       <div className="basket-tray-inner">
+        {profile && (
+          <button
+            type="button"
+            className={`tray-profile ${profile.major ? '' : 'tray-profile-empty'}`}
+            onClick={onOpenProfile}
+            aria-expanded={basketOpen}
+            aria-controls="focus-basket-panel"
+            title={tr('Profilini düzenle', 'Edit your profile')}
+          >
+            <span className="tray-profile-mark" aria-hidden="true">Ö</span>
+            <span className="tray-profile-text">
+              {profile.major || tr('Bölüm seç', 'Pick major')}
+              {profile.grade && <span className="tray-profile-grade"> · {profile.grade === 'prep' ? tr('Hazırlık', 'Prep') : tr(`${profile.grade}. sınıf`, `Year ${profile.grade}`)}</span>}
+            </span>
+          </button>
+        )}
         <button
           type="button"
           className={`tray-basket-toggle ${basketOpen ? 'tray-basket-toggle-open' : ''}`}
