@@ -32,7 +32,7 @@
 
 .survey-page h1 {
   font-size: clamp(1.75rem, 3.4vw, 2.5rem);
-  font-weight: 800;
+  font-weight: 600;
   line-height: 1.08;
   letter-spacing: -0.03em;
 }

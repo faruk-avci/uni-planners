@@ -372,7 +372,7 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
 
       {/* Results */}
       {!(afterForm && !isLoading && !queryTooShort && searchResults.length === 0) && (
-      <div className="search-results stagger-enter">
+      <div className="search-results">
         {isLoading ? (
           <p className="no-results-msg">{t.loading}</p>
         ) : queryTooShort ? (

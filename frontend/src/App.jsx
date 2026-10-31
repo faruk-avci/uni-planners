@@ -55,6 +55,7 @@ const routeFromLocation = () => {
 const PUBLIC_COLOR_THEMES = new Set(['petrol', 'iris', 'neutral', 'ocean', 'forest', 'violet', 'coral'])
 const DEFAULT_COLOR_THEME = 'petrol'
 const PLANNER_LAYOUTS = ['1', '2']
+const PHONE_QUERY = '(max-width: 640px)'
 const FAVICON_COLORS = {
   petrol: '#1d5e66',
   iris: '#3b3f9a',
@@ -110,6 +111,9 @@ function App() {
     }
   })
   const [trayBasketOpen, setTrayBasketOpen] = useState(false)
+  // Phones always get the Odak design; the stored choice applies on wider screens.
+  const [isPhone, setIsPhone] = useState(() => Boolean(window.matchMedia?.(PHONE_QUERY).matches))
+  const effectiveLayout = isPhone ? '2' : layout
   const [searchClearToken, setSearchClearToken] = useState(0)
   const focusSearchRef = useRef(null)
   const [darkMode, setDarkMode] = useState(() => {
@@ -220,13 +224,21 @@ function App() {
   }
 
   useEffect(() => {
-    document.documentElement.toggleAttribute('data-tray', layout === '2' && activePage === 'planner')
-  }, [layout, activePage])
+    const query = window.matchMedia?.(PHONE_QUERY)
+    if (!query) return undefined
+    const update = event => setIsPhone(event.matches)
+    query.addEventListener('change', update)
+    return () => query.removeEventListener('change', update)
+  }, [])
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-layout', layout)
+    document.documentElement.toggleAttribute('data-tray', effectiveLayout === '2' && activePage === 'planner')
+  }, [effectiveLayout, activePage])
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-layout', effectiveLayout)
     try { localStorage.setItem('uniplanner_layout', layout) } catch { /* storage disabled */ }
-  }, [layout])
+  }, [layout, effectiveLayout])
 
   const selectLayout = next => {
     if (!PLANNER_LAYOUTS.includes(next) || next === layout) return
@@ -473,7 +485,7 @@ function App() {
         localStorage.setItem('uniplanner_dino_mode', String(next))
         setDinoOpen(next)
         notify('success', next
-          ? tr('Dino modu açıldı!', 'Dino Mode activated!')
+          ? tr('Dino modu açıldı', 'Dino Mode activated')
           : tr('Dino modu kapatıldı.', 'Dino Mode deactivated.'))
         return next
       })
@@ -708,7 +720,7 @@ function App() {
     }
     setGenerating(true)
     // Design 2 shows schedules where the search results were, so clear them.
-    if (layout === '2') setSearchClearToken(token => token + 1)
+    if (effectiveLayout === '2') setSearchClearToken(token => token + 1)
     const result = await courseService.generateSchedule(generationBasket, generationFreeDays, options)
     setGenerating(false)
 
@@ -1267,7 +1279,6 @@ function App() {
                       {fittingLoading
                         ? (language === 'tr' ? 'Yükleniyor…' : 'Loading…')
                         : (language === 'tr' ? 'Programıma Uyan Dersleri Göster' : 'Show Courses That Fit This Schedule')}
-                      <span className="badge badge-new">{language === 'tr' ? 'Yeni' : 'New'}</span>
                     </button>
 
                     {fittingShown && (
@@ -1451,9 +1462,9 @@ function App() {
       onRemoveSection={removeSection}
       onExcludeSection={excludeSectionFromBasket}
       major={major}
-      afterForm={layout === '2' ? schedulesSection : null}
+      afterForm={effectiveLayout === '2' ? schedulesSection : null}
       clearToken={searchClearToken}
-      onSearch={layout === '2' ? () => {
+      onSearch={effectiveLayout === '2' ? () => {
         // Design 2: a new search replaces earlier generated schedules (they
         // sit where results go), then the search scrolls to the top so the
         // profile strip moves out of view; scrolling up reveals it again.
@@ -1469,7 +1480,7 @@ function App() {
 
   // The survey stands on its own: no header, profile bar, dock or footer.
   if (activePage === 'survey') {
-    return <SurveyPage language={language} university="ozyegin" layout={layout} onBack={() => navigate('planner')} />
+    return <SurveyPage language={language} university="ozyegin" layout={effectiveLayout} onBack={() => navigate('planner')} />
   }
 
   if (activePage === 'landing') {
@@ -1479,6 +1490,8 @@ function App() {
         toggleLanguage={toggleLanguage}
         darkMode={darkMode}
         onToggleDarkMode={toggleDarkMode}
+        colorTheme={colorTheme}
+        setColorTheme={selectColorTheme}
         onOpenUniversity={() => navigate('planner')}
         footerCredit={footerCredit}
       />
@@ -1533,7 +1546,7 @@ function App() {
         />
       )}
 
-      {activePage !== 'shared' && activePage !== 'recap' && !(activePage === 'planner' && layout !== '1') && (
+      {activePage !== 'shared' && activePage !== 'recap' && !(activePage === 'planner' && effectiveLayout !== '1') && (
         <ProfileBar
           language={language}
           majorLabel={selectedMajorLabel}
@@ -1583,7 +1596,7 @@ function App() {
         <RecapPage language={language} />
 
       ) : (
-      layout === '2' ? (
+      effectiveLayout === '2' ? (
       <main className="main planner-focus">
         <section className="focus-hero">
           <ContextStrip {...profileProps} />

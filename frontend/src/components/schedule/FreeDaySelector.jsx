@@ -23,7 +23,6 @@ function FreeDaySelector({ freeDays, setFreeDays, language }) {
         <h3 className="freeday-title">
           {language === 'tr' ? 'Boş Gün Seçimi' : 'Free Day Selection'}
         </h3>
-        <span className="badge badge-new">{language === 'tr' ? 'Yeni' : 'New'}</span>
       </div>
       <p className="freeday-desc">
         {language === 'tr'

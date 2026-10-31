@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { isExternalUrl } from '../../utils/links'
 import './ProfileBar.css'
 
 const CATALOG_NOTICE_DISMISSED_KEY = 'uniplanner_catalog_notice_dismissed_version'
@@ -73,7 +72,7 @@ export function ContextStrip({ language, majorLabel, grade, onMajorClick, onUniv
 }
 
 /* One slot for everything the site needs to say. */
-export function NoticeRail({ language, announcementUrl, surveyUrl, catalogNotice, catalogNoticeUpdatedAt }) {
+export function NoticeRail({ language, announcementUrl, catalogNotice, catalogNoticeUpdatedAt }) {
   const tr = (trText, enText) => language === 'tr' ? trText : enText
   // Dismissal is keyed to *which* notice was dismissed (its updatedAt
   // timestamp), not just a yes/no flag -- so publishing a new notice from
@@ -113,8 +112,8 @@ export function NoticeRail({ language, announcementUrl, surveyUrl, catalogNotice
       onDismiss: dismissNotice,
     })
   }
-  // One slot: a catalog notice takes the place of the regular links (official
-  // site, survey) until it is dismissed, then those links come back.
+  // One slot: a catalog notice takes the place of the official-site link until
+  // it is dismissed. The survey lives in the header, not here.
   if (!noticeVisible && announcementUrl) {
     notices.push({
       key: 'announcement',
@@ -122,15 +121,6 @@ export function NoticeRail({ language, announcementUrl, surveyUrl, catalogNotice
       icon: 'megaphone',
       body: tr('Bu site resmi ders kayıt sitesi değildir. Resmi duyurular ve ders kaydı için:', 'This is not the official course registration site. For official announcements and registration:'),
       link: { href: announcementUrl, label: tr('Resmi siteye git', 'Go to the official site'), external: true },
-    })
-  }
-  if (!noticeVisible && surveyUrl) {
-    notices.push({
-      key: 'survey',
-      tone: 'neutral',
-      icon: 'survey',
-      body: tr('Lütfen anketi doldurmayı unutmayın.', 'Please don’t forget to fill out our survey.'),
-      link: { href: surveyUrl, label: tr('Ankete git', 'Go to survey'), external: isExternalUrl(surveyUrl) },
     })
   }
 

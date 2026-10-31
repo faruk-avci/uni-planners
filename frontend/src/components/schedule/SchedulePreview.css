@@ -281,7 +281,7 @@
   .grid-day-header { padding: 6px 1px; font-size: 10px; }
   .grid-time { padding: 2px; font-size: 9px; justify-content: center; }
   .grid-cell,
-  .grid-block { min-height: 38px; }
+  .grid-block { min-height: 40px; }
   .grid-block {
     min-width: 0;
     gap: 1px;
@@ -395,7 +395,7 @@
   }
 
   .schedule-actions .btn {
-    min-height: 42px;
+    min-height: 44px;
     white-space: normal;
   }
 }

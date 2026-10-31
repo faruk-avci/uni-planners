@@ -1,4 +1,5 @@
 import { UNIVERSITIES } from '../../data/universities'
+import SettingsMenu from '../layout/SettingsMenu'
 import './LandingPage.css'
 
 const DAYS = {
@@ -27,7 +28,7 @@ function ArrowIcon() {
   )
 }
 
-function LandingPage({ language, toggleLanguage, darkMode, onToggleDarkMode, onOpenUniversity, footerCredit }) {
+function LandingPage({ language, toggleLanguage, darkMode, onToggleDarkMode, colorTheme, setColorTheme, onOpenUniversity, footerCredit }) {
   const tr = (trText, enText) => (language === 'tr' ? trText : enText)
 
   return (
@@ -35,34 +36,21 @@ function LandingPage({ language, toggleLanguage, darkMode, onToggleDarkMode, onO
       <header className="landing-bar">
         <a className="landing-wordmark" href="/" aria-label="UniPlanners">UniPlanners</a>
         <div className="landing-bar-actions">
-          <button
-            type="button"
-            className="landing-icon-btn"
-            onClick={onToggleDarkMode}
-            aria-pressed={darkMode}
-            aria-label={darkMode ? tr('Aydınlık moda geç', 'Switch to light mode') : tr('Karanlık moda geç', 'Switch to dark mode')}
-          >
-            {darkMode ? (
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <circle cx="12" cy="12" r="4" />
-                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
-              </svg>
-            ) : (
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-              </svg>
-            )}
-          </button>
-          <button type="button" className="landing-icon-btn landing-lang" onClick={toggleLanguage} title={tr('Switch to English', "Türkçe'ye geç")}>
-            {language === 'tr' ? 'EN' : 'TR'}
-          </button>
+          <SettingsMenu
+            language={language}
+            toggleLanguage={toggleLanguage}
+            darkMode={darkMode}
+            onToggleDarkMode={onToggleDarkMode}
+            colorTheme={colorTheme}
+            setColorTheme={setColorTheme}
+          />
         </div>
       </header>
 
       <main>
         <section className="landing-index" aria-labelledby="landing-title">
           <div className="landing-intro">
-            <h1 id="landing-title">{tr('Üniversiteni seç.', 'Choose your university.')}</h1>
+            <h1 id="landing-title">{tr('Üniversiteni seç', 'Choose your university')}</h1>
             <p>
               {tr(
                 'Derslerini ekle, şubeleri seç; UniPlanners çakışmayan tüm haftalık programları saniyeler içinde çıkarsın.',

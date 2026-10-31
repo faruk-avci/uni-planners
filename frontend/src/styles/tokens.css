@@ -141,7 +141,7 @@
   --weight-normal: 400;
   --weight-medium: 500;
   --weight-semibold: 600;
-  --weight-bold: 700;
+  --weight-bold: 600;
 
   /* ── Transitions ── */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -152,7 +152,7 @@
 
   /* ── Layout ── */
   --max-width: 1400px;
-  --header-height: 64px;
+  --header-height: 69px;
   --sidebar-width: 360px;
 }
 

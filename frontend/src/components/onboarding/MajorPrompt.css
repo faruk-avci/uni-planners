@@ -134,7 +134,6 @@
   border-color: var(--accent-primary);
   box-shadow: var(--shadow-sm);
   outline: none;
-  transform: translateY(-1px);
 }
 
 .major-prompt-programs .major-prompt-program-active,

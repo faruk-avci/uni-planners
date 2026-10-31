@@ -79,7 +79,7 @@ function SurveyPage({ language, university, layout, onBack }) {
   if (state.status === 'done') {
     return shell(
       <main className="survey-page survey-done">
-        <h1>{state.already && !submitting ? tr('Bu anketi zaten doldurdun', 'You have already answered this survey') : tr('Teşekkürler!', 'Thank you!')}</h1>
+        <h1>{state.already && !submitting ? tr('Bu anketi zaten doldurdun', 'You have already answered this survey') : tr('Teşekkürler', 'Thank you')}</h1>
         <p className="survey-muted">
           {tr('Cevapların UniPlanners’ı geliştirmemize doğrudan yardım ediyor.', 'Your answers directly help us improve UniPlanners.')}
         </p>

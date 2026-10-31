@@ -72,7 +72,6 @@ function CourseWorkload({ basket, language, showHeader = true }) {
           <div className="workload-header">
             <div className="workload-header-title">
               <h3>{t.sectionTitle}</h3>
-              <span className="badge badge-new">{t.newBadge}</span>
             </div>
             <button className="btn btn-secondary btn-sm" onClick={handleExport} disabled={!hasAnyData || exporting}>
               {exporting ? t.exporting : t.exportImage}

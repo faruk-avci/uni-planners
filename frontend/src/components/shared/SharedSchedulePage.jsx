@@ -186,7 +186,6 @@ function SharedSchedulePage({ id, language, onHome }) {
             >
               <h2>{tr('Ders Yükü Tablosu', 'Course Workload Table')}</h2>
               <span className="shared-card-toggle-right">
-                <span className="badge badge-new">{tr('Yeni', 'New')}</span>
                 <span className="shared-card-toggle-pill">
                   <span>{workloadOpen ? tr('Detayları gizle', 'Hide details') : tr('Detayları göster', 'Show details')}</span>
                   <span className={`shared-card-chevron ${workloadOpen ? 'shared-card-chevron-open' : ''}`} aria-hidden="true">›</span>

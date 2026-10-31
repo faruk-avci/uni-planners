@@ -149,14 +149,13 @@ function SchedulePreview({ language, schedules = [], current = 0, onPrev, onNext
       {!readOnly && <div className="schedule-actions">
         <button className="btn btn-secondary btn-sm" onClick={onShowFits}>
           {language === 'tr' ? 'Bu programa uyan dersler' : 'Courses that fit this schedule'}
-          <span className="badge badge-new">{language === 'tr' ? 'Yeni' : 'New'}</span>
         </button>
         <button className={`btn btn-secondary btn-sm ${shareCopied ? 'schedule-share-copied' : ''}`} onClick={onShare} disabled={!hasData || sharing || shareCopied}>
           {sharing
             ? (language === 'tr' ? 'Paylaşım hazırlanıyor…' : 'Creating share…')
             : shareCopied
               ? (language === 'tr' ? 'Bağlantı kopyalandı' : 'Link copied')
-              : <>{language === 'tr' ? 'Programı Paylaş' : 'Share Schedule'} <span className="badge badge-new">{language === 'tr' ? 'Yeni' : 'New'}</span></>}
+              : <>{language === 'tr' ? 'Programı Paylaş' : 'Share Schedule'}</>}
         </button>
         <button className="btn btn-secondary btn-sm" onClick={onExportCalendar} disabled={!hasData || exportingCalendar}>
           {exportingCalendar

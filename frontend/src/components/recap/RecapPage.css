@@ -26,7 +26,7 @@
   display: inline-block;
   color: var(--accent-primary); 
   font-size: var(--text-sm); 
-  font-weight: 800; 
+  font-weight: 600; 
   letter-spacing: 0.15em;  
   margin-bottom: var(--space-3);
   padding: 4px 12px;
@@ -37,7 +37,7 @@
 .recap-hero h1 { 
   margin-top: 0; 
   font-size: clamp(32px, 6vw, 56px); 
-  font-weight: 900;
+  font-weight: 600;
   letter-spacing: -0.04em; 
   line-height: 1.1;
   color: var(--text-primary);
@@ -86,14 +86,14 @@
   background: var(--bg-tertiary); 
   border: 1px solid var(--border-secondary);
   border-radius: var(--radius-full); 
-  font-weight: 800; 
+  font-weight: 600; 
   font-size: var(--text-lg);
 }
 
 .recap-step-body h2 { 
   margin-top: 4px; 
   font-size: var(--text-xl); 
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .recap-step-body p { 
@@ -128,7 +128,7 @@
   border: 1px solid var(--border-secondary);
   border-radius: var(--radius-lg); 
   text-align: center;
-  transition: all 0.3s ease;
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
 }
 
 .recap-stat-card:hover {
@@ -138,7 +138,7 @@
 
 .recap-stat-card strong {
   font-size: 2.5rem;
-  font-weight: 900;
+  font-weight: 600;
   color: var(--accent-primary);
   line-height: 1;
 }
@@ -146,7 +146,7 @@
 .recap-stat-card span { 
   color: var(--text-primary); 
   font-size: var(--text-sm); 
-  font-weight: 700;
+  font-weight: 600;
 }
 
 /* HIGHLIGHTS CONTAINER */
@@ -172,7 +172,7 @@
 
 .recap-highlight-box h3 {
   font-size: var(--text-lg);
-  font-weight: 800;
+  font-weight: 600;
   margin-bottom: var(--space-4);
   border-bottom: 2px solid var(--border-primary);
   padding-bottom: var(--space-2);
@@ -215,7 +215,7 @@
   padding: 4px 10px;
   border-radius: var(--radius-full);
   font-size: var(--text-sm);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .recap-highlight-course {
@@ -279,7 +279,7 @@
   font-size: 0.75rem;
   color: var(--accent-primary);
   letter-spacing: 0.1em;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .recap-q-asked span {
@@ -302,7 +302,7 @@
 
 .recap-q-score {
   font-size: 2.25rem;
-  font-weight: 900;
+  font-weight: 600;
   color: var(--accent-primary);
   line-height: 1;
 }
@@ -310,7 +310,7 @@
 .recap-q-label {
   font-size: 0.75rem;
   color: var(--text-primary);
-  font-weight: 700;
+  font-weight: 600;
   margin-top: 4px;
 }
 
@@ -324,7 +324,7 @@
 
 .recap-favorites-box h3 {
   font-size: var(--text-lg);
-  font-weight: 800;
+  font-weight: 600;
   margin-bottom: var(--space-4);
 }
 
@@ -409,7 +409,7 @@
 
 .recap-footer-cta h2 {
   font-size: var(--text-2xl);
-  font-weight: 900;
+  font-weight: 600;
 }
 
 .recap-footer-cta p {

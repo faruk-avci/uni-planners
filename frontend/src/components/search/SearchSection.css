@@ -8,7 +8,7 @@
 }
 
 .search-btn, .clear-btn {
-  height: 46px;
+  height: 48px;
   padding: 0 var(--space-6);
   border-radius: var(--radius-md);
   font-size: var(--text-md);
@@ -17,7 +17,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all var(--duration-fast) var(--ease-out);
+  transition: color var(--duration-fast) var(--ease-out), background-color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out), opacity var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
   border: none;
 }
 
@@ -29,7 +29,6 @@
 
 .search-btn:hover {
   background: var(--accent-primary-hover);
-  transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }
 
@@ -43,7 +42,6 @@
   color: var(--text-primary);
   background: var(--bg-accent);
   border-color: var(--border-accent);
-  transform: translateY(-1px);
 }
 
 .search-input-wrapper {
@@ -55,7 +53,7 @@
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-md);
   padding: var(--space-3) var(--space-4);
-  transition: all var(--duration-fast) var(--ease-out);
+  transition: color var(--duration-fast) var(--ease-out), background-color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out), opacity var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
   flex: 1;
 }
 
@@ -277,7 +275,7 @@
   min-width: 20px;
   height: 20px;
   place-items: center;
-  padding: 0 5px;
+  padding: 0 4px;
   color: var(--text-secondary);
   background: var(--bg-tertiary);
   border: 1px solid var(--border-secondary);
@@ -495,7 +493,7 @@
 }
 
 .filter-select {
-  height: 42px;
+  height: 44px;
   padding: 0 var(--space-3);
   border-radius: var(--radius-md);
   border: 1px solid var(--border-primary);
@@ -503,7 +501,7 @@
   color: var(--text-primary);
   font-size: var(--text-sm);
   outline: none;
-  transition: all var(--duration-fast) var(--ease-out);
+  transition: color var(--duration-fast) var(--ease-out), background-color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out), opacity var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
   cursor: pointer;
 }
 
@@ -547,7 +545,7 @@
 
   .search-input-wrapper {
     min-width: 0;
-    min-height: 46px;
+    min-height: 48px;
     padding: var(--space-2) var(--space-3);
   }
 
@@ -557,7 +555,7 @@
   }
 
   .search-btn {
-    height: 46px;
+    height: 48px;
     padding: 0 var(--space-4);
   }
 
@@ -609,7 +607,7 @@
 
   .course-actions .btn {
     min-width: 0;
-    min-height: 42px;
+    min-height: 44px;
     flex: 1;
     padding-inline: var(--space-2);
   }

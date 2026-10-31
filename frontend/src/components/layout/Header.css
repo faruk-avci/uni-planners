@@ -5,7 +5,7 @@
 .header {
   width: 100%;
   margin: 0;
-  padding: var(--space-3) 0;
+  padding: var(--space-4) 0;
   background: var(--bg-primary);
   border-bottom: 1px solid var(--border-primary);
   position: sticky;
@@ -79,7 +79,7 @@
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   color: var(--text-secondary);
-  transition: all var(--duration-fast) var(--ease-out);
+  transition: color var(--duration-fast) var(--ease-out), background-color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out), opacity var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
   white-space: nowrap;
 }
 
@@ -117,7 +117,7 @@
   height: 36px;
   border-radius: var(--radius-md);
   color: var(--text-secondary);
-  transition: all var(--duration-fast) var(--ease-out);
+  transition: color var(--duration-fast) var(--ease-out), background-color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out), opacity var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
 }
 
 .action-btn:hover {
@@ -187,7 +187,7 @@
 
 .palette-option {
   width: 100%;
-  min-height: 38px;
+  min-height: 40px;
   display: grid;
   grid-template-columns: 20px 1fr 16px;
   align-items: center;
@@ -265,25 +265,45 @@
   color: var(--accent-primary);
 }
 
-/* Phones get the switch as its own full-width row under the header. */
-.layout-switch-row {
-  display: none;
-}
-
+/* Phones always use the Odak design, so the switch is desktop/tablet only. */
 @media (max-width: 640px) {
   .layout-switch-inline { display: none; }
+}
 
-  .layout-switch-row {
-    display: flex;
-    width: calc(100% - 2 * var(--space-2));
-    margin: var(--space-1) auto 0;
-  }
+/* Settings menu: theme and language as segmented rows, then the palettes */
+.settings-menu {
+  width: 232px;
+}
 
-  .layout-switch-row .layout-switch-option {
-    flex: 1;
-    justify-content: center;
-    height: 32px;
-  }
+.settings-segment {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  margin: 0 var(--space-2) var(--space-2);
+  padding: 3px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+}
+
+.settings-segment-option {
+  height: 30px;
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+}
+
+.settings-segment-option:hover {
+  color: var(--text-primary);
+}
+
+.settings-segment-active,
+.settings-segment-active:hover {
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-sm);
+  font-weight: var(--weight-semibold);
 }
 
 .lang-toggle {
@@ -331,7 +351,7 @@
 
 @media (max-width: 768px) {
   .header {
-    padding: var(--space-1) 0;
+    padding: var(--space-2) 0;
   }
 
   .nav-link-secondary {
@@ -428,7 +448,7 @@
 
   .nav-link {
     min-height: 36px;
-    padding-inline: 7px;
+    padding-inline: 8px;
     font-size: 11px;
   }
 
@@ -442,9 +462,6 @@
     font-size: 10px;
   }
 
-  a.action-btn.howto-mobile {
-    display: none;
-  }
 }
 
 @media (max-width: 350px) {
