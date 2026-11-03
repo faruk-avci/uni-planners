@@ -1,8 +1,8 @@
 import express from 'express';
 import { pool } from '../config/db.js';
-import { DEFAULT_UNIVERSITY } from '../config/universities.js';
 import { majorCodesFor } from '../services/catalogService.js';
 
+// Major and year, per browser session and university (university_preferences).
 const router = express.Router();
 
 const MAJOR_PREFERENCE_SOURCES = new Set([
@@ -15,15 +15,12 @@ const MAJOR_PREFERENCE_SOURCES = new Set([
 
 const GRADE_VALUES = new Set(['prep', '1', '2', '3', '4']);
 
-// Özyeğin keeps major/year on `sessions` (its analytics read them there);
-// every other university has a row in university_preferences.
-const onSessions = university => university === DEFAULT_UNIVERSITY;
-
 router.get('/preferences', async (req, res) => {
   try {
-    const { rows } = onSessions(req.university)
-      ? await pool.query('SELECT major_code, grade_level FROM sessions WHERE id = $1', [req.sessionId])
-      : await pool.query('SELECT major_code, grade_level FROM university_preferences WHERE session_id = $1 AND university = $2', [req.sessionId, req.university]);
+    const { rows } = await pool.query(
+      'SELECT major_code, grade_level FROM university_preferences WHERE session_id = $1 AND university = $2',
+      [req.sessionId, req.university]
+    );
     res.json({ major: rows[0]?.major_code || null, grade: rows[0]?.grade_level || null });
   } catch (err) {
     console.error('GET /preferences error:', err.message);
@@ -31,6 +28,8 @@ router.get('/preferences', async (req, res) => {
   }
 });
 
+// Programs listed for the university, or (Özyeğin) any program code its
+// catalog mentions.
 async function isKnownMajor(major, university) {
   const listed = majorCodesFor(university);
   if (listed) return listed.includes(major);
@@ -60,48 +59,22 @@ router.put('/preferences/major', async (req, res) => {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
-      let previousMajor = null;
-      let changed = false;
-      if (onSessions(req.university)) {
-        const current = await client.query(
-          'SELECT major_code, first_major_code FROM sessions WHERE id = $1 FOR UPDATE',
-          [req.sessionId]
-        );
-        previousMajor = current.rows[0]?.major_code || null;
-        changed = previousMajor !== storedMajor;
-        if (changed) {
-          await client.query(
-            `UPDATE sessions
-                SET major_code = $1,
-                    major_updated_at = now(),
-                    first_major_code = COALESCE(first_major_code, $1)
-              WHERE id = $2`,
-            [storedMajor, req.sessionId]
-          );
-        } else if (!current.rows[0]?.first_major_code) {
-          // Backfill for sessions that chose their major before first_major_code existed.
-          await client.query('UPDATE sessions SET first_major_code = $1 WHERE id = $2', [storedMajor, req.sessionId]);
-        }
-      } else {
-        const current = await client.query(
-          'SELECT major_code FROM university_preferences WHERE session_id = $1 AND university = $2 FOR UPDATE',
-          [req.sessionId, req.university]
-        );
-        previousMajor = current.rows[0]?.major_code || null;
-        changed = previousMajor !== storedMajor;
-        if (changed) {
-          await client.query(
-            `INSERT INTO university_preferences (session_id, university, major_code, first_major_code, major_updated_at)
-             VALUES ($1, $2, $3, $3, now())
-             ON CONFLICT (session_id, university) DO UPDATE
-               SET major_code = EXCLUDED.major_code,
-                   major_updated_at = now(),
-                   first_major_code = COALESCE(university_preferences.first_major_code, EXCLUDED.major_code)`,
-            [req.sessionId, req.university, storedMajor]
-          );
-        }
-      }
+      const current = await client.query(
+        'SELECT major_code FROM university_preferences WHERE session_id = $1 AND university = $2 FOR UPDATE',
+        [req.sessionId, req.university]
+      );
+      const previousMajor = current.rows[0]?.major_code || null;
+      const changed = previousMajor !== storedMajor;
       if (changed) {
+        await client.query(
+          `INSERT INTO university_preferences (session_id, university, major_code, first_major_code, major_updated_at)
+           VALUES ($1, $2, $3, $3, now())
+           ON CONFLICT (session_id, university) DO UPDATE
+             SET major_code = EXCLUDED.major_code,
+                 major_updated_at = now(),
+                 first_major_code = COALESCE(university_preferences.first_major_code, EXCLUDED.major_code)`,
+          [req.sessionId, req.university, storedMajor]
+        );
         await client.query(
           'INSERT INTO major_selection_events (session_id, major_code, source, university) VALUES ($1, $2, $3, $4)',
           [req.sessionId, storedMajor, source, req.university]
@@ -130,31 +103,19 @@ router.put('/preferences/grade', async (req, res) => {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
-      let previousGrade = '';
-      if (onSessions(req.university)) {
-        const current = await client.query('SELECT grade_level FROM sessions WHERE id = $1 FOR UPDATE', [req.sessionId]);
-        previousGrade = current.rows[0]?.grade_level || '';
-        if (previousGrade !== grade) {
-          await client.query(
-            'UPDATE sessions SET grade_level = $1, grade_updated_at = now() WHERE id = $2',
-            [grade || null, req.sessionId]
-          );
-        }
-      } else {
-        const current = await client.query(
-          'SELECT grade_level FROM university_preferences WHERE session_id = $1 AND university = $2 FOR UPDATE',
-          [req.sessionId, req.university]
+      const current = await client.query(
+        'SELECT grade_level FROM university_preferences WHERE session_id = $1 AND university = $2 FOR UPDATE',
+        [req.sessionId, req.university]
+      );
+      const previousGrade = current.rows[0]?.grade_level || '';
+      if (previousGrade !== grade) {
+        await client.query(
+          `INSERT INTO university_preferences (session_id, university, grade_level, grade_updated_at)
+           VALUES ($1, $2, $3, now())
+           ON CONFLICT (session_id, university) DO UPDATE
+             SET grade_level = EXCLUDED.grade_level, grade_updated_at = now()`,
+          [req.sessionId, req.university, grade || null]
         );
-        previousGrade = current.rows[0]?.grade_level || '';
-        if (previousGrade !== grade) {
-          await client.query(
-            `INSERT INTO university_preferences (session_id, university, grade_level, grade_updated_at)
-             VALUES ($1, $2, $3, now())
-             ON CONFLICT (session_id, university) DO UPDATE
-               SET grade_level = EXCLUDED.grade_level, grade_updated_at = now()`,
-            [req.sessionId, req.university, grade || null]
-          );
-        }
       }
       await client.query('COMMIT');
       res.locals.activity = { ...res.locals.activity, previousGrade, selectedGrade: grade, changed: previousGrade !== grade };

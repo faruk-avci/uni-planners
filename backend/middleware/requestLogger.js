@@ -48,7 +48,7 @@ function actionFor(method, path) {
     [/^GET \/api\/admin\/elective-pools$/, 'admin_elective_pool_list'],
     [/^POST \/api\/admin\/elective-pools\/inspect-file$/, 'admin_elective_inspect'],
     [/^PUT \/api\/admin\/elective-pools\/[^/]+$/, 'admin_elective_pool_save'],
-    [/^GET \/api\/admin\/analytics\//, 'admin_analytics_view'],
+    [/^GET \/api\/admin\/(u\/[^/]+\/insights|traffic)\//, 'admin_analytics_view'],
     [/^POST \/api\/degree-audit$/, 'degree_audit_parse'],
   ]
   return routes.find(([pattern]) => pattern.test(key))?.[1] || 'api_request'

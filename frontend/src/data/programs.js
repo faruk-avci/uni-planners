@@ -1,4 +1,4 @@
-import { isBilkent } from './university'
+import { UNIVERSITY } from './university'
 
 const OZYEGIN_FACULTIES = [
   { id: 'aviation', tr: 'Havacılık ve Uzay Bilimleri Fakültesi', en: 'Faculty of Aviation and Aeronautical Sciences' },
@@ -101,8 +101,12 @@ const BILKENT_PROGRAMS = [
   { id: 'bilkent-d19', faculty: 'applied', tr: 'Turizm ve Otel İşletmeciliği', en: 'Tourism and Hotel Management', codes: ['THM'] },
 ]
 
-const FACULTIES = isBilkent ? BILKENT_FACULTIES : OZYEGIN_FACULTIES
-const PROGRAMS = isBilkent ? BILKENT_PROGRAMS : OZYEGIN_PROGRAMS
+const CATALOGS = {
+  ozyegin: { faculties: OZYEGIN_FACULTIES, programs: OZYEGIN_PROGRAMS },
+  bilkent: { faculties: BILKENT_FACULTIES, programs: BILKENT_PROGRAMS },
+}
+const FACULTIES = CATALOGS[UNIVERSITY].faculties
+const PROGRAMS = CATALOGS[UNIVERSITY].programs
 
 const programByCode = new Map(PROGRAMS.flatMap(program => program.codes.map(code => [code, program])))
 const programById = new Map(PROGRAMS.map(program => [program.id, program]))

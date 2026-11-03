@@ -4,9 +4,9 @@
 import { UNIVERSITY } from '../data/university'
 
 // University-specific calls (courses, schedules, basket, preferences...) go to
-// /api/u/<university>. Özyeğin keeps its original /api paths, which the
-// server still answers for it.
-const API_SCOPE_PATH = UNIVERSITY === 'ozyegin' ? '/api' : `/api/u/${UNIVERSITY}`
+// /api/u/<university>, the same for every university. (The server still
+// answers the old /api paths for Özyeğin, for tabs opened before the switch.)
+const API_SCOPE_PATH = `/api/u/${UNIVERSITY}`
 
 // API base URL. Empty = same-origin: works in dev via the Vite proxy and in
 // production behind a reverse proxy. Set VITE_API_URL to target a different host.

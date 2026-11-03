@@ -1,7 +1,6 @@
 import express from 'express'
 import { pool } from '../config/db.js'
 import { validateSurveyAnswers } from '../config/surveys.js'
-import { DEFAULT_UNIVERSITY } from '../config/universities.js'
 import { getSurvey, publicSurvey } from '../services/surveyStore.js'
 
 // Anonymous by construction:
@@ -60,13 +59,12 @@ router.post('/:university', async (req, res) => {
       await client.query('ROLLBACK')
       return res.status(409).json({ error: 'already_submitted' })
     }
-    // Context is copied, not linked: Özyeğin's from the session, other
-    // universities' from their preferences row (or, failing that, what the
-    // page sent).
-    const context = slug === DEFAULT_UNIVERSITY
-      ? (await client.query('SELECT major_code, grade_level FROM sessions WHERE id = $1', [req.sessionId])).rows[0] || {}
-      : (await client.query('SELECT major_code, grade_level FROM university_preferences WHERE session_id = $1 AND university = $2', [req.sessionId, slug])).rows[0]
-        || browserContext(req.body)
+    // Context is copied, not linked: major and year from this browser's
+    // preferences at that university (or, failing that, what the page sent).
+    const context = (await client.query(
+      'SELECT major_code, grade_level FROM university_preferences WHERE session_id = $1 AND university = $2',
+      [req.sessionId, slug]
+    )).rows[0] || browserContext(req.body)
     await client.query(
       `INSERT INTO survey_responses (university, survey_version, answers, major_code, grade_level, layout)
        VALUES ($1, $2, $3, $4, $5, $6)`,

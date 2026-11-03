@@ -1,6 +1,6 @@
 import SettingsMenu from './SettingsMenu'
 import { linkTargetProps } from '../../utils/links'
-import { isBilkent } from '../../data/university'
+import { UNIVERSITY_INFO } from '../../data/university'
 import './Header.css'
 
 const LAYOUTS = [
@@ -71,7 +71,7 @@ function Header({
               {language === 'tr' ? 'Müfredat' : 'Curriculum'}
             </button>
             {/* The recap covers Özyeğin's 2026-27 fall term only. */}
-            {!isBilkent && (
+            {UNIVERSITY_INFO.features.recap && (
               <button type="button" onClick={() => onNavigate('recap')} className={`nav-link nav-link-secondary ${activePage === 'recap' ? 'nav-link-active' : ''}`}>
                 {language === 'tr' ? 'Özet' : 'Recap'}
               </button>
@@ -86,7 +86,7 @@ function Header({
 
         {/* Actions */}
         <div className="header-actions">
-          {!isBilkent && (
+          {UNIVERSITY_INFO.features.recap && (
             <button
               className={`action-btn howto-mobile ${activePage === 'recap' ? 'action-btn-active' : ''}`}
               type="button"

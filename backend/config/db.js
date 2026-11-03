@@ -327,8 +327,7 @@ async function migrateToMultiUniversity() {
   await pool.query(`CREATE INDEX IF NOT EXISTS saved_baskets_session_university_idx ON saved_baskets (session_id, university, updated_at DESC)`);
   await pool.query(`CREATE INDEX IF NOT EXISTS course_add_events_university_idx ON course_add_events (university, added_at DESC)`);
 
-  // Major and year for universities other than Özyeğin. Özyeğin keeps its
-  // columns on `sessions`, which its analytics already read.
+  // Major and year, one row per browser session and university.
   await pool.query(`
     CREATE TABLE IF NOT EXISTS university_preferences (
       session_id       UUID NOT NULL REFERENCES sessions(id) ON DELETE CASCADE,
@@ -340,6 +339,17 @@ async function migrateToMultiUniversity() {
       grade_updated_at TIMESTAMPTZ,
       PRIMARY KEY (session_id, university)
     )`);
+  await pool.query(`CREATE INDEX IF NOT EXISTS university_preferences_university_idx ON university_preferences (university)`);
+  // Özyeğin's major/year used to live on `sessions`; copy them over. Sessions
+  // that already have an Özyeğin row are skipped, so this is safe to repeat.
+  // (The old columns stay, unused, so older backups still restore.)
+  await pool.query(`
+    INSERT INTO university_preferences
+      (session_id, university, major_code, first_major_code, major_updated_at, grade_level, grade_updated_at)
+    SELECT s.id, 'ozyegin', s.major_code, s.first_major_code, s.major_updated_at, NULLIF(s.grade_level, ''), s.grade_updated_at
+      FROM sessions s
+     WHERE (s.major_code IS NOT NULL OR s.first_major_code IS NOT NULL OR NULLIF(s.grade_level, '') IS NOT NULL)
+       AND NOT EXISTS (SELECT 1 FROM university_preferences p WHERE p.session_id = s.id AND p.university = 'ozyegin')`);
 }
 
 export { pool, ensureSchema };

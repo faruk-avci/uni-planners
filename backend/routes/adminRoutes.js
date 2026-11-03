@@ -455,86 +455,90 @@ panelCurricula.get('/suggest-elective-key', (req, res) => {
 })
 
 // --- Analytics ---
-// The visitor analytics tables are Özyeğin's planner (the only university
-// with a backend so far), so they live under /u/ozyegin.
+// Paths avoid the word "analytics": ad and tracker blockers drop requests
+// containing it, which left these panel pages empty for people using one.
+// Visitors of this university's planner: their major and year choices and
+// where they add courses from.
 
-const ozyeginOnly = (req, res, next) => (req.university === 'ozyegin' ? next() : res.status(404).json({ error: 'Bu üniversite için analitik yok' }))
-
-uni.get('/analytics/majors', ozyeginOnly, async (_req, res) => {
+uni.get('/insights/majors', async (req, res) => {
   try {
     const [current, firstChoice, selections] = await Promise.all([
       pool.query(
         `SELECT major_code AS major, count(*)::int AS visitors
-           FROM sessions
-          WHERE major_code IS NOT NULL
+           FROM university_preferences
+          WHERE university = $1 AND major_code IS NOT NULL
           GROUP BY major_code
-          ORDER BY visitors DESC, major_code`
+          ORDER BY visitors DESC, major_code`,
+        [req.university]
       ),
       pool.query(
         `SELECT first_major_code AS major, count(*)::int AS visitors
-           FROM sessions
-          WHERE first_major_code IS NOT NULL
+           FROM university_preferences
+          WHERE university = $1 AND first_major_code IS NOT NULL
           GROUP BY first_major_code
-          ORDER BY visitors DESC, first_major_code`
+          ORDER BY visitors DESC, first_major_code`,
+        [req.university]
       ),
       pool.query(
         `SELECT major_code AS major, count(*)::int AS selections,
                 count(DISTINCT session_id)::int AS visitors
            FROM major_selection_events
-          WHERE university = 'ozyegin'
+          WHERE university = $1
           GROUP BY major_code
-          ORDER BY selections DESC, major_code`
+          ORDER BY selections DESC, major_code`,
+        [req.university]
       ),
     ])
     res.json({ current: current.rows, firstChoice: firstChoice.rows, selections: selections.rows })
   } catch (err) {
-    console.error('GET /admin/analytics/majors error:', err.message)
+    console.error('GET /admin/insights/majors error:', err.message)
     res.status(500).json({ error: 'Major analytics could not be loaded' })
   }
 })
 
-uni.get('/analytics/grades', ozyeginOnly, async (_req, res) => {
+uni.get('/insights/grades', async (req, res) => {
   try {
     const { rows } = await pool.query(
       `SELECT grade_level AS grade, count(*)::int AS visitors
-         FROM sessions
-        WHERE grade_level IS NOT NULL AND grade_level <> ''
+         FROM university_preferences
+        WHERE university = $1 AND grade_level IS NOT NULL AND grade_level <> ''
         GROUP BY grade_level
         ORDER BY CASE grade_level
                    WHEN 'prep' THEN 0 WHEN '1' THEN 1 WHEN '2' THEN 2
                    WHEN '3' THEN 3 WHEN '4' THEN 4
                    ELSE 5
-                 END`
+                 END`,
+      [req.university]
     )
     res.json({ current: rows })
   } catch (err) {
-    console.error('GET /admin/analytics/grades error:', err.message)
+    console.error('GET /admin/insights/grades error:', err.message)
     res.status(500).json({ error: 'Grade analytics could not be loaded' })
   }
 })
 
-uni.get('/analytics/course-add-sources', ozyeginOnly, async (req, res) => {
+uni.get('/insights/course-add-sources', async (req, res) => {
   const parsedDays = Number.parseInt(req.query.days, 10)
   const days = Number.isFinite(parsedDays) ? Math.min(Math.max(parsedDays, 1), 365) : 30
   try {
     const { rows } = await pool.query(
       `SELECT source, count(*)::int AS additions, count(DISTINCT session_id)::int AS visitors
          FROM course_add_events
-        WHERE university = 'ozyegin' AND added_at >= now() - make_interval(days => $1)
+        WHERE university = $2 AND added_at >= now() - make_interval(days => $1)
         GROUP BY source
         ORDER BY additions DESC, source`,
-      [days]
+      [days, req.university]
     )
     res.json({ days, total: rows.reduce((sum, row) => sum + row.additions, 0), sources: rows })
   } catch (err) {
-    console.error('GET /admin/analytics/course-add-sources error:', err.message)
+    console.error('GET /admin/insights/course-add-sources error:', err.message)
     res.status(500).json({ error: 'Course-add analytics could not be loaded' })
   }
 })
 
 // Request logs and the raw event stream include IP addresses and user agents:
 // superadmin only.
-router.get('/analytics/requests', requireSuperadmin, async (req, res) => {
+router.get('/traffic/requests', requireSuperadmin, async (req, res) => {
   const requestedLimit = Number.parseInt(req.query.limit, 10)
   const limit = Number.isFinite(requestedLimit) ? Math.min(Math.max(requestedLimit, 1), 500) : 100
   const action = String(req.query.action || '').trim().slice(0, 80)
@@ -560,7 +564,7 @@ router.get('/analytics/requests', requireSuperadmin, async (req, res) => {
     )
     res.json({ requests: rows })
   } catch (err) {
-    console.error('GET /admin/analytics/requests error:', err.message)
+    console.error('GET /admin/traffic/requests error:', err.message)
     res.status(500).json({ error: 'Failed to load request logs' })
   }
 })
@@ -592,7 +596,7 @@ const REQUEST_LOG_EXCLUDED_ACTIONS = [
   'api_request',
 ]
 
-router.get('/analytics/events', requireSuperadmin, async (req, res) => {
+router.get('/traffic/events', requireSuperadmin, async (req, res) => {
   const requestedLimit = Number.parseInt(req.query.limit, 10)
   const limit = Number.isFinite(requestedLimit) ? Math.min(Math.max(requestedLimit, 1), 500) : 100
   const since = String(req.query.since || '').trim()
@@ -631,12 +635,12 @@ router.get('/analytics/events', requireSuperadmin, async (req, res) => {
     )
     res.json({ events: rows })
   } catch (err) {
-    console.error('GET /admin/analytics/events error:', err.message)
+    console.error('GET /admin/traffic/events error:', err.message)
     res.status(500).json({ error: 'Failed to load events' })
   }
 })
 
-router.get('/analytics/summary', requireSuperadmin, async (_req, res) => {
+router.get('/traffic/summary', requireSuperadmin, async (_req, res) => {
   try {
     const [totalEvents, activeSessions, recentSearches] = await Promise.all([
       pool.query('SELECT count(*)::int FROM site_events'),
@@ -654,7 +658,7 @@ router.get('/analytics/summary', requireSuperadmin, async (_req, res) => {
       topSearches: recentSearches.rows,
     })
   } catch (err) {
-    console.error('GET /admin/analytics/summary error:', err.message)
+    console.error('GET /admin/traffic/summary error:', err.message)
     res.status(500).json({ error: 'Failed to load summary' })
   }
 })

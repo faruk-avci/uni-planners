@@ -30,7 +30,7 @@ const UNIVERSITY_PAGES = [
   { id: 'survey', label: 'Anket', icon: 'survey' },
   { id: 'results', label: 'Anket sonuçları', icon: 'results' },
   { id: 'curricula', label: 'Müfredatlar', icon: 'curricula' },
-  { id: 'analytics', label: 'Analitik', icon: 'analytics', only: 'ozyegin' },
+  { id: 'analytics', label: 'Analitik', icon: 'analytics' },
   { id: 'activity', label: 'Etkinlik kaydı', icon: 'activity' },
 ]
 const ADMIN_PAGES = [

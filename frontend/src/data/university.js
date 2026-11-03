@@ -1,10 +1,11 @@
-// One university per page load. The path decides it (/bilkent/... is Bilkent,
-// everything else is Özyeğin), and moving to another university is a full
-// page load (see navigate in App), so this never changes while the app runs.
-export const UNIVERSITY = /^\/bilkent(\/|$)/.test(window.location.pathname) ? 'bilkent' : 'ozyegin'
-export const isBilkent = UNIVERSITY === 'bilkent'
-
-export const UNIVERSITY_INFO = {
+// Everything that differs between universities lives here; components read
+// UNIVERSITY_INFO instead of checking which university they are on.
+//
+// One university per page load: the first path segment decides it
+// (/bilkent/..., /ozyegin/...). Pages without one (/, /how-to, /share/...)
+// count as Özyeğin. Moving to another university is a full page load (see
+// navigate in App), so this never changes while the app runs.
+const UNIVERSITIES = {
   ozyegin: {
     mark: 'Ö',
     name: { tr: 'Özyeğin Üniversitesi', en: 'Özyeğin University' },
@@ -16,6 +17,9 @@ export const UNIVERSITY_INFO = {
     creditLoad: { warn: 36, danger: 42 },
     // Classes start at :40 past the hour (08:40, 09:40...).
     slotMinute: 40,
+    searchExample: 'EE 201',
+    // The term recap and the degree-audit upload are built on ÖzÜ data.
+    features: { recap: true, degreeAudit: true },
   },
   bilkent: {
     mark: 'B',
@@ -26,27 +30,45 @@ export const UNIVERSITY_INFO = {
     creditUnitEn: 'Credits',
     creditLoad: null,
     slotMinute: 30,
+    searchExample: 'CS 101',
+    features: { recap: false, degreeAudit: false },
   },
-}[UNIVERSITY]
+}
+
+const DEFAULT_UNIVERSITY = 'ozyegin'
+export const universityOfPath = pathname => {
+  const slug = String(pathname || '').split('/')[1]
+  return UNIVERSITIES[slug] ? slug : DEFAULT_UNIVERSITY
+}
+
+export const UNIVERSITY = universityOfPath(window.location.pathname)
+export const UNIVERSITY_INFO = UNIVERSITIES[UNIVERSITY]
 
 // Credits are ECTS at Özyeğin and Bilkent credits at Bilkent.
 export const creditUnit = language => (language === 'tr' ? 'Kredi' : UNIVERSITY_INFO.creditUnitEn)
 
-// Path of a page for the current university. Özyeğin keeps its original,
-// shorter paths (/curriculum); other universities nest under their slug.
+// Every university's pages live under its slug: /ozyegin/curriculum,
+// /bilkent/anket... (/curriculum still works and redirects to Özyeğin's).
 export function pathFor(page, university = UNIVERSITY) {
   if (page === 'landing') return '/'
   if (page === 'howto') return '/how-to'
   if (page === 'recap') return '/ozyegin/recap/26-27-guz'
   if (page === 'survey') return `/${university}/anket`
-  if (page === 'curriculum') return university === 'ozyegin' ? '/curriculum' : `/${university}/curriculum`
+  if (page === 'curriculum') return `/${university}/curriculum`
   return `/${university}`
 }
 
-// The university a path belongs to. The landing page and shared pages count
-// as Özyeğin, the only university with a backend so far.
-export const universityOfPath = pathname => (/^\/bilkent(\/|$)/.test(pathname) ? 'bilkent' : 'ozyegin')
+// localStorage keys for per-university state: uniplanner_<university>_major...
+export const storageKey = name => name.replace(/^uniplanner_/, `uniplanner_${UNIVERSITY}_`)
 
-// localStorage keys that hold per-university state (major, grade, basket...).
-// Özyeğin keeps the historical names so returning visitors keep their data.
-export const storageKey = name => (isBilkent ? name.replace(/^uniplanner_/, 'uniplanner_bilkent_') : name)
+// Özyeğin used unprefixed keys before there were several universities; move
+// them once so returning visitors keep their major, year and curriculum.
+if (UNIVERSITY === DEFAULT_UNIVERSITY) {
+  try {
+    for (const name of ['uniplanner_major', 'uniplanner_grade', 'uniplanner_curriculum']) {
+      const legacy = localStorage.getItem(name)
+      if (legacy !== null && localStorage.getItem(storageKey(name)) === null) localStorage.setItem(storageKey(name), legacy)
+      localStorage.removeItem(name)
+    }
+  } catch { /* storage disabled */ }
+}

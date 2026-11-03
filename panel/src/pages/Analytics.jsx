@@ -31,9 +31,9 @@ function BarList({ title, rows }) {
 
 const RefreshButton = ({ onClick, loading }) => <button className="secondary-button" onClick={onClick} disabled={loading}>{loading ? 'Yükleniyor…' : 'Yenile'}</button>
 
-// Visitor analytics of the university's planner (Özyeğin only so far).
+// Visitor analytics of the university's planner.
 export function UniversityAnalytics({ university }) {
-  const base = `/u/${university.slug}/analytics`
+  const base = `/u/${university.slug}/insights`
   const majors = useLoad(() => request(`${base}/majors`), [base])
   const grades = useLoad(() => request(`${base}/grades`), [base])
   const [days, setDays] = useState(30)
@@ -83,7 +83,7 @@ function EventLog() {
     try {
       const params = new URLSearchParams({ limit: '100' })
       if (sinceRef.current) params.set('since', sinceRef.current)
-      const data = await request(`/analytics/events?${params.toString()}`)
+      const data = await request(`/traffic/events?${params.toString()}`)
       if (data.events.length > 0) {
         sinceRef.current = data.events[0].created_at
         const fresh = data.events.filter(event => {
@@ -150,7 +150,7 @@ function EventLog() {
 
 // Site-wide traffic, including raw events: superadmin only.
 export function Traffic() {
-  const summary = useLoad(() => request('/analytics/summary'), [])
+  const summary = useLoad(() => request('/traffic/summary'), [])
   return (
     <>
       <PageHeader title="Site trafiği" subtitle="Tüm site için ham etkinlikler. IP ve tarayıcı bilgisi içerdiği için yalnızca süper yöneticiler görür." />

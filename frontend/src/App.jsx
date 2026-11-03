@@ -27,7 +27,7 @@ import { recordGenerateSuccess, shouldQueueSurveyNudge, markSurveyNudgeShown, ma
 import { canonicalProgramCode, groupMajorOptions } from './data/programs'
 import LandingPage from './components/landing/LandingPage'
 import SurveyPage from './components/survey/SurveyPage'
-import { UNIVERSITY, creditUnit, isBilkent, pathFor, storageKey, universityOfPath } from './data/university'
+import { UNIVERSITY, UNIVERSITY_INFO, creditUnit, pathFor, storageKey, universityOfPath } from './data/university'
 import { ContextStrip, ProfileCard } from './components/profile/ProfileBar'
 import BasketTray from './components/layouts/BasketTray'
 import './components/layouts/layouts.css'
@@ -36,7 +36,7 @@ const isUndergraduateMajor = value => Boolean(value && !['none', 'master', 'doct
 const sharedIdFromPath = pathname => String(pathname || '').match(/^\/share\/([A-Za-z0-9]{8})\/?$/)?.[1] || ''
 const legacyPathFromHash = hash => {
   const value = String(hash || '')
-  if (value === '#/curriculum') return '/curriculum'
+  if (value === '#/curriculum') return '/ozyegin/curriculum'
   if (value === '#/how-to') return '/how-to'
   const sharedId = value.match(/^#\/share\/([A-Za-z0-9]{8})$/)?.[1]
   return sharedId ? `/share/${sharedId}` : ''
@@ -45,8 +45,7 @@ const routeFromLocation = () => {
   const pathname = legacyPathFromHash(window.location.hash) || window.location.pathname
   const sharedId = sharedIdFromPath(pathname)
   if (sharedId) return { page: 'shared', sharedId }
-  if (/^\/curriculum\/?$/.test(pathname)) return { page: 'curriculum', sharedId: '' }
-  if (/^\/bilkent\/curriculum\/?$/.test(pathname)) return { page: 'curriculum', sharedId: '' }
+  if (/^\/((ozyegin|bilkent)\/)?curriculum\/?$/.test(pathname)) return { page: 'curriculum', sharedId: '' }
   if (/^\/how-to\/?$/.test(pathname)) return { page: 'howto', sharedId: '' }
   if (/^\/ozyegin\/recap\/26-27-guz\/?$/.test(pathname)) return { page: 'recap', sharedId: '' }
   if (/^\/(ozyegin|bilkent)\/anket\/?$/.test(pathname)) return { page: 'survey', sharedId: '' }
@@ -133,10 +132,10 @@ function App() {
   const [dinoOpen, setDinoOpen] = useState(() => localStorage.getItem('uniplanner_dino_mode') === 'true')
   // Independent, unrelated easter egg — a different press count than Dino's,
   // never reset by Dino's own counter/toggle.
-  const [auditUnlocked, setAuditUnlocked] = useState(() => !isBilkent && localStorage.getItem('uniplanner_audit_unlocked') === 'true')
+  const [auditUnlocked, setAuditUnlocked] = useState(() => UNIVERSITY_INFO.features.degreeAudit && localStorage.getItem('uniplanner_audit_unlocked') === 'true')
   const [auditOpen, setAuditOpen] = useState(false)
   const [auditResult, setAuditResult] = useState(() => {
-    if (isBilkent) return null
+    if (!UNIVERSITY_INFO.features.degreeAudit) return null
     try { return JSON.parse(localStorage.getItem('uniplanner_degree_audit') || 'null') } catch { return null }
   })
   const [activePage, setActivePage] = useState(initialRoute.page)
@@ -316,6 +315,8 @@ function App() {
     const syncPage = () => {
       const legacyPath = legacyPathFromHash(window.location.hash)
       if (legacyPath) window.history.replaceState(null, '', legacyPath)
+      // Özyeğin's curriculum used to live at /curriculum.
+      if (/^\/curriculum\/?$/.test(window.location.pathname)) window.history.replaceState(null, '', '/ozyegin/curriculum')
       // Back/forward into another university's pages needs that university's app.
       if (universityOfPath(window.location.pathname) !== UNIVERSITY) {
         window.location.reload()
@@ -506,7 +507,7 @@ function App() {
     }
 
     // The degree audit reads ÖzÜ transcripts only.
-    if (isBilkent) return
+    if (!UNIVERSITY_INFO.features.degreeAudit) return
     auditLogoPresses.current += 1
     // >= rather than === so a double-fired click event (or a click missed
     // earlier and caught up on a later render) can't skip past the exact
