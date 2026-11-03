@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { UNIVERSITY_INFO } from '../../data/university'
 import './ProfileBar.css'
 
 const CATALOG_NOTICE_DISMISSED_KEY = 'uniplanner_catalog_notice_dismissed_version'
@@ -37,13 +38,13 @@ export function ContextStrip({ language, majorLabel, grade, onMajorClick, onUniv
         className="context-segment context-university"
         href="/"
         title={tr('Üniversiteyi değiştir', 'Change university')}
-        aria-label={tr('Özyeğin Üniversitesi, üniversiteyi değiştir', 'Özyeğin University, change university')}
+        aria-label={tr(`${UNIVERSITY_INFO.name.tr}, üniversiteyi değiştir`, `${UNIVERSITY_INFO.name.en}, change university`)}
         onClick={universityClick(onUniversityClick)}
       >
-        <span className="context-mark" aria-hidden="true">Ö</span>
+        <span className="context-mark" aria-hidden="true">{UNIVERSITY_INFO.mark}</span>
         <span className="context-copy">
           <small>{tr('Üniversite', 'University')}</small>
-          <strong>{tr('Özyeğin Üniversitesi', 'Özyeğin University')}</strong>
+          <strong>{tr(UNIVERSITY_INFO.name.tr, UNIVERSITY_INFO.name.en)}</strong>
         </span>
         <span className="context-action">{tr('Değiştir', 'Change')}</span>
       </a>
@@ -78,8 +79,8 @@ export function ProfileCard({ language, majorLabel, grade, onMajorClick, onUnive
     <section className="profile-card" aria-label={tr('Profilin', 'Your profile')}>
       <h3 className="profile-card-title">{tr('Profilin', 'Your profile')}</h3>
       <a className="profile-card-row profile-card-university" href="/" onClick={universityClick(onUniversityClick)}>
-        <span className="context-mark" aria-hidden="true">Ö</span>
-        <span className="profile-card-value">{tr('Özyeğin Üniversitesi', 'Özyeğin University')}</span>
+        <span className="context-mark" aria-hidden="true">{UNIVERSITY_INFO.mark}</span>
+        <span className="profile-card-value">{tr(UNIVERSITY_INFO.name.tr, UNIVERSITY_INFO.name.en)}</span>
         <span className="context-action">{tr('Değiştir', 'Change')}</span>
       </a>
       <button type="button" className="profile-card-row" onClick={onMajorClick}>

@@ -196,6 +196,150 @@ async function ensureSchema() {
       university VARCHAR(32) NOT NULL,
       PRIMARY KEY (session_id, university)
     )`);
+
+  await migrateToMultiUniversity();
+
+  // Panel accounts. A superadmin manages everything; everyone else only sees
+  // the universities listed for them in admin_university_access.
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS admin_users (
+      id                  SERIAL PRIMARY KEY,
+      email               TEXT NOT NULL UNIQUE,
+      display_name        TEXT NOT NULL DEFAULT '',
+      password_hash       TEXT,
+      is_superadmin       BOOLEAN NOT NULL DEFAULT false,
+      totp_secret         TEXT,
+      totp_last_counter   BIGINT,
+      disabled            BOOLEAN NOT NULL DEFAULT false,
+      setup_token_hash    CHAR(64),
+      setup_expires_at    TIMESTAMPTZ,
+      failed_logins       INTEGER NOT NULL DEFAULT 0,
+      locked_until        TIMESTAMPTZ,
+      created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+      created_by          INTEGER,
+      last_login_at       TIMESTAMPTZ,
+      password_changed_at TIMESTAMPTZ
+    )`);
+  await pool.query(`CREATE UNIQUE INDEX IF NOT EXISTS admin_users_setup_token_idx ON admin_users (setup_token_hash) WHERE setup_token_hash IS NOT NULL`);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS admin_university_access (
+      user_id    INTEGER NOT NULL REFERENCES admin_users(id) ON DELETE CASCADE,
+      university VARCHAR(32) NOT NULL,
+      role       VARCHAR(16) NOT NULL CHECK (role IN ('viewer', 'editor')),
+      granted_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      granted_by INTEGER,
+      PRIMARY KEY (user_id, university)
+    )`);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS admin_sessions (
+      token_hash   CHAR(64) PRIMARY KEY,
+      user_id      INTEGER NOT NULL REFERENCES admin_users(id) ON DELETE CASCADE,
+      created_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
+      last_seen_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      expires_at   TIMESTAMPTZ NOT NULL,
+      ip_address   TEXT,
+      user_agent   TEXT
+    )`);
+  await pool.query(`CREATE INDEX IF NOT EXISTS admin_sessions_user_idx ON admin_sessions (user_id)`);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS admin_audit_log (
+      id         BIGSERIAL PRIMARY KEY,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      user_id    INTEGER,
+      email      TEXT,
+      action     TEXT NOT NULL,
+      university VARCHAR(32),
+      details    JSONB,
+      ip_address TEXT
+    )`);
+  await pool.query(`CREATE INDEX IF NOT EXISTS admin_audit_log_created_idx ON admin_audit_log (created_at DESC)`);
+  await pool.query(`CREATE INDEX IF NOT EXISTS admin_audit_log_university_idx ON admin_audit_log (university, created_at DESC)`);
+}
+
+// ─── One database, many universities ───────────────────────────────
+// Catalog, baskets and analytics carry a `university` column. Everything that
+// existed before is Özyeğin's, which the column default says. Course codes are
+// unique per university (two universities can both have "CS 101").
+// Safe to run on every start: each step checks whether it is still needed.
+async function migrateToMultiUniversity() {
+  const tables = [
+    'catalog_courses', 'catalog_sections', 'course_assessments', 'basket_items', 'saved_baskets',
+    'shared_schedules', 'course_add_events', 'major_selection_events', 'site_events',
+  ];
+  for (const table of tables) {
+    await pool.query(`ALTER TABLE ${table} ADD COLUMN IF NOT EXISTS university VARCHAR(32) NOT NULL DEFAULT 'ozyegin'`);
+  }
+
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    // catalog_courses: primary key (course_code) -> (university, course_code),
+    // and catalog_sections follows it. Constraint names are looked up rather
+    // than assumed, since older installs may have named them differently.
+    await client.query(`
+      DO $$
+      DECLARE r RECORD;
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM pg_constraint
+           WHERE conrelid = 'catalog_courses'::regclass AND contype = 'p'
+             AND pg_get_constraintdef(oid) LIKE '%university%'
+        ) THEN
+          FOR r IN SELECT conname FROM pg_constraint
+                    WHERE conrelid = 'catalog_sections'::regclass AND contype IN ('f', 'u') LOOP
+            EXECUTE format('ALTER TABLE catalog_sections DROP CONSTRAINT %I', r.conname);
+          END LOOP;
+          FOR r IN SELECT conname FROM pg_constraint
+                    WHERE conrelid = 'catalog_courses'::regclass AND contype = 'p' LOOP
+            EXECUTE format('ALTER TABLE catalog_courses DROP CONSTRAINT %I', r.conname);
+          END LOOP;
+          ALTER TABLE catalog_courses ADD CONSTRAINT catalog_courses_pkey PRIMARY KEY (university, course_code);
+          ALTER TABLE catalog_sections ADD CONSTRAINT catalog_sections_course_fkey
+            FOREIGN KEY (university, course_code) REFERENCES catalog_courses (university, course_code)
+            ON DELETE CASCADE ON UPDATE CASCADE;
+          ALTER TABLE catalog_sections ADD CONSTRAINT catalog_sections_university_course_section_key
+            UNIQUE (university, course_code, section_no);
+        END IF;
+
+        -- A browser keeps one basket per university.
+        IF NOT EXISTS (
+          SELECT 1 FROM pg_constraint
+           WHERE conrelid = 'basket_items'::regclass AND contype = 'u'
+             AND pg_get_constraintdef(oid) LIKE '%university%'
+        ) THEN
+          FOR r IN SELECT conname FROM pg_constraint
+                    WHERE conrelid = 'basket_items'::regclass AND contype = 'u' LOOP
+            EXECUTE format('ALTER TABLE basket_items DROP CONSTRAINT %I', r.conname);
+          END LOOP;
+          ALTER TABLE basket_items ADD CONSTRAINT basket_items_session_university_course_key
+            UNIQUE (session_id, university, course_code);
+        END IF;
+      END $$`);
+    await client.query('COMMIT');
+  } catch (error) {
+    await client.query('ROLLBACK').catch(() => {});
+    throw error;
+  } finally {
+    client.release();
+  }
+
+  await pool.query(`CREATE INDEX IF NOT EXISTS course_assessments_university_code_idx ON course_assessments (university, course_code)`);
+  await pool.query(`CREATE INDEX IF NOT EXISTS saved_baskets_session_university_idx ON saved_baskets (session_id, university, updated_at DESC)`);
+  await pool.query(`CREATE INDEX IF NOT EXISTS course_add_events_university_idx ON course_add_events (university, added_at DESC)`);
+
+  // Major and year for universities other than Özyeğin. Özyeğin keeps its
+  // columns on `sessions`, which its analytics already read.
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS university_preferences (
+      session_id       UUID NOT NULL REFERENCES sessions(id) ON DELETE CASCADE,
+      university       VARCHAR(32) NOT NULL,
+      major_code       VARCHAR(32),
+      first_major_code VARCHAR(32),
+      major_updated_at TIMESTAMPTZ,
+      grade_level      VARCHAR(16),
+      grade_updated_at TIMESTAMPTZ,
+      PRIMARY KEY (session_id, university)
+    )`);
 }
 
 export { pool, ensureSchema };

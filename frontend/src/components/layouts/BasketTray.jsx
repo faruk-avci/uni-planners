@@ -1,3 +1,5 @@
+import { UNIVERSITY_INFO, creditUnit } from '../../data/university'
+
 const DAYS = [
   { id: 'Pazartesi', tr: 'Pzt', en: 'Mon', fullTr: 'Pazartesi', fullEn: 'Monday' },
   { id: 'Salı', tr: 'Sal', en: 'Tue', fullTr: 'Salı', fullEn: 'Tuesday' },
@@ -24,7 +26,7 @@ function BasketTray({ language, basket, totalCredits, onRemoveCourse, freeDays, 
             aria-controls="focus-basket-panel"
             title={tr('Profilini düzenle', 'Edit your profile')}
           >
-            <span className="tray-profile-mark" aria-hidden="true">Ö</span>
+            <span className="tray-profile-mark" aria-hidden="true">{UNIVERSITY_INFO.mark}</span>
             <span className="tray-profile-text">
               {profile.major || tr('Bölüm seç', 'Pick major')}
               {profile.grade && <span className="tray-profile-grade"> · {profile.grade === 'prep' ? tr('Hazırlık', 'Prep') : tr(`${profile.grade}. sınıf`, `Year ${profile.grade}`)}</span>}
@@ -40,7 +42,7 @@ function BasketTray({ language, basket, totalCredits, onRemoveCourse, freeDays, 
           <span className="tray-count">{basket.length}</span>
           <span className="tray-basket-copy">
             <strong>{basketOpen ? tr('Sepeti kapat', 'Close basket') : tr('Sepeti aç', 'Open basket')}</strong>
-            <span>{totalCredits} {tr('Kredi', 'ECTS')}</span>
+            <span>{totalCredits} {creditUnit(language)}</span>
           </span>
         </button>
 

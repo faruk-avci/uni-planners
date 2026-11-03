@@ -35,7 +35,9 @@ PGPASSWORD="$DB_PASSWORD" psql \
         major_selection_events,
         dino_high_scores,
         site_events,
-        server_request_logs
+        server_request_logs,
+        survey_submissions,
+        university_preferences
       RESTART IDENTITY;"
 
 echo "Restarting API so in-memory session caches don't reference truncated rows..."

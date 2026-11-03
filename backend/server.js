@@ -8,6 +8,7 @@ import { ensureSchema, pool } from './config/db.js';
 import { sessionMiddleware } from './middleware/session.js';
 import { requestLogger } from './middleware/requestLogger.js';
 import { drainRequestLogs, requestLogStats, stopActivityLoggerTimer } from './services/activityLogger.js';
+import { pruneSessions } from './services/adminAccounts.js';
 import { schedulePool, heavyTaskPoolConfig, closeHeavyTaskPools } from './services/heavyTaskPool.js';
 
 // Routes
@@ -20,6 +21,7 @@ import dinoRoutes from './routes/dinoRoutes.js';
 import sharedScheduleRoutes from './routes/sharedScheduleRoutes.js';
 import sharePageRoutes from './routes/sharePageRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import { DEFAULT_UNIVERSITY, isUniversity } from './config/universities.js';
 import degreeAuditRoutes from './routes/degreeAuditRoutes.js';
 import surveyRoutes from './routes/surveyRoutes.js';
 
@@ -64,6 +66,22 @@ app.use('/api', sessionMiddleware);
 app.use('/api', requestLogger);
 
 // Mount Routes
+// University-scoped API: /api/u/<university>/courses/search, .../schedule/generate,
+// .../basket and so on. The same routers also stay at their old /api paths,
+// where they serve Özyeğin, so builds and links from before keep working.
+const scopedApi = express.Router({ mergeParams: true });
+scopedApi.use(catalogRoutes);
+scopedApi.use('/schedule', scheduleRoutes);
+scopedApi.use('/basket', basketRoutes);
+scopedApi.use(userRoutes);
+scopedApi.use(analyticsRoutes);
+app.use('/api/u/:university', (req, res, next) => {
+  if (!isUniversity(req.params.university)) return res.status(404).json({ error: 'Unknown university' });
+  req.university = req.params.university;
+  next();
+}, scopedApi);
+app.use('/api', (req, _res, next) => { req.university ||= DEFAULT_UNIVERSITY; next(); });
+
 app.use('/api', catalogRoutes);
 app.use('/api/schedule', scheduleRoutes);
 app.use('/api/basket', basketRoutes);
@@ -85,6 +103,8 @@ let server;
 
 ensureSchema()
   .then(() => {
+    // Expired panel sessions are refused on use anyway; this keeps the table small.
+    setInterval(() => pruneSessions().catch(() => {}), 60 * 60 * 1000).unref();
     server = app.listen(PORT, () => {
       console.log(JSON.stringify({
         event: 'server_started',

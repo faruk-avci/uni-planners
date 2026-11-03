@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, writeFileSync } from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { DEFAULT_UNIVERSITY, isUniversity } from '../config/universities.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 export const DATA_ROOT = path.resolve(process.env.APP_DATA_DIR || path.join(__dirname, '..', 'data'))
@@ -10,14 +11,19 @@ const SITE_SETTINGS_FILE = path.join(DATA_ROOT, 'site-settings.json')
 const SAFE_KEY = /^[a-z0-9][a-z0-9_-]{0,79}$/
 const SITE_FONTS = new Set(['grotesk', 'system', 'inter', 'arial', 'rounded'])
 
-export const DEFAULT_SITE_SETTINGS = {
-  mainFont: 'grotesk',
+// Site settings: `global` applies to the whole site (font), `universities`
+// holds each university's own term, survey link, announcement and notice, so
+// one university's announcement never shows on another's pages.
+export const DEFAULT_GLOBAL_SETTINGS = { mainFont: 'grotesk' }
+export const DEFAULT_UNIVERSITY_SETTINGS = {
   catalogTerm: process.env.CATALOG_TERM || '2026-2027 Güz',
   surveyUrl: '',
   announcementUrl: '',
   catalogNotice: '',
   catalogNoticeUpdatedAt: '',
 }
+// Kept for callers that only need the defaults of the merged shape.
+export const DEFAULT_SITE_SETTINGS = { ...DEFAULT_GLOBAL_SETTINGS, ...DEFAULT_UNIVERSITY_SETTINGS }
 
 function ensureDirectories() {
   mkdirSync(CURRICULUM_DIR, { recursive: true })
@@ -138,14 +144,29 @@ export function writeElectivePool(pool) {
   return saved
 }
 
-export function readSiteSettings() {
+// Before per-university settings the file held one flat object; that was
+// Özyeğin's, so it becomes Özyeğin's settings plus the global font.
+function readSettingsFile() {
   ensureDirectories()
-  if (!existsSync(SITE_SETTINGS_FILE)) return { ...DEFAULT_SITE_SETTINGS }
-  try {
-    return { ...DEFAULT_SITE_SETTINGS, ...readJson(SITE_SETTINGS_FILE) }
-  } catch {
-    return { ...DEFAULT_SITE_SETTINGS }
-  }
+  let raw = {}
+  try { if (existsSync(SITE_SETTINGS_FILE)) raw = readJson(SITE_SETTINGS_FILE) } catch { raw = {} }
+  if (raw.version === 2) return { version: 2, global: raw.global || {}, universities: raw.universities || {} }
+  const { mainFont, ...ozyegin } = raw
+  return { version: 2, global: mainFont ? { mainFont } : {}, universities: Object.keys(ozyegin).length ? { [DEFAULT_UNIVERSITY]: ozyegin } : {} }
+}
+
+export function readGlobalSettings() {
+  return { ...DEFAULT_GLOBAL_SETTINGS, ...readSettingsFile().global }
+}
+
+export function readUniversitySettings(university = DEFAULT_UNIVERSITY) {
+  if (!isUniversity(university)) throw new Error('Unknown university')
+  return { ...DEFAULT_UNIVERSITY_SETTINGS, ...(readSettingsFile().universities[university] || {}) }
+}
+
+// What the public site gets for one university: global + that university's.
+export function readSiteSettings(university = DEFAULT_UNIVERSITY) {
+  return { ...readGlobalSettings(), ...readUniversitySettings(university), university }
 }
 
 function validateOptionalHttpsUrl(value, label) {
@@ -159,8 +180,16 @@ function validateOptionalHttpsUrl(value, label) {
   return trimmed
 }
 
-export function writeSiteSettings(input) {
-  const mainFont = SITE_FONTS.has(input?.mainFont) ? input.mainFont : DEFAULT_SITE_SETTINGS.mainFont
+export function writeGlobalSettings(input, updatedBy = null) {
+  const file = readSettingsFile()
+  const mainFont = SITE_FONTS.has(input?.mainFont) ? input.mainFont : DEFAULT_GLOBAL_SETTINGS.mainFont
+  file.global = { mainFont, updatedAt: new Date().toISOString(), updatedBy }
+  atomicWrite(SITE_SETTINGS_FILE, file)
+  return readGlobalSettings()
+}
+
+export function writeUniversitySettings(university, input, updatedBy = null) {
+  if (!isUniversity(university)) throw new Error('Unknown university')
   const catalogTerm = String(input?.catalogTerm || '').trim().slice(0, 60)
   if (!catalogTerm) throw new Error('Academic term is required')
   const surveyUrl = validateOptionalHttpsUrl(input?.surveyUrl, 'Survey link')
@@ -168,18 +197,18 @@ export function writeSiteSettings(input) {
   const catalogNotice = String(input?.catalogNotice || '').trim().slice(0, 500)
 
   // Only bump the notice's own timestamp when its text actually changes --
-  // not on every settings save (font tweaks, term updates, etc. shouldn't
-  // make a previously-dismissed notice reappear for users).
-  const previous = readSiteSettings()
+  // not on every settings save (term updates etc. shouldn't make a
+  // previously-dismissed notice reappear for users).
+  const previous = readUniversitySettings(university)
   const catalogNoticeUpdatedAt = catalogNotice !== previous.catalogNotice
     ? new Date().toISOString()
     : previous.catalogNoticeUpdatedAt
 
-  const saved = {
-    mainFont, catalogTerm, surveyUrl, announcementUrl,
-    catalogNotice, catalogNoticeUpdatedAt,
-    updatedAt: new Date().toISOString(),
+  const file = readSettingsFile()
+  file.universities[university] = {
+    catalogTerm, surveyUrl, announcementUrl, catalogNotice, catalogNoticeUpdatedAt,
+    updatedAt: new Date().toISOString(), updatedBy,
   }
-  atomicWrite(SITE_SETTINGS_FILE, saved)
-  return saved
+  atomicWrite(SITE_SETTINGS_FILE, file)
+  return readUniversitySettings(university)
 }

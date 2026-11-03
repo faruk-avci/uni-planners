@@ -158,7 +158,9 @@ async function run() {
 
     console.log('Replacing catalog contents in one transaction...');
     await client.query('BEGIN');
-    await client.query('TRUNCATE TABLE catalog_sections RESTART IDENTITY');
+    // The catalog tables hold every university's courses; this import only
+    // replaces Özyeğin's rows (university = 'ozyegin', the column default).
+    await client.query("DELETE FROM catalog_sections WHERE university = 'ozyegin'");
 
     for (const c of courseList) {
       await client.query(`
@@ -166,7 +168,7 @@ async function run() {
           course_code, subject, course_no, title, faculty, credits,
           description, corequisites, prerequisites, required_programs, elective_programs
         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-        ON CONFLICT (course_code) DO UPDATE SET
+        ON CONFLICT (university, course_code) DO UPDATE SET
           subject = EXCLUDED.subject, course_no = EXCLUDED.course_no, title = EXCLUDED.title,
           faculty = EXCLUDED.faculty, credits = EXCLUDED.credits, description = EXCLUDED.description,
           corequisites = EXCLUDED.corequisites, prerequisites = EXCLUDED.prerequisites,
@@ -180,7 +182,7 @@ async function run() {
 
     const importedCodes = courseList.map(c => c.course_code);
     const { rowCount: removed } = await client.query(
-      'DELETE FROM catalog_courses WHERE NOT (course_code = ANY($1::text[]))',
+      "DELETE FROM catalog_courses WHERE university = 'ozyegin' AND NOT (course_code = ANY($1::text[]))",
       [importedCodes]
     );
     if (removed > 0) console.log(`Removed ${removed} course(s) no longer offered.`);

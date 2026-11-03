@@ -1,66 +1,111 @@
-import { randomBytes, timingSafeEqual } from 'crypto'
+// Panel authentication and authorization.
+//
+// - Sessions: opaque random token in an HttpOnly, SameSite=Strict cookie
+//   scoped to /api/admin; only its hash is stored (admin_sessions).
+// - CSRF: state-changing requests must carry the X-Panel-Request header (a
+//   cross-site form cannot set it) and, when the browser sends an Origin, it
+//   must be the panel's own host.
+// - Authorization: requireSuperadmin, or requireUniversity(role) for routes
+//   under /u/:university.
+import { isUniversity } from '../config/universities.js'
+import { sessionUser, SESSION_MAX_MS } from '../services/adminAccounts.js'
 
-const COOKIE_NAME = 'uniplanner_admin'
-const MAX_AGE_MS = 8 * 60 * 60 * 1000
-const sessions = new Map()
-const failures = new Map()
+export const COOKIE_NAME = 'uniplanner_admin'
+const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS'])
 
-const cookies = header => Object.fromEntries(String(header || '').split(';').map(part => {
-  const index = part.indexOf('=')
-  return index < 0 ? ['', ''] : [part.slice(0, index).trim(), decodeURIComponent(part.slice(index + 1).trim())]
-}).filter(([key]) => key))
-
-function sameSecret(left, right) {
-  const a = Buffer.from(String(left || ''))
-  const b = Buffer.from(String(right || ''))
-  return a.length === b.length && a.length > 0 && timingSafeEqual(a, b)
+export const readCookie = (req, name = COOKIE_NAME) => {
+  for (const part of String(req.headers.cookie || '').split(';')) {
+    const index = part.indexOf('=')
+    if (index > 0 && part.slice(0, index).trim() === name) return decodeURIComponent(part.slice(index + 1).trim())
+  }
+  return ''
 }
 
-function prune() {
-  const now = Date.now()
-  for (const [token, expiresAt] of sessions) if (expiresAt <= now) sessions.delete(token)
-  for (const [ip, entry] of failures) if (entry.resetAt <= now) failures.delete(ip)
-}
-
-export function adminLogin(req, res) {
-  prune()
-  const configured = process.env.ADMIN_SECRET
-  if (!configured) return res.status(503).json({ error: 'Admin access is not configured' })
-  const ip = req.ip || 'unknown'
-  const attempt = failures.get(ip)
-  if (attempt && attempt.count >= 5 && attempt.resetAt > Date.now()) {
-    return res.status(429).json({ error: 'Too many attempts. Try again later.' })
-  }
-  if (!sameSecret(req.body?.secret, configured)) {
-    failures.set(ip, { count: (attempt?.count || 0) + 1, resetAt: Date.now() + 15 * 60 * 1000 })
-    return res.status(401).json({ error: 'Invalid access key' })
-  }
-  failures.delete(ip)
-  const token = randomBytes(32).toString('base64url')
-  sessions.set(token, Date.now() + MAX_AGE_MS)
+export function setSessionCookie(res, token) {
   res.cookie(COOKIE_NAME, token, {
     httpOnly: true,
     secure: process.env.COOKIE_SECURE === '1',
     sameSite: 'strict',
-    maxAge: MAX_AGE_MS,
+    maxAge: SESSION_MAX_MS,
     path: '/api/admin',
   })
-  res.locals.activity = { ...res.locals.activity, adminAuthenticated: true }
-  return res.json({ authenticated: true })
 }
 
-export function requireAdmin(req, res, next) {
-  prune()
-  const token = cookies(req.headers.cookie)[COOKIE_NAME]
-  const expiresAt = token ? sessions.get(token) : null
-  if (!expiresAt || expiresAt <= Date.now()) return res.status(401).json({ error: 'Admin authentication required' })
-  sessions.set(token, Date.now() + MAX_AGE_MS)
-  req.adminToken = token
-  next()
+export const clearSessionCookie = res => res.clearCookie(COOKIE_NAME, { path: '/api/admin' })
+
+export function csrfGuard(req, res, next) {
+  if (SAFE_METHODS.has(req.method)) return next()
+  if (req.get('x-panel-request') !== '1') return res.status(403).json({ error: 'Missing panel request header' })
+  const origin = req.get('origin')
+  if (origin) {
+    let host = ''
+    try { host = new URL(origin).host } catch { /* invalid origin */ }
+    // X-Forwarded-Host covers the panel's dev proxy; a browser cannot set it
+    // (or X-Panel-Request) on a cross-site request.
+    if (!host || (host !== req.get('host') && host !== req.get('x-forwarded-host'))) {
+      return res.status(403).json({ error: 'Cross-origin request refused' })
+    }
+  }
+  return next()
 }
 
-export function adminLogout(req, res) {
-  if (req.adminToken) sessions.delete(req.adminToken)
-  res.clearCookie(COOKIE_NAME, { path: '/api/admin' })
-  res.json({ authenticated: false })
+// Small in-memory limiter for the unauthenticated endpoints (login, setup).
+// nginx limits these too; this also covers direct access to the API port.
+const attempts = new Map()
+export function rateLimit({ max, windowMs }) {
+  return (req, res, next) => {
+    const now = Date.now()
+    const key = `${req.path}|${req.ip}`
+    const entry = attempts.get(key)
+    if (!entry || entry.resetAt <= now) attempts.set(key, { count: 1, resetAt: now + windowMs })
+    else if (++entry.count > max) {
+      res.set('Retry-After', String(Math.ceil((entry.resetAt - now) / 1000)))
+      return res.status(429).json({ error: 'Çok fazla deneme. Biraz sonra tekrar deneyin.' })
+    }
+    if (attempts.size > 10_000) for (const [k, v] of attempts) if (v.resetAt <= now) attempts.delete(k)
+    return next()
+  }
 }
+
+export async function requireAdmin(req, res, next) {
+  try {
+    const token = readCookie(req)
+    const user = await sessionUser(token)
+    if (!user) {
+      if (token) clearSessionCookie(res)
+      return res.status(401).json({ error: 'Oturum açmanız gerekiyor' })
+    }
+    req.adminUser = user
+    req.adminToken = token
+    res.locals.activity = { ...res.locals.activity, adminUserId: user.id }
+    return next()
+  } catch (error) {
+    return next(error)
+  }
+}
+
+export function requireSuperadmin(req, res, next) {
+  if (!req.adminUser?.is_superadmin) return res.status(403).json({ error: 'Bu işlem için süper yönetici yetkisi gerekir' })
+  return next()
+}
+
+export const roleFor = (user, university) => (user?.is_superadmin ? 'editor' : user?.access?.[university] || null)
+
+// `editor` may change things; `viewer` may only read.
+export function requireUniversity(minimum = 'viewer') {
+  return (req, res, next) => {
+    const { university } = req.params
+    if (!isUniversity(university)) return res.status(404).json({ error: 'Unknown university' })
+    const role = roleFor(req.adminUser, university)
+    if (!role || (minimum === 'editor' && role !== 'editor')) {
+      return res.status(403).json({ error: 'Bu üniversite için yetkiniz yok' })
+    }
+    req.university = university
+    req.universityRole = role
+    return next()
+  }
+}
+
+// Read for viewers, write for editors, decided per request method.
+export const requireUniversityForMethod = () => (req, res, next) =>
+  requireUniversity(SAFE_METHODS.has(req.method) ? 'viewer' : 'editor')(req, res, next)

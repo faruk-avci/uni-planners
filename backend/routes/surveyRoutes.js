@@ -1,6 +1,8 @@
 import express from 'express'
 import { pool } from '../config/db.js'
-import { SURVEYS, publicSurvey, validateSurveyAnswers } from '../config/surveys.js'
+import { validateSurveyAnswers } from '../config/surveys.js'
+import { DEFAULT_UNIVERSITY } from '../config/universities.js'
+import { getSurvey, publicSurvey } from '../services/surveyStore.js'
 
 // Anonymous by construction:
 // - survey_responses holds answers plus coarse context (university, major,
@@ -13,6 +15,12 @@ import { SURVEYS, publicSurvey, validateSurveyAnswers } from '../config/surveys.
 //   not logged next to a submission either.
 
 const router = express.Router()
+
+const GRADES = new Set(['prep', '1', '2', '3', '4'])
+const browserContext = body => ({
+  major_code: /^[A-Z]{2,8}$/.test(String(body?.major || '')) ? String(body.major) : null,
+  grade_level: GRADES.has(String(body?.grade || '')) ? String(body.grade) : null,
+})
 
 router.get('/:university', async (req, res) => {
   const survey = publicSurvey(req.params.university)
@@ -31,8 +39,8 @@ router.get('/:university', async (req, res) => {
 
 router.post('/:university', async (req, res) => {
   const slug = req.params.university
-  const survey = SURVEYS[slug]
-  if (!survey) return res.status(404).json({ error: 'Survey not found' })
+  const survey = getSurvey(slug)
+  if (!survey || !survey.active) return res.status(404).json({ error: 'Survey not found' })
 
   const { answers, error } = validateSurveyAnswers(survey, req.body?.answers)
   if (error) return res.status(400).json({ error })
@@ -52,12 +60,17 @@ router.post('/:university', async (req, res) => {
       await client.query('ROLLBACK')
       return res.status(409).json({ error: 'already_submitted' })
     }
-    // Context is copied from the session, not linked to it.
-    const { rows } = await client.query('SELECT major_code, grade_level FROM sessions WHERE id = $1', [req.sessionId])
+    // Context is copied, not linked: Özyeğin's from the session, other
+    // universities' from their preferences row (or, failing that, what the
+    // page sent).
+    const context = slug === DEFAULT_UNIVERSITY
+      ? (await client.query('SELECT major_code, grade_level FROM sessions WHERE id = $1', [req.sessionId])).rows[0] || {}
+      : (await client.query('SELECT major_code, grade_level FROM university_preferences WHERE session_id = $1 AND university = $2', [req.sessionId, slug])).rows[0]
+        || browserContext(req.body)
     await client.query(
       `INSERT INTO survey_responses (university, survey_version, answers, major_code, grade_level, layout)
        VALUES ($1, $2, $3, $4, $5, $6)`,
-      [slug, survey.version, answers, rows[0]?.major_code || null, rows[0]?.grade_level || null, layout]
+      [slug, survey.version, answers, context.major_code || null, context.grade_level || null, layout]
     )
     await client.query('COMMIT')
     res.status(201).json({ success: true })

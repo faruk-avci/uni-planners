@@ -10,10 +10,10 @@ router.get('/', async (req, res) => {
     const { rows } = await pool.query(
       `SELECT b.course_code, b.sections, b.source, c.title, c.credits
          FROM basket_items b
-         LEFT JOIN catalog_courses c ON c.course_code = upper(replace(b.course_code, ' ', ''))
-        WHERE b.session_id = $1
+         LEFT JOIN catalog_courses c ON c.university = b.university AND c.course_code = upper(replace(b.course_code, ' ', ''))
+        WHERE b.session_id = $1 AND b.university = $2
         ORDER BY b.added_at`,
-      [req.sessionId]
+      [req.sessionId, req.university]
     );
     res.json(rows.map(r => ({
       code: r.course_code,
@@ -33,7 +33,7 @@ router.put('/', async (req, res) => {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
-    await client.query('DELETE FROM basket_items WHERE session_id = $1', [req.sessionId]);
+    await client.query('DELETE FROM basket_items WHERE session_id = $1 AND university = $2', [req.sessionId, req.university]);
     const seen = new Set();
     for (const it of items) {
       const code = String(it?.code || '').trim();
@@ -42,8 +42,8 @@ router.put('/', async (req, res) => {
       const sections = Array.isArray(it.sections) ? it.sections.map(String) : [];
       const source = it.source ? String(it.source).slice(0, 32) : null;
       await client.query(
-        'INSERT INTO basket_items (session_id, course_code, sections, source) VALUES ($1, $2, $3, $4)',
-        [req.sessionId, code, sections, source]
+        'INSERT INTO basket_items (session_id, course_code, sections, source, university) VALUES ($1, $2, $3, $4, $5)',
+        [req.sessionId, code, sections, source, req.university]
       );
     }
     await client.query('COMMIT');
@@ -60,7 +60,7 @@ router.put('/', async (req, res) => {
 
 router.delete('/', async (req, res) => {
   try {
-    await pool.query('DELETE FROM basket_items WHERE session_id = $1', [req.sessionId]);
+    await pool.query('DELETE FROM basket_items WHERE session_id = $1 AND university = $2', [req.sessionId, req.university]);
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -89,9 +89,9 @@ function normalizeSavedBasketItems(rawItems) {
   return normalized;
 }
 
-async function enrichSavedBasketItems(rawItems) {
+async function enrichSavedBasketItems(rawItems, university) {
   const items = normalizeSavedBasketItems(rawItems);
-  const currentCatalog = await getCatalog();
+  const currentCatalog = await getCatalog(university);
   return items.map(item => {
     const catalogCourse = currentCatalog.byCode.get(item.code.replace(/\s+/g, '').toUpperCase());
     return {
@@ -109,15 +109,15 @@ router.get('/saved', async (req, res) => {
     const { rows } = await pool.query(
       `SELECT id, name, items, created_at, updated_at
          FROM saved_baskets
-        WHERE session_id = $1
+        WHERE session_id = $1 AND university = $2
         ORDER BY updated_at DESC
         LIMIT 25`,
-      [req.sessionId]
+      [req.sessionId, req.university]
     );
     const saved = await Promise.all(rows.map(async row => ({
       id: row.id,
       name: row.name,
-      items: await enrichSavedBasketItems(row.items),
+      items: await enrichSavedBasketItems(row.items, req.university),
       createdAt: row.created_at,
       updatedAt: row.updated_at,
     })));
@@ -136,17 +136,17 @@ router.post('/saved', async (req, res) => {
 
   try {
     const { rows } = await pool.query(
-      `INSERT INTO saved_baskets (session_id, name, items)
-       VALUES ($1, $2, $3::jsonb)
+      `INSERT INTO saved_baskets (session_id, name, items, university)
+       VALUES ($1, $2, $3::jsonb, $4)
        RETURNING id, name, items, created_at, updated_at`,
-      [req.sessionId, name, JSON.stringify(items)]
+      [req.sessionId, name, JSON.stringify(items), req.university]
     );
     const row = rows[0];
     res.locals.activity = { ...res.locals.activity, savedBasketId: row.id, itemCount: items.length };
     res.status(201).json({
       id: row.id,
       name: row.name,
-      items: await enrichSavedBasketItems(row.items),
+      items: await enrichSavedBasketItems(row.items, req.university),
       createdAt: row.created_at,
       updatedAt: row.updated_at,
     });
@@ -162,8 +162,8 @@ router.delete('/saved/:id', async (req, res) => {
   }
   try {
     const { rowCount } = await pool.query(
-      'DELETE FROM saved_baskets WHERE id = $1 AND session_id = $2',
-      [req.params.id, req.sessionId]
+      'DELETE FROM saved_baskets WHERE id = $1 AND session_id = $2 AND university = $3',
+      [req.params.id, req.sessionId, req.university]
     );
     if (rowCount === 0) return res.status(404).json({ error: 'Saved basket not found' });
     res.locals.activity = { ...res.locals.activity, savedBasketId: req.params.id, deleted: true };

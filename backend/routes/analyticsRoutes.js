@@ -21,9 +21,9 @@ router.post('/analytics/course-add', async (req, res) => {
 
   try {
     await pool.query(
-      `INSERT INTO course_add_events (session_id, course_code, source, selection_mode)
-       VALUES ($1, $2, $3, $4)`,
-      [req.sessionId, code, source, selectionMode]
+      `INSERT INTO course_add_events (session_id, course_code, source, selection_mode, university)
+       VALUES ($1, $2, $3, $4, $5)`,
+      [req.sessionId, code, source, selectionMode, req.university]
     );
     console.log(JSON.stringify({
       event: 'course_add',
@@ -67,9 +67,9 @@ router.post('/analytics/site-event', async (req, res) => {
 
   try {
     await pool.query(
-      `INSERT INTO site_events (session_id, event_category, event_action, event_label)
-       VALUES ($1, $2, $3, $4)`,
-      [req.sessionId, category, action, label]
+      `INSERT INTO site_events (session_id, event_category, event_action, event_label, university)
+       VALUES ($1, $2, $3, $4, $5)`,
+      [req.sessionId, category, action, label, req.university]
     );
     res.status(201).json({ success: true });
   } catch (err) {
@@ -78,10 +78,10 @@ router.post('/analytics/site-event', async (req, res) => {
   }
 });
 
-router.get('/stats', async (_req, res) => {
+router.get('/stats', async (req, res) => {
   try {
-    const courses  = await pool.query('SELECT count(*) FROM catalog_courses');
-    const sections = await pool.query('SELECT count(*) FROM catalog_sections');
+    const courses  = await pool.query('SELECT count(*) FROM catalog_courses WHERE university = $1', [req.university]);
+    const sections = await pool.query('SELECT count(*) FROM catalog_sections WHERE university = $1', [req.university]);
     res.json({
       courses:  parseInt(courses.rows[0].count),
       sections: parseInt(sections.rows[0].count),

@@ -27,6 +27,7 @@ import { recordGenerateSuccess, shouldQueueSurveyNudge, markSurveyNudgeShown, ma
 import { canonicalProgramCode, groupMajorOptions } from './data/programs'
 import LandingPage from './components/landing/LandingPage'
 import SurveyPage from './components/survey/SurveyPage'
+import { UNIVERSITY, creditUnit, isBilkent, pathFor, storageKey, universityOfPath } from './data/university'
 import { ContextStrip, ProfileCard } from './components/profile/ProfileBar'
 import BasketTray from './components/layouts/BasketTray'
 import './components/layouts/layouts.css'
@@ -45,10 +46,11 @@ const routeFromLocation = () => {
   const sharedId = sharedIdFromPath(pathname)
   if (sharedId) return { page: 'shared', sharedId }
   if (/^\/curriculum\/?$/.test(pathname)) return { page: 'curriculum', sharedId: '' }
+  if (/^\/bilkent\/curriculum\/?$/.test(pathname)) return { page: 'curriculum', sharedId: '' }
   if (/^\/how-to\/?$/.test(pathname)) return { page: 'howto', sharedId: '' }
   if (/^\/ozyegin\/recap\/26-27-guz\/?$/.test(pathname)) return { page: 'recap', sharedId: '' }
-  if (/^\/ozyegin\/anket\/?$/.test(pathname)) return { page: 'survey', sharedId: '' }
-  if (/^\/ozyegin\/?$/.test(pathname)) return { page: 'planner', sharedId: '' }
+  if (/^\/(ozyegin|bilkent)\/anket\/?$/.test(pathname)) return { page: 'survey', sharedId: '' }
+  if (/^\/(ozyegin|bilkent)\/?$/.test(pathname)) return { page: 'planner', sharedId: '' }
   // `/` and any university that has no planner yet land on the index.
   return { page: 'landing', sharedId: '' }
 }
@@ -131,9 +133,10 @@ function App() {
   const [dinoOpen, setDinoOpen] = useState(() => localStorage.getItem('uniplanner_dino_mode') === 'true')
   // Independent, unrelated easter egg — a different press count than Dino's,
   // never reset by Dino's own counter/toggle.
-  const [auditUnlocked, setAuditUnlocked] = useState(() => localStorage.getItem('uniplanner_audit_unlocked') === 'true')
+  const [auditUnlocked, setAuditUnlocked] = useState(() => !isBilkent && localStorage.getItem('uniplanner_audit_unlocked') === 'true')
   const [auditOpen, setAuditOpen] = useState(false)
   const [auditResult, setAuditResult] = useState(() => {
+    if (isBilkent) return null
     try { return JSON.parse(localStorage.getItem('uniplanner_degree_audit') || 'null') } catch { return null }
   })
   const [activePage, setActivePage] = useState(initialRoute.page)
@@ -168,10 +171,10 @@ function App() {
   const [fitTypeFilter, setFitTypeFilter] = useState(() => new Set()) // empty = show all
   const [fitCreditFilter, setFitCreditFilter] = useState('all')
   const [majorsList, setMajorsList] = useState([])
-  const [grade, setGrade] = useState(() => localStorage.getItem('uniplanner_grade') || '')
+  const [grade, setGrade] = useState(() => localStorage.getItem(storageKey('uniplanner_grade')) || '')
   // '' = not chosen yet, 'none' = user declined to share, otherwise a program code
-  const [major, setMajor] = useState(() => canonicalProgramCode(localStorage.getItem('uniplanner_major') || ''))
-  const [majorPreferenceLoaded, setMajorPreferenceLoaded] = useState(() => Boolean(localStorage.getItem('uniplanner_major')))
+  const [major, setMajor] = useState(() => canonicalProgramCode(localStorage.getItem(storageKey('uniplanner_major')) || ''))
+  const [majorPreferenceLoaded, setMajorPreferenceLoaded] = useState(() => Boolean(localStorage.getItem(storageKey('uniplanner_major'))))
   const [majorPromptReason, setMajorPromptReason] = useState(null)
   const generatedSchedulesRef = useRef(null)
   const fittingCoursesRef = useRef(null)
@@ -313,6 +316,11 @@ function App() {
     const syncPage = () => {
       const legacyPath = legacyPathFromHash(window.location.hash)
       if (legacyPath) window.history.replaceState(null, '', legacyPath)
+      // Back/forward into another university's pages needs that university's app.
+      if (universityOfPath(window.location.pathname) !== UNIVERSITY) {
+        window.location.reload()
+        return
+      }
       const route = routeFromLocation()
       setSharedScheduleId(route.sharedId)
       setActivePage(route.page)
@@ -343,8 +351,14 @@ function App() {
     }
   }, [mobileBasketOpen])
 
-  const navigate = page => {
-    const path = page === 'curriculum' ? '/curriculum' : page === 'howto' ? '/how-to' : page === 'recap' ? '/ozyegin/recap/26-27-guz' : page === 'survey' ? '/ozyegin/anket' : page === 'landing' ? '/' : '/ozyegin'
+  // `university` defaults to the one this page load runs; reaching another
+  // university is a full page load, since its data source and saved state differ.
+  const navigate = (page, university = UNIVERSITY) => {
+    const path = pathFor(page, university)
+    if (universityOfPath(path) !== UNIVERSITY) {
+      window.location.assign(path)
+      return
+    }
     window.history.pushState(null, '', path)
     setSharedScheduleId('')
     setActivePage(page)
@@ -357,24 +371,24 @@ function App() {
   }, [])
 
   useEffect(() => {
-    const localMajor = canonicalProgramCode(localStorage.getItem('uniplanner_major') || '')
+    const localMajor = canonicalProgramCode(localStorage.getItem(storageKey('uniplanner_major')) || '')
     courseService.getPreferences()
       .then(preferences => {
         const serverMajor = preferences?.major ? canonicalProgramCode(preferences.major) : ''
         if (serverMajor) {
           // Server already knows the major — nothing to (re-)send.
           setMajor(serverMajor)
-          localStorage.setItem('uniplanner_major', serverMajor)
+          localStorage.setItem(storageKey('uniplanner_major'), serverMajor)
         } else if (localMajor) {
           // Session has no major yet (e.g. cookie was cleared) but this
           // browser already chose one — sync it once instead of every load.
           setMajor(localMajor)
           courseService.saveMajorPreference(localMajor, 'existing_browser').catch(() => {})
         }
-        const localGrade = localStorage.getItem('uniplanner_grade') || ''
+        const localGrade = localStorage.getItem(storageKey('uniplanner_grade')) || ''
         if (preferences?.grade) {
           setGrade(preferences.grade)
-          localStorage.setItem('uniplanner_grade', preferences.grade)
+          localStorage.setItem(storageKey('uniplanner_grade'), preferences.grade)
         } else if (localGrade) {
           courseService.saveGradePreference(localGrade).catch(() => {})
         }
@@ -491,6 +505,8 @@ function App() {
       })
     }
 
+    // The degree audit reads ÖzÜ transcripts only.
+    if (isBilkent) return
     auditLogoPresses.current += 1
     // >= rather than === so a double-fired click event (or a click missed
     // earlier and caught up on a later render) can't skip past the exact
@@ -691,7 +707,7 @@ function App() {
 
   const saveMajorPreference = (value, source = 'curriculum') => {
     setMajor(value)
-    localStorage.setItem('uniplanner_major', value)
+    localStorage.setItem(storageKey('uniplanner_major'), value)
     setMajorPreferenceLoaded(true)
     if (value) {
       courseService.saveMajorPreference(value, source).catch(error => {
@@ -702,8 +718,8 @@ function App() {
 
   const saveGradePreference = value => {
     setGrade(value)
-    if (value) localStorage.setItem('uniplanner_grade', value)
-    else localStorage.removeItem('uniplanner_grade')
+    if (value) localStorage.setItem(storageKey('uniplanner_grade'), value)
+    else localStorage.removeItem(storageKey('uniplanner_grade'))
     courseService.saveGradePreference(value).catch(error => {
       console.error('Grade preference could not be saved:', error)
     })
@@ -1045,7 +1061,7 @@ function App() {
               )}
             </span>
             <span className="fit-course-name">{course.name}</span>
-            <span className="fit-course-credits">{course.credits} {tr('Kredi', 'ECTS')}</span>
+            <span className="fit-course-credits">{course.credits} {creditUnit(language)}</span>
           </div>
           {course.sections.length > 1 && (
             <button className="btn btn-sm btn-ghost fit-add-all" onClick={() => addCourseToBasket(course, undefined, 'fitting')}>
@@ -1407,7 +1423,7 @@ function App() {
                               </div>
 
                               <div className="fit-credit-filter" role="group" aria-label={tr('Kredi filtresi', 'ECTS filter')}>
-                                <span className="fit-filter-label">{tr('Kredi:', 'ECTS:')}</span>
+                                <span className="fit-filter-label">{creditUnit(language)}:</span>
                                 <button
                                   className={`fit-filter-chip ${fitCreditFilter === 'all' ? 'fit-filter-chip-active' : ''}`}
                                   onClick={() => setFitCreditFilter('all')}
@@ -1480,7 +1496,7 @@ function App() {
 
   // The survey stands on its own: no header, profile bar, dock or footer.
   if (activePage === 'survey') {
-    return <SurveyPage language={language} university="ozyegin" layout={effectiveLayout} onBack={() => navigate('planner')} />
+    return <SurveyPage language={language} university={UNIVERSITY} layout={effectiveLayout} onBack={() => navigate('planner')} />
   }
 
   if (activePage === 'landing') {
@@ -1492,7 +1508,7 @@ function App() {
         onToggleDarkMode={toggleDarkMode}
         colorTheme={colorTheme}
         setColorTheme={selectColorTheme}
-        onOpenUniversity={() => navigate('planner')}
+        onOpenUniversity={slug => navigate('planner', slug)}
         footerCredit={footerCredit}
       />
     )
@@ -1671,7 +1687,7 @@ function App() {
             >
               <span className="mobile-basket-dock-copy">
                 <strong>{tr('Sepetim', 'My Basket')}</strong>
-                <span>{basket.length} {tr('ders', 'courses')} · {totalCredits} {tr('Kredi', 'ECTS')}</span>
+                <span>{basket.length} {tr('ders', 'courses')} · {totalCredits} {creditUnit(language)}</span>
               </span>
               <span className="mobile-basket-dock-action">{tr('Aç', 'Open')} <span aria-hidden="true">↑</span></span>
             </button>

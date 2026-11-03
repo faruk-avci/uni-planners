@@ -1,10 +1,17 @@
 /**
  * Course Catalog API / Service Layer (Direct PostgreSQL Backend Bridge)
  */
+import { UNIVERSITY } from '../data/university'
+
+// University-specific calls (courses, schedules, basket, preferences...) go to
+// /api/u/<university>. Özyeğin keeps its original /api paths, which the
+// server still answers for it.
+const API_SCOPE_PATH = UNIVERSITY === 'ozyegin' ? '/api' : `/api/u/${UNIVERSITY}`
 
 // API base URL. Empty = same-origin: works in dev via the Vite proxy and in
 // production behind a reverse proxy. Set VITE_API_URL to target a different host.
 const API_BASE = import.meta.env.VITE_API_URL || ''
+const API_SCOPE = API_BASE + API_SCOPE_PATH
 
 export const courseService = {
   /**
@@ -27,7 +34,7 @@ export const courseService = {
   },
 
   async getSiteSettings() {
-    const res = await fetch(API_BASE + '/api/site-settings', { cache: 'no-store' })
+    const res = await fetch(API_SCOPE + '/site-settings', { cache: 'no-store' })
     if (!res.ok) throw new Error('Site settings could not be loaded')
     return await res.json()
   },
@@ -39,7 +46,7 @@ export const courseService = {
     const { major = '', programType = 'all' } = filters;
     
     try {
-      const res = await fetch(API_BASE + '/api/courses/search', {
+      const res = await fetch(API_SCOPE + '/courses/search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query, major, type: programType }),
@@ -58,7 +65,7 @@ export const courseService = {
    */
   async getMajors() {
     try {
-      const res = await fetch(API_BASE + '/api/majors');
+      const res = await fetch(API_SCOPE + '/majors');
       if (!res.ok) throw new Error('API request failed');
       return await res.json();
     } catch (err) {
@@ -68,13 +75,13 @@ export const courseService = {
   },
 
   async getPreferences() {
-    const res = await fetch(API_BASE + '/api/preferences', { credentials: 'include' })
+    const res = await fetch(API_SCOPE + '/preferences', { credentials: 'include' })
     if (!res.ok) throw new Error('Preferences could not be loaded')
     return await res.json()
   },
 
   async saveMajorPreference(major, source) {
-    const res = await fetch(API_BASE + '/api/preferences/major', {
+    const res = await fetch(API_SCOPE + '/preferences/major', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -85,7 +92,7 @@ export const courseService = {
   },
 
   async saveGradePreference(grade) {
-    const res = await fetch(API_BASE + '/api/preferences/grade', {
+    const res = await fetch(API_SCOPE + '/preferences/grade', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -96,13 +103,13 @@ export const courseService = {
   },
 
   async getCurriculums() {
-    const res = await fetch(API_BASE + '/api/curriculums');
+    const res = await fetch(API_SCOPE + '/curriculums');
     if (!res.ok) throw new Error('Curriculum list request failed');
     return await res.json();
   },
 
   async getCurriculum(id) {
-    const res = await fetch(API_BASE + '/api/curriculums/' + encodeURIComponent(id));
+    const res = await fetch(API_SCOPE + '/curriculums/' + encodeURIComponent(id));
     if (!res.ok) throw new Error('Curriculum request failed');
     return await res.json();
   },
@@ -116,7 +123,7 @@ export const courseService = {
     const norm = String(code || '').replace(/\s+/g, '').toUpperCase()
     if (!norm) return null
     try {
-      const res = await fetch(API_BASE + '/api/courses/' + encodeURIComponent(norm))
+      const res = await fetch(API_SCOPE + '/courses/' + encodeURIComponent(norm))
       if (!res.ok) return null
       return await res.json()
     } catch (err) {
@@ -131,7 +138,7 @@ export const courseService = {
    */
   async getBasket() {
     try {
-      const res = await fetch(API_BASE + '/api/basket', { credentials: 'include' })
+      const res = await fetch(API_SCOPE + '/basket', { credentials: 'include' })
       if (!res.ok) throw new Error('Basket load failed')
       return await res.json()
     } catch (err) {
@@ -146,7 +153,7 @@ export const courseService = {
    */
   async saveBasket(items = []) {
     try {
-      const res = await fetch(API_BASE + '/api/basket', {
+      const res = await fetch(API_SCOPE + '/basket', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -161,13 +168,13 @@ export const courseService = {
   },
 
   async getSavedBaskets() {
-    const res = await fetch(API_BASE + '/api/saved-baskets', { credentials: 'include' })
+    const res = await fetch(API_SCOPE + '/basket/saved', { credentials: 'include' })
     if (!res.ok) throw new Error('Saved baskets could not be loaded')
     return await res.json()
   },
 
   async saveNamedBasket(name, items = []) {
-    const res = await fetch(API_BASE + '/api/saved-baskets', {
+    const res = await fetch(API_SCOPE + '/basket/saved', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -188,7 +195,7 @@ export const courseService = {
   },
 
   async deleteSavedBasket(id) {
-    const res = await fetch(API_BASE + '/api/saved-baskets/' + encodeURIComponent(id), {
+    const res = await fetch(API_SCOPE + '/basket/saved/' + encodeURIComponent(id), {
       method: 'DELETE',
       credentials: 'include',
     })
@@ -198,7 +205,7 @@ export const courseService = {
 
   async trackCourseAdd(code, source = 'search', selectionMode = 'course') {
     try {
-      const res = await fetch(API_BASE + '/api/analytics/course-add', {
+      const res = await fetch(API_SCOPE + '/analytics/course-add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -230,7 +237,7 @@ export const courseService = {
 
   async trackSiteEvent(category, action, label) {
     try {
-      const res = await fetch(API_BASE + '/api/analytics/site-event', {
+      const res = await fetch(API_SCOPE + '/analytics/site-event', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -249,7 +256,7 @@ export const courseService = {
   async getAssessments(codes = []) {
     if (codes.length === 0) return {}
     try {
-      const res = await fetch(API_BASE + '/api/assessments', {
+      const res = await fetch(API_SCOPE + '/assessments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ codes }),
@@ -274,7 +281,7 @@ export const courseService = {
     }));
 
     try {
-      const res = await fetch(API_BASE + '/api/schedule/generate', {
+      const res = await fetch(API_SCOPE + '/schedule/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ courses, freeDays, ignoreCoreqs: Boolean(options.ignoreCoreqs) }),
@@ -295,7 +302,7 @@ export const courseService = {
    */
   async getFittingForSchedule(occupied = [], excludeCodes = [], major = '') {
     try {
-      const res = await fetch(API_BASE + '/api/schedule/fitting', {
+      const res = await fetch(API_SCOPE + '/schedule/fitting', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         // Matches the backend's hard cap (scheduleRoutes.js) so the full
@@ -325,7 +332,7 @@ export const courseService = {
   },
 
   async exportScheduleCalendar(schedule, language = 'tr') {
-    const res = await fetch(API_BASE + '/api/schedule/export-calendar', {
+    const res = await fetch(API_SCOPE + '/schedule/export-calendar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ schedule, language }),
@@ -401,3 +408,4 @@ export const courseService = {
     });
   }
 };
+

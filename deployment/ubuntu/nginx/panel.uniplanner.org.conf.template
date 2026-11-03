@@ -1,5 +1,5 @@
 limit_req_zone $binary_remote_addr zone=uniplanner_panel_api:10m rate=15r/s;
-limit_req_zone $binary_remote_addr zone=uniplanner_panel_login:10m rate=5r/m;
+limit_req_zone $binary_remote_addr zone=uniplanner_panel_login:10m rate=10r/m;
 
 server {
     listen 80;
@@ -16,8 +16,10 @@ server {
     add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
     add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'" always;
 
-    location = /api/admin/login {
-        limit_req zone=uniplanner_panel_login burst=3 nodelay;
+    # Sign-in (password, code, 2FA enrolment) and setup links: a person needs
+    # a handful of requests; guessing needs thousands.
+    location ~ ^/api/admin/(login|setup)(/|$) {
+        limit_req zone=uniplanner_panel_login burst=5 nodelay;
         include proxy_params;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_pass http://127.0.0.1:3001;

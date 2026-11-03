@@ -4,14 +4,16 @@ import { buildMask, DAY_INDEX } from '../scheduleEngine.js';
 import {
   formatCourseCode,
   parseSchedule,
+  sectionLabel,
   normalizeSharedSchedule,
   scheduleCalendarIcs
 } from '../utils/helpers.js';
 import { schedulePool } from '../services/heavyTaskPool.js';
 import {
   equivalentProgramsFor,
-  MAJOR_TO_CURRICULUM,
+  curriculumIdForMajor,
   curriculumData,
+  electiveLabelsFor,
   electiveTypeMap,
   ELECTIVE_TYPE_ORDER
 } from '../services/catalogService.js';
@@ -47,8 +49,8 @@ router.post('/generate', async (req, res) => {
 
   try {
     const { rows: courseRows } = await pool.query(
-      `SELECT course_code, title, credits, corequisites FROM catalog_courses WHERE course_code = ANY($1)`,
-      [codes]
+      `SELECT course_code, title, credits, corequisites FROM catalog_courses WHERE university = $2 AND course_code = ANY($1)`,
+      [codes, req.university]
     );
     const courseMeta = {};
     for (const c of courseRows) {
@@ -76,8 +78,8 @@ router.post('/generate', async (req, res) => {
       if (missing.size > 0) {
         const missingCodes = [...missing.keys()];
         const { rows: missingRows } = await pool.query(
-          `SELECT course_code, title, credits FROM catalog_courses WHERE course_code = ANY($1)`,
-          [missingCodes]
+          `SELECT course_code, title, credits FROM catalog_courses WHERE university = $2 AND course_code = ANY($1)`,
+          [missingCodes, req.university]
         );
         const missingMeta = {};
         for (const c of missingRows) missingMeta[c.course_code] = { name: c.title, credits: parseFloat(c.credits) || 0 };
@@ -99,8 +101,8 @@ router.post('/generate', async (req, res) => {
 
     const { rows: secRows } = await pool.query(
       `SELECT course_code, section_no, instructor, schedule, room FROM catalog_sections
-       WHERE course_code = ANY($1) ORDER BY course_code, section_no`,
-      [codes]
+       WHERE university = $2 AND course_code = ANY($1) ORDER BY course_code, section_no`,
+      [codes, req.university]
     );
 
     const coursesSections = {};
@@ -112,7 +114,7 @@ router.post('/generate', async (req, res) => {
         .filter(s => s.course_code === norm)
         .map(s => {
           const times = parseSchedule(s.schedule);
-          const sectionName = `${formattedCode}${s.section_no}`;
+          const sectionName = sectionLabel(req.university, formattedCode, s.section_no);
           return {
             code: formattedCode,
             name: meta.name,
@@ -247,7 +249,7 @@ router.post('/fitting', async (req, res) => {
       .map(c => String(c).replace(/\s+/g, '').toUpperCase())
   );
   const major = (req.body.major || '').trim().toUpperCase();
-  const equivalentPrograms = equivalentProgramsFor(major);
+  const equivalentPrograms = equivalentProgramsFor(major, req.university);
   const limit = Math.min(parseInt(req.body.limit, 10) || 200, 300);
 
   try {
@@ -256,7 +258,8 @@ router.post('/fitting', async (req, res) => {
     const isEngineering = faculty => /Mühendislik/i.test(faculty || '');
 
     const { rows: courseRows } = await pool.query(
-      `SELECT course_code, title, credits, faculty, prerequisites, corequisites, required_programs, elective_programs FROM catalog_courses`
+      `SELECT course_code, title, credits, faculty, prerequisites, corequisites, required_programs, elective_programs FROM catalog_courses WHERE university = $1`,
+      [req.university]
     );
     const meta = {};
     for (const c of courseRows) {
@@ -283,17 +286,18 @@ router.post('/fitting', async (req, res) => {
       homePrefix = Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || null;
     }
 
-    const curriculumId = MAJOR_TO_CURRICULUM[major];
-    const activeCurriculum = curriculumId ? curriculumData(curriculumId) : null;
-    const etMap = curriculumId ? electiveTypeMap(curriculumId) : null;
-    const electiveLabels = activeCurriculum?.electiveLabels || {};
+    const curriculumId = curriculumIdForMajor(major, req.university);
+    const activeCurriculum = curriculumId ? curriculumData(curriculumId, req.university) : null;
+    const etMap = curriculumId ? electiveTypeMap(curriculumId, req.university) : null;
+    const electiveLabels = electiveLabelsFor(activeCurriculum, req.body?.language === 'en' ? 'en' : 'tr');
 
     const conflict = (a, b) => a.some((v, d) => (v & b[d]) !== 0);
     const parseCoreqs = txt => (txt || '')
       .split(/[,;]+/).map(x => x.replace(/\s+/g, '').toUpperCase()).filter(Boolean);
 
     const { rows: secRows } = await pool.query(
-      `SELECT course_code, section_no, instructor, schedule FROM catalog_sections ORDER BY course_code, section_no`
+      `SELECT course_code, section_no, instructor, schedule FROM catalog_sections WHERE university = $1 ORDER BY course_code, section_no`,
+      [req.university]
     );
 
     const secByCourse = {};
@@ -301,7 +305,7 @@ router.post('/fitting', async (req, res) => {
       const times = parseSchedule(s.schedule);
       const mask = buildMask(times);
       (secByCourse[s.course_code] ||= []).push({
-        section: `${formatCourseCode(s.course_code)}${s.section_no}`,
+        section: sectionLabel(req.university, formatCourseCode(s.course_code), s.section_no),
         lecturer: s.instructor || 'Staff',
         times, mask, hasTimes: mask.some(v => v !== 0),
       });

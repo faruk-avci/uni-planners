@@ -10,6 +10,13 @@ export const UNIVERSITIES = [
     status: 'live',
   },
   {
+    slug: 'bilkent',
+    short: 'Bilkent',
+    name: { tr: 'Bilkent Üniversitesi', en: 'Bilkent University' },
+    city: { tr: 'Ankara', en: 'Ankara' },
+    status: 'live',
+  },
+  {
     slug: 'itu',
     short: 'İTÜ',
     name: { tr: 'İstanbul Teknik Üniversitesi', en: 'Istanbul Technical University' },

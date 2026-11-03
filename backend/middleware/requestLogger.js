@@ -125,7 +125,12 @@ export function requestLogger(req, res, next) {
   if (req.method === 'POST' && req.originalUrl.split('?')[0].startsWith('/api/survey/')) return next()
   const startedAt = performance.now()
   const requestId = randomUUID()
-  const path = req.originalUrl.split('?')[0]
+  const fullPath = req.originalUrl.split('?')[0]
+  // /api/u/bilkent/courses/search is classified like /api/courses/search;
+  // the university goes into the metadata and the raw path is kept.
+  const scoped = fullPath.match(/^\/api\/u\/([a-z0-9-]+)(\/.*)?$/)
+  const path = scoped ? `/api${scoped[2] || ''}` : fullPath
+  const university = scoped ? scoped[1] : null
   let logged = false
   res.setHeader('X-Request-Id', requestId)
 
@@ -133,13 +138,13 @@ export function requestLogger(req, res, next) {
     if (logged) return
     logged = true
     const baseMetadata = metadataFor(req, path)
-    const metadata = { sessionCreated: Boolean(req.sessionCreated), ...baseMetadata, ...(res.locals.activity || {}), ...(aborted ? { aborted: true } : {}) }
+    const metadata = { sessionCreated: Boolean(req.sessionCreated), ...(university ? { university } : {}), ...baseMetadata, ...(res.locals.activity || {}), ...(aborted ? { aborted: true } : {}) }
     enqueueRequestLog({
       request_id: requestId,
       session_id: req.sessionId || '',
       event_action: actionFor(req.method, path),
       method: req.method,
-      request_path: path.slice(0, 500),
+      request_path: fullPath.slice(0, 500),
       status_code: aborted ? 499 : res.statusCode,
       duration_ms: Number((performance.now() - startedAt).toFixed(3)),
       request_size: Number.parseInt(req.get('content-length'), 10) || null,

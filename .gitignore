@@ -54,3 +54,6 @@ tmp/panel-e2e-data/
 # Local database exports (move these separately; never commit them)
 /*.dump
 /*.sql
+
+# Raw Bilkent STARS exports (imported into frontend/public/data/bilkent)
+bilkent-data/

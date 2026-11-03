@@ -53,6 +53,9 @@ export const SURVEYS = {
   },
 }
 
+// Bilkent asks the same questions; it keeps its own version and results.
+SURVEYS.bilkent = { ...SURVEYS.ozyegin, version: 1 }
+
 const OTHER_MAX_LENGTH = 200
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 

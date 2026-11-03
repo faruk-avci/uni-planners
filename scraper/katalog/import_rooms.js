@@ -86,7 +86,7 @@ async function run() {
     const unmatched = [];
     for (const r of rows) {
       const { rowCount } = await client.query(
-        'UPDATE catalog_sections SET room = $1 WHERE course_code = $2 AND section_no = $3',
+        "UPDATE catalog_sections SET room = $1 WHERE university = 'ozyegin' AND course_code = $2 AND section_no = $3",
         [r.room, r.course_code, r.section_no]
       );
       if (rowCount > 0) matched++;

@@ -84,7 +84,8 @@ async function main() {
     `);
 
     // Fetch list of valid course codes to ensure foreign key constraint is satisfied
-    const res = await client.query('SELECT course_code FROM catalog_courses');
+    // Syllabus assessments are Özyeğin's; other universities' rows are left alone.
+    const res = await client.query("SELECT course_code FROM catalog_courses WHERE university = 'ozyegin'");
     const validCourses = new Set(res.rows.map(r => r.course_code.toUpperCase()));
     console.log(`ℹ️ Database contains ${validCourses.size} valid courses in catalog_courses.`);
 
@@ -92,7 +93,7 @@ async function main() {
     await client.query('BEGIN');
 
     // Clear existing assessments
-    await client.query('DELETE FROM course_assessments');
+    await client.query("DELETE FROM course_assessments WHERE university = 'ozyegin'");
     console.log('🧹 Cleared existing records in course_assessments.');
 
     let insertCount = 0;

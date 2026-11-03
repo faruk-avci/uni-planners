@@ -1,5 +1,6 @@
 import SettingsMenu from './SettingsMenu'
 import { linkTargetProps } from '../../utils/links'
+import { isBilkent } from '../../data/university'
 import './Header.css'
 
 const LAYOUTS = [
@@ -69,9 +70,12 @@ function Header({
             <button type="button" onClick={() => onNavigate('curriculum')} className={`nav-link ${activePage === 'curriculum' ? 'nav-link-active' : ''}`}>
               {language === 'tr' ? 'Müfredat' : 'Curriculum'}
             </button>
-            <button type="button" onClick={() => onNavigate('recap')} className={`nav-link nav-link-secondary ${activePage === 'recap' ? 'nav-link-active' : ''}`}>
-              {language === 'tr' ? 'Özet' : 'Recap'}
-            </button>
+            {/* The recap covers Özyeğin's 2026-27 fall term only. */}
+            {!isBilkent && (
+              <button type="button" onClick={() => onNavigate('recap')} className={`nav-link nav-link-secondary ${activePage === 'recap' ? 'nav-link-active' : ''}`}>
+                {language === 'tr' ? 'Özet' : 'Recap'}
+              </button>
+            )}
             {surveyUrl && (
               <a href={surveyUrl} {...linkTargetProps(surveyUrl)} className="nav-link nav-link-secondary" onClick={onSurveyLinkClick}>
                 {language === 'tr' ? 'Anket' : 'Survey'}
@@ -82,15 +86,17 @@ function Header({
 
         {/* Actions */}
         <div className="header-actions">
-          <button
-            className={`action-btn howto-mobile ${activePage === 'recap' ? 'action-btn-active' : ''}`}
-            type="button"
-            onClick={() => onNavigate('recap')}
-            title={language === 'tr' ? 'Dönem Özeti' : 'Semester Recap'}
-            aria-label={language === 'tr' ? 'Özet' : 'Recap'}
-          >
-            {language === 'tr' ? 'Özet' : 'Recap'}
-          </button>
+          {!isBilkent && (
+            <button
+              className={`action-btn howto-mobile ${activePage === 'recap' ? 'action-btn-active' : ''}`}
+              type="button"
+              onClick={() => onNavigate('recap')}
+              title={language === 'tr' ? 'Dönem Özeti' : 'Semester Recap'}
+              aria-label={language === 'tr' ? 'Özet' : 'Recap'}
+            >
+              {language === 'tr' ? 'Özet' : 'Recap'}
+            </button>
+          )}
           {surveyUrl && (
             <a href={surveyUrl} {...linkTargetProps(surveyUrl)} className="action-btn howto-mobile" onClick={onSurveyLinkClick}>
               {language === 'tr' ? 'Anket' : 'Survey'}

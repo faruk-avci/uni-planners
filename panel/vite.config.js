@@ -12,6 +12,8 @@ export default defineConfig(({ mode }) => {
         '/api': {
           target: env.VITE_DEV_API_PROXY || 'http://localhost:3001',
           changeOrigin: true,
+          // Lets the API's Origin check see the panel's own host (localhost:5174).
+          xfwd: true,
         },
       },
     },

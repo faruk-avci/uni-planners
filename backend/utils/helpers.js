@@ -1,8 +1,14 @@
 import { createHash, randomBytes } from 'crypto';
+import { UNIVERSITY_BY_SLUG } from '../config/universities.js';
 
 export function formatCourseCode(code) {
   const m = code.match(/^([A-Z]+)(\d+.*)$/i);
   return m ? `${m[1]} ${m[2]}` : code;
+}
+
+// "ACCT 201" + "A" -> "ACCT 201A" (Özyeğin); "CS 101" + "1" -> "CS 101-1" (Bilkent).
+export function sectionLabel(university, formattedCode, sectionNo) {
+  return `${formattedCode}${UNIVERSITY_BY_SLUG.get(university)?.sectionSeparator ?? ''}${sectionNo}`;
 }
 
 export function parseSchedule(raw) {

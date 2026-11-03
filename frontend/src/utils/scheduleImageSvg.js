@@ -1,3 +1,4 @@
+import { UNIVERSITY_INFO } from '../data/university'
 // Ported verbatim from backend/utils/helpers.js so schedule PNG export can
 // run entirely client-side: the exported image is built from this fixed-size
 // SVG (not a screenshot of the visible page), so it looks the same whether
@@ -140,7 +141,7 @@ export function scheduleImageSvg(schedule, language = 'tr', layout = 'grid') {
   const gridWidth = timeWidth + dayWidth * 5
   const height = gridTop + gridHeight + padding
   const exportScale = 3
-  const baseMinutes = 8 * 60 + 40
+  const baseMinutes = 8 * 60 + UNIVERSITY_INFO.slotMinute
   const cardMargin = 28
   const canvasWidth = width + cardMargin * 2
   const canvasHeight = height + cardMargin * 2

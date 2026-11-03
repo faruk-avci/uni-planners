@@ -1,6 +1,10 @@
 import { useState } from 'react'
 import { courseService } from '../../services/courseService'
 import './BasketPanel.css'
+import { UNIVERSITY_INFO, creditUnit } from '../../data/university'
+
+// Load limits differ per university; none are known for some (no warning).
+const creditLoad = UNIVERSITY_INFO.creditLoad
 
 function BasketPanel({ basket, setBasket, removeSection, totalCredits, language, savedBaskets, setSavedBaskets }) {
   const [saveFormOpen, setSaveFormOpen] = useState(false)
@@ -10,7 +14,7 @@ function BasketPanel({ basket, setBasket, removeSection, totalCredits, language,
 
   const t = {
     title: language === 'tr' ? 'Sepetim' : 'My Basket',
-    credits: language === 'tr' ? 'Kredi' : 'ECTS',
+    credits: creditUnit(language),
     empty: language === 'tr' ? 'Sepetiniz boş. Ders arayarak ekleyin.' : 'Your basket is empty. Search to add courses.',
     clear: language === 'tr' ? 'Sepeti Temizle' : 'Clear Basket',
     remove: language === 'tr' ? 'Kaldır' : 'Remove',
@@ -29,11 +33,11 @@ function BasketPanel({ basket, setBasket, removeSection, totalCredits, language,
     deleteConfirm: language === 'tr' ? 'Bu kayıtlı sepet silinsin mi?' : 'Delete this saved basket?',
     courseCount: language === 'tr' ? 'ders' : 'courses',
     creditWarning: language === 'tr'
-      ? '36 Kredi veya üzeri ders yükü almaya uygun olduğunuzdan emin olun.'
-      : 'Make sure you are eligible to take 36 ECTS or more.',
+      ? `${creditLoad?.warn} Kredi veya üzeri ders yükü almaya uygun olduğunuzdan emin olun.`
+      : `Make sure you are eligible to take ${creditLoad?.warn} ECTS or more.`,
     creditDanger: language === 'tr'
-      ? '42 Kredi üzeri ders yükü seçtiniz. Bu ders yükünü almaya uygun olduğunuzdan emin olun.'
-      : 'You selected more than 42 ECTS. Make sure you are eligible for this course load.',
+      ? `${creditLoad?.danger} Kredi üzeri ders yükü seçtiniz. Bu ders yükünü almaya uygun olduğunuzdan emin olun.`
+      : `You selected more than ${creditLoad?.danger} ECTS. Make sure you are eligible for this course load.`,
   }
 
   const handleSaveBasket = async event => {
@@ -92,10 +96,10 @@ function BasketPanel({ basket, setBasket, removeSection, totalCredits, language,
         </div>
       </div>
 
-      {totalCredits > 36 && (
-        <div className={`basket-credit-warning ${totalCredits > 42 ? 'basket-credit-danger' : ''}`} role="status">
+      {creditLoad && totalCredits > creditLoad.warn && (
+        <div className={`basket-credit-warning ${totalCredits > creditLoad.danger ? 'basket-credit-danger' : ''}`} role="status">
           <span className="basket-credit-warning-icon" aria-hidden="true">i</span>
-          <span>{totalCredits > 42 ? t.creditDanger : t.creditWarning}</span>
+          <span>{totalCredits > creditLoad.danger ? t.creditDanger : t.creditWarning}</span>
         </div>
       )}
 

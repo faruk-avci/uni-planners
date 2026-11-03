@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { courseService } from '../../services/courseService'
 import { curriculumIdForProgramCode, groupCurriculumOptions } from '../../data/programs'
+import { storageKey } from '../../data/university'
 import './CurriculumPage.css'
 
 const ELECTIVE_LABELS = {
@@ -64,6 +65,9 @@ function CurriculumPage({ language, onAddCourse, major, auditResult }) {
   const [error, setError] = useState('')
   const tr = (trText, enText) => language === 'tr' ? trText : enText
   const programGroups = groupCurriculumOptions(programs, language)
+  // Bilkent curricula count Bilkent credits (elective slots have no ECTS).
+  const bilkentCredits = curriculum?.creditUnit === 'bilkent'
+  const unit = bilkentCredits ? tr('kredi', 'credits') : 'ECTS'
 
   const auditActive = Boolean(auditResult && !auditResult.error && auditResult.curriculumId === selected)
   const auditMissingSet = useMemo(
@@ -153,7 +157,7 @@ function CurriculumPage({ language, onAddCourse, major, auditResult }) {
     setSelectedElectiveType(null)
     setElectiveCredit('all')
     setOfferedFirst(true)
-    localStorage.setItem('uniplanner_curriculum', selected)
+    localStorage.setItem(storageKey('uniplanner_curriculum'), selected)
     courseService.getCurriculum(selected)
       .then(setCurriculum)
       .catch(() => setError(tr('Müfredat yüklenemedi.', 'Could not load the curriculum.')))
@@ -184,7 +188,9 @@ function CurriculumPage({ language, onAddCourse, major, auditResult }) {
   }
 
   const electiveLabel = key => {
-    if (curriculum?.electiveLabels?.[key]) return curriculum.electiveLabels[key]
+    const label = curriculum?.electiveLabels?.[key]
+    if (label && typeof label === 'object') return label[language === 'tr' ? 'tr' : 'en'] || label.tr
+    if (label) return label
     if (ELECTIVE_LABELS[key]) return ELECTIVE_LABELS[key][language === 'tr' ? 0 : 1]
     if (key.startsWith('program_')) return `${tr('Program seçmeli', 'Program elective')} (${key.slice(8)})`
     return key.replaceAll('_', ' ')
@@ -272,7 +278,7 @@ function CurriculumPage({ language, onAddCourse, major, auditResult }) {
               <span>{tr('Uygun dersleri gör', 'View matching courses')}</span>
             </span>
             <span className="elective-slot-action">
-              <span className="elective-slot-credit">{course.credits} ECTS</span>
+              <span className="elective-slot-credit">{course.credits} {unit}</span>
               <button type="button" className="elective-slot-show" onClick={() => openElectivePool(electiveType)}>
                 {tr('Göster', 'Show')}
               </button>
@@ -299,7 +305,7 @@ function CurriculumPage({ language, onAddCourse, major, auditResult }) {
           {taken && <span className="curriculum-audit-badge curriculum-audit-badge-taken">{tr('Tamamlandı', 'Completed')}</span>}
         </div>
         <div className="curriculum-course-meta">
-          <span>{course.credits} ECTS</span>
+          <span>{course.credits} {unit}</span>
           {taken ? null : (
             <button
               type="button"
@@ -335,7 +341,7 @@ function CurriculumPage({ language, onAddCourse, major, auditResult }) {
   const renderElectiveControls = () => (
     <div className="elective-control-set">
       <div className="elective-credit-filter" role="group" aria-label={tr('Kredi filtresi', 'ECTS filter')}>
-        <span className="elective-control-label">{tr('Kredi', 'ECTS')}</span>
+        <span className="elective-control-label">{tr('Kredi', bilkentCredits ? 'Credits' : 'ECTS')}</span>
         <div className="elective-credit-chips">
           <button
             type="button"
@@ -474,7 +480,7 @@ function CurriculumPage({ language, onAddCourse, major, auditResult }) {
                       {['fall', 'spring'].map(term => {
                         const courses = terms[term].filter(matches)
                         return <section className="curriculum-semester" key={term}>
-                          <header><h4>{term === 'fall' ? tr('Güz', 'Fall') : tr('Bahar', 'Spring')}</h4><span>{courses.reduce((sum, course) => sum + (Number(course.credits) || 0), 0)} ECTS</span></header>
+                          <header><h4>{term === 'fall' ? tr('Güz', 'Fall') : tr('Bahar', 'Spring')}</h4><span>{courses.reduce((sum, course) => sum + (Number(course.credits) || 0), 0)} {unit}</span></header>
                           {courses.length ? <ul>{courses.map((course, index) => <CourseRow key={`${term}-${course.code}-${index}`} course={course} slotId={`${year}-${term}-${terms[term].indexOf(course)}`} />)}</ul> : <p className="curriculum-empty">{tr('Eşleşen ders yok.', 'No matching courses.')}</p>}
                         </section>
                       })}
@@ -513,7 +519,11 @@ function CurriculumPage({ language, onAddCourse, major, auditResult }) {
                   {modalCourses.length ? (
                     <ul>{modalCourses.map((course, index) => <CourseRow key={`modal-${course.code}-${index}`} course={course} source="elective_popup" />)}</ul>
                   ) : (
-                    <p className="curriculum-empty">{tr('Eşleşen ders yok.', 'No matching courses.')}</p>
+                    <p className="curriculum-empty">
+                      {(curriculum.electives[modalElectiveType] || []).length
+                        ? tr('Eşleşen ders yok.', 'No matching courses.')
+                        : tr('Bu seçmeli türünün ders listesi henüz eklenmedi.', 'The course list for this elective type has not been added yet.')}
+                    </p>
                   )}
                 </div>
               </section>

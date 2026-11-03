@@ -6,10 +6,16 @@ import {
   stripEntry,
   equivalentProgramsFor,
   curriculumData,
+  majorCodesFor,
   CURRICULUM_PROGRAMS
 } from '../services/catalogService.js';
 import { listCurriculumData, readSiteSettings } from '../services/curriculumStore.js';
+import { DEFAULT_UNIVERSITY, UNIVERSITY_BY_SLUG, isUniversity } from '../config/universities.js';
+import { BILKENT_PROGRAMS } from '../config/bilkentPrograms.js';
+import { listedStaticIds } from '../services/staticCurricula.js';
 
+// Mounted twice (see server.js): at /api for Özyeğin, as before, and at
+// /api/u/:university for every university. `req.university` says which.
 const router = express.Router();
 
 // Lets an already-open tab notice that a new build is live: the client keeps
@@ -18,10 +24,15 @@ const router = express.Router();
 // since a deploy restarts the service.
 const APP_VERSION = process.env.APP_VERSION || String(Date.now());
 
-router.get('/site-settings', (_req, res) => {
-  const { mainFont, catalogTerm, surveyUrl, announcementUrl, catalogNotice, catalogNoticeUpdatedAt } = readSiteSettings();
+// ?university=bilkent (or /api/u/bilkent/site-settings) returns that
+// university's settings; plain /api/site-settings answers with Özyeğin's,
+// which is what builds from before the split expect.
+router.get('/site-settings', (req, res) => {
+  const requested = String(req.query.university || req.university || DEFAULT_UNIVERSITY);
+  const university = isUniversity(requested) ? requested : DEFAULT_UNIVERSITY;
+  const { mainFont, catalogTerm, surveyUrl, announcementUrl, catalogNotice, catalogNoticeUpdatedAt } = readSiteSettings(university);
   res.set('Cache-Control', 'no-store');
-  res.json({ mainFont, catalogTerm, surveyUrl, announcementUrl, catalogNotice, catalogNoticeUpdatedAt, appVersion: APP_VERSION });
+  res.json({ university, mainFont, catalogTerm, surveyUrl, announcementUrl, catalogNotice, catalogNoticeUpdatedAt, appVersion: APP_VERSION });
 });
 
 // Many different students search the same handful of popular course codes.
@@ -30,21 +41,24 @@ router.get('/site-settings', (_req, res) => {
 // serialize work for an identical query. Keyed on the catalog's own
 // loadedAt so a reload (new term data) invalidates everything at once
 // instead of needing a separate TTL to reason about.
-const searchCache = { generation: 0, entries: new Map() };
+const searchCaches = new Map(); // university -> { generation, entries }
 const SEARCH_CACHE_MAX_ENTRIES = 500;
 
 router.post('/courses/search', async (req, res) => {
+  const university = req.university;
   const query = (req.body.query || '').trim().toUpperCase();
   const major = (req.body.major || '').trim().toUpperCase();
   const type  = (req.body.type  || 'all').trim().toLowerCase();
-  const equivalentPrograms = equivalentProgramsFor(major);
+  const equivalentPrograms = equivalentProgramsFor(major, university);
 
   if (query.length < 2 && !major) {
     return res.json([]);
   }
 
   try {
-    const { all, loadedAt } = await getCatalog();
+    const { all, loadedAt } = await getCatalog(university);
+    const searchCache = searchCaches.get(university) || { generation: 0, entries: new Map() };
+    searchCaches.set(university, searchCache);
     if (searchCache.generation !== loadedAt) {
       searchCache.generation = loadedAt;
       searchCache.entries.clear();
@@ -93,7 +107,7 @@ router.get('/courses/:code', async (req, res) => {
   const code = String(req.params.code || '').replace(/\s+/g, '').toUpperCase();
   if (!code) return res.status(400).json({ error: 'code required' });
   try {
-    const { byCode } = await getCatalog();
+    const { byCode } = await getCatalog(req.university);
     const entry = byCode.get(code);
     if (!entry) return res.status(404).json({ error: 'not found' });
     res.locals.activity = { ...res.locals.activity, found: true, sectionCount: entry.sections?.length || 0 };
@@ -115,8 +129,8 @@ router.post('/assessments', async (req, res) => {
 
   try {
     const { rows } = await pool.query(
-      `SELECT * FROM course_assessments WHERE course_code = ANY($1) ORDER BY course_code, category, id`,
-      [codes]
+      `SELECT * FROM course_assessments WHERE university = $2 AND course_code = ANY($1) ORDER BY course_code, category, id`,
+      [codes, req.university]
     );
 
     const result = {};
@@ -139,10 +153,12 @@ router.post('/assessments', async (req, res) => {
   }
 });
 
-router.get('/majors', async (_req, res) => {
+router.get('/majors', async (req, res) => {
+  const listed = majorCodesFor(req.university);
+  if (listed) return res.json([...listed].sort());
   try {
-    const r1 = await pool.query('SELECT DISTINCT unnest(required_programs) AS program FROM catalog_courses');
-    const r2 = await pool.query('SELECT DISTINCT unnest(elective_programs) AS program FROM catalog_courses');
+    const r1 = await pool.query('SELECT DISTINCT unnest(required_programs) AS program FROM catalog_courses WHERE university = $1', [req.university]);
+    const r2 = await pool.query('SELECT DISTINCT unnest(elective_programs) AS program FROM catalog_courses WHERE university = $1', [req.university]);
     const majors = new Set([
       ...Object.values(CURRICULUM_PROGRAMS).flat(),
       ...r1.rows.map(r => r.program),
@@ -155,8 +171,17 @@ router.get('/majors', async (_req, res) => {
   }
 });
 
-router.get('/curriculums', (_req, res) => {
+const isStatic = university => UNIVERSITY_BY_SLUG.get(university)?.curriculumSource === 'static';
+
+router.get('/curriculums', (req, res) => {
   try {
+    if (isStatic(req.university)) {
+      const listed = listedStaticIds(req.university);
+      res.set('Cache-Control', 'public, max-age=3600');
+      return res.json(BILKENT_PROGRAMS
+        .filter(program => listed.has(program.id))
+        .map(program => ({ id: program.id, programCodes: program.codes, title_tr: program.tr, title_en: program.en, faculty: program.faculty, mandatoryCount: 0, electiveCount: 0 })));
+    }
     const programs = listCurriculumData().map(data => {
       const id = data.id;
       const programCodes = data.programCodes || CURRICULUM_PROGRAMS[id] || [];
@@ -184,11 +209,11 @@ router.get('/curriculums', (_req, res) => {
 
 router.get('/curriculums/:id', async (req, res) => {
   const id = String(req.params.id || '').toLowerCase();
-  const data = curriculumData(id);
+  const data = curriculumData(id, req.university);
   if (!data) return res.status(404).json({ error: 'curriculum not found' });
 
   try {
-    const { byCode } = await getCatalog();
+    const { byCode } = await getCatalog(req.university);
     const enrich = course => {
       const norm = String(course.code || '').replace(/\s+/g, '').toUpperCase();
       const current = byCode.get(norm);
@@ -214,7 +239,7 @@ router.get('/curriculums/:id', async (req, res) => {
     res.json({
       ...data,
       programCodes: data.programCodes || CURRICULUM_PROGRAMS[id] || [],
-      catalogTerm: readSiteSettings().catalogTerm,
+      catalogTerm: readSiteSettings(req.university).catalogTerm,
       semesters,
       electives,
     });

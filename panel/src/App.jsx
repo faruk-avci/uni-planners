@@ -1,399 +1,151 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import Analytics from './Analytics.jsx'
-import SurveyResults from './SurveyResults.jsx'
+import { useEffect, useState } from 'react'
+import { go, request } from './api.js'
+import { Login, Setup } from './auth.jsx'
+import { Icon, RoleBadge } from './ui.jsx'
+import Overview from './pages/Overview.jsx'
+import UniversitySettings from './pages/UniversitySettings.jsx'
+import SurveyEditor from './pages/SurveyEditor.jsx'
+import SurveyResults from './pages/SurveyResults.jsx'
+import Curricula from './pages/Curricula.jsx'
+import { UniversityAnalytics, Traffic } from './pages/Analytics.jsx'
+import Users from './pages/Users.jsx'
+import GlobalSettings from './pages/GlobalSettings.jsx'
+import Audit from './pages/Audit.jsx'
+import Account from './pages/Account.jsx'
 
-const API = '/api/admin'
-const DEFAULT_SITE_SETTINGS = { mainFont: 'grotesk', catalogTerm: '2026-2027 Güz', surveyUrl: '', announcementUrl: '', catalogNotice: '', catalogNoticeUpdatedAt: '' }
-const FONT_PREVIEWS = {
-  system: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-  inter: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-  arial: 'Arial, Helvetica, sans-serif',
-  rounded: '"Trebuchet MS", ui-rounded, system-ui, sans-serif',
-  grotesk: '"Schibsted Grotesk", ui-sans-serif, system-ui, sans-serif',
+const parseHash = () => window.location.hash.replace(/^#\/?/, '').split('/').filter(Boolean)
+
+function useHashRoute() {
+  const [parts, setParts] = useState(parseHash)
+  useEffect(() => {
+    const update = () => { setParts(parseHash()); window.scrollTo(0, 0) }
+    window.addEventListener('hashchange', update)
+    return () => window.removeEventListener('hashchange', update)
+  }, [])
+  return parts
 }
 
-export async function request(path, options = {}) {
-  const response = await fetch(`${API}${path}`, { credentials: 'include', ...options })
-  const data = await response.json().catch(() => ({}))
-  if (!response.ok) {
-    const error = new Error(data.error || 'İstek tamamlanamadı')
-    error.status = response.status
-    throw error
-  }
-  return data
+const UNIVERSITY_PAGES = [
+  { id: 'settings', label: 'Site ayarları', icon: 'settings' },
+  { id: 'survey', label: 'Anket', icon: 'survey' },
+  { id: 'results', label: 'Anket sonuçları', icon: 'results' },
+  { id: 'curricula', label: 'Müfredatlar', icon: 'curricula' },
+  { id: 'analytics', label: 'Analitik', icon: 'analytics', only: 'ozyegin' },
+  { id: 'activity', label: 'Etkinlik kaydı', icon: 'activity' },
+]
+const ADMIN_PAGES = [
+  { id: 'users', label: 'Kullanıcılar ve yetkiler', icon: 'users' },
+  { id: 'settings', label: 'Genel ayarlar', icon: 'globe' },
+  { id: 'audit', label: 'Denetim kaydı', icon: 'shield' },
+  { id: 'traffic', label: 'Site trafiği', icon: 'traffic' },
+]
+
+function NoAccess() {
+  return <div className="content-card empty-state"><h2>Bu sayfaya erişiminiz yok</h2><p className="muted">Yetki gerekiyorsa süper yöneticiden isteyin.</p><button className="secondary-button" onClick={() => go('/')}>Genel bakışa dön</button></div>
 }
 
-const termLabel = term => term === 'fall' ? 'Güz' : 'Bahar'
-const countCourses = curriculum => Object.values(curriculum?.semesters || {}).reduce(
-  (sum, terms) => sum + (terms.fall?.length || 0) + (terms.spring?.length || 0), 0
-)
+function Shell({ session, route, onSignOut }) {
+  const { user, universities } = session
+  const role = slug => (user.isSuperadmin ? 'editor' : user.access[slug] || null)
+  const mine = universities.filter(university => role(university.slug))
+  const [section, slug, page] = route
 
-function Login({ onLogin }) {
-  const [secret, setSecret] = useState('')
-  const [error, setError] = useState('')
-  const [busy, setBusy] = useState(false)
-
-  const submit = async event => {
-    event.preventDefault()
-    setBusy(true)
-    setError('')
-    try {
-      await request('/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ secret }),
-      })
-      onLogin()
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setBusy(false)
-    }
-  }
-
-  return (
-    <main className="login-shell">
-      <form className="login-card" onSubmit={submit}>
-        <div className="brand-mark">U</div>
-        <h1>Yönetim paneli</h1>
-        <p className="muted">Devam etmek için sunucudaki yönetici anahtarını girin.</p>
-        <label>
-          Yönetici anahtarı
-          <input type="password" value={secret} onChange={event => setSecret(event.target.value)} autoFocus autoComplete="current-password" />
-        </label>
-        {error && <div className="alert alert-error">{error}</div>}
-        <button className="primary-button" disabled={busy || !secret}>{busy ? 'Kontrol ediliyor…' : 'Panele gir'}</button>
-      </form>
-    </main>
-  )
-}
-
-function FilePicker({ label, hint, onFile, busy, compact = false, disabled = false }) {
-  const input = useRef(null)
-  return (
-    <button type="button" className={`file-picker ${compact ? 'file-picker-compact' : ''}`} onClick={() => input.current?.click()} disabled={busy || disabled}>
-      <span className="file-picker-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 16V4" /><polyline points="7 9 12 4 17 9" /><path d="M4 20h16" /></svg></span>
-      <span><strong>{busy ? 'Dosya okunuyor…' : label}</strong><small>{hint}</small></span>
-      <input ref={input} type="file" accept=".xls,.xlsx" onChange={event => {
-        const file = event.target.files?.[0]
-        if (file) onFile(file)
-        event.target.value = ''
-      }} />
+  // On phones the navigation is one scrolling row: keep the current page in view.
+  useEffect(() => {
+    document.querySelector('.side-nav nav .nav-active')?.scrollIntoView({ block: 'nearest', inline: 'center' })
+  }, [section, slug, page])
+  const navButton = (path, label, icon, active) => (
+    <button key={path} className={active ? 'nav-active' : ''} onClick={() => go(path)} aria-current={active ? 'page' : undefined}>
+      <Icon name={icon} />{label}
     </button>
   )
-}
 
-function CurriculumPreview({ curriculum, onClose }) {
-  if (!curriculum) return null
-  const refs = curriculum.electivePoolRefs || {}
-  return (
-    <section className="preview-panel">
-      <header className="preview-header">
-        <div>
-          <h2>{curriculum.title_tr}</h2>
-          <p className="muted">{curriculum.programCodes?.join(' / ')} · {countCourses(curriculum)} satır</p>
-        </div>
-        <button className="icon-button" onClick={onClose} aria-label="Kapat">×</button>
-      </header>
-      <div className="year-list">
-        {Object.entries(curriculum.semesters || {}).sort(([a], [b]) => Number(a) - Number(b)).map(([year, terms]) => (
-          <div className="year-block" key={year}>
-            <h3>{year}. Yıl</h3>
-            <div className="term-grid">
-              {['fall', 'spring'].map(term => (
-                <div className="term-card" key={term}>
-                  <div className="term-title"><strong>{termLabel(term)}</strong><span>{terms[term]?.length || 0} ders</span></div>
-                  <div className="preview-courses">
-                    {(terms[term] || []).map((course, index) => (
-                      <div className={`preview-course ${course.code ? '' : 'preview-elective'}`} key={`${course.code}-${course.electiveType}-${index}`}>
-                        <span className="course-code">{course.code || 'SEÇMELİ'}</span>
-                        <span className="course-title">{course.title_tr}</span>
-                        <span className="course-credit">{course.credits} Kredi</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-      {Object.keys(refs).length > 0 && (
-        <div className="preview-pools">
-          <h3>Bağlı seçmeli listeleri</h3>
-          {Object.entries(refs).map(([type, pool]) => <span className="pool-pill" key={type}>{curriculum.electiveLabels?.[type] || type} → {pool}</span>)}
-        </div>
-      )}
-    </section>
-  )
-}
-
-function Dashboard({ onLogout }) {
-  const [programData, setProgramData] = useState({ faculties: [], programs: [] })
-  const [curricula, setCurricula] = useState([])
-  const [pools, setPools] = useState([])
-  const [programId, setProgramId] = useState('')
-  const [draft, setDraft] = useState(null)
-  const [sourceFile, setSourceFile] = useState('')
-  const [mappings, setMappings] = useState({})
-  const [busy, setBusy] = useState('')
-  const [notice, setNotice] = useState(null)
-  const [preview, setPreview] = useState(null)
-  const [siteSettings, setSiteSettings] = useState(DEFAULT_SITE_SETTINGS)
-  const [settingsDraft, setSettingsDraft] = useState(DEFAULT_SITE_SETTINGS)
-
-  const selectedProgram = programData.programs.find(program => program.id === programId)
-  const groupedPrograms = useMemo(() => programData.faculties.map(faculty => ({
-    ...faculty,
-    programs: programData.programs.filter(program => program.faculty === faculty.id),
-  })).filter(group => group.programs.length), [programData])
-
-  const refresh = async () => {
-    const [programsResult, curriculaResult, poolsResult, settingsResult] = await Promise.all([
-      request('/programs'), request('/curriculums'), request('/elective-pools'), request('/site-settings'),
-    ])
-    setProgramData(programsResult)
-    setCurricula(curriculaResult)
-    setPools(poolsResult)
-    setSiteSettings(settingsResult)
-    setSettingsDraft(settingsResult)
-  }
-
-  useEffect(() => { refresh().catch(error => setNotice({ type: 'error', text: error.message })) }, [])
-
-  const inspectCurriculum = async file => {
-    setBusy('curriculum')
-    setNotice(null)
-    try {
-      const parsed = await request('/curriculums/inspect-file', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/octet-stream', 'X-File-Name': encodeURIComponent(file.name) },
-        body: await file.arrayBuffer(),
-      })
-      const automatic = {}
-      for (const requirement of parsed.electiveRequirements) {
-        const exact = pools.find(pool => pool.key === requirement.key || pool.label.toLocaleLowerCase('tr-TR') === requirement.label.toLocaleLowerCase('tr-TR'))
-        if (exact) automatic[requirement.key] = exact.key
-      }
-      setDraft(parsed)
-      setMappings(automatic)
-      setSourceFile(file.name)
-      setNotice({ type: 'success', text: `${parsed.courseCount} ders ve ${parsed.electiveRequirements.length} seçmeli türü bulundu.` })
-    } catch (error) {
-      setNotice({ type: 'error', text: error.message })
-    } finally {
-      setBusy('')
+  let content
+  if (!section || section === 'overview') content = <Overview user={user} />
+  else if (section === 'u') {
+    const university = universities.find(item => item.slug === slug)
+    const pageDef = UNIVERSITY_PAGES.find(item => item.id === page)
+    if (!university || !role(slug) || !pageDef || (pageDef.only && pageDef.only !== slug)) content = <NoAccess />
+    else {
+      const props = { university, role: role(slug), user }
+      content = {
+        settings: <UniversitySettings {...props} />,
+        survey: <SurveyEditor {...props} />,
+        results: <SurveyResults {...props} />,
+        curricula: <Curricula {...props} />,
+        analytics: <UniversityAnalytics {...props} />,
+        activity: <Audit university={university} />,
+      }[page]
     }
-  }
-
-  const uploadElective = async (requirement, file) => {
-    setBusy(`elective:${requirement.key}`)
-    setNotice(null)
-    try {
-      const parsed = await request('/elective-pools/inspect-file', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/octet-stream', 'X-File-Name': encodeURIComponent(file.name) },
-        body: await file.arrayBuffer(),
-      })
-      // Scoped by programId, not just the requirement's label-derived key --
-      // two majors whose curriculum spreadsheets use the same elective label
-      // (e.g. "FE Serbest Seçmeli") would otherwise resolve to the exact same
-      // pool file and each upload would silently overwrite the other major's
-      // list. Deliberate sharing is still possible via the "Mevcut havuz"
-      // dropdown below, which links to an existing pool without uploading.
-      const saved = await request(`/elective-pools/${encodeURIComponent(`${programId}-${requirement.key}`)}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ label: requirement.label, sourceFile: file.name, courses: parsed.courses }),
-      })
-      setPools(current => [...current.filter(pool => pool.key !== saved.key), saved].sort((a, b) => a.label.localeCompare(b.label, 'tr')))
-      setMappings(current => ({ ...current, [requirement.key]: saved.key }))
-      setNotice({ type: 'success', text: `${requirement.label}: ${saved.courseCount} ders kaydedildi.` })
-    } catch (error) {
-      setNotice({ type: 'error', text: error.message })
-    } finally {
-      setBusy('')
-    }
-  }
-
-  const saveCurriculum = async () => {
-    if (!programId || !draft) return
-    setBusy('save')
-    setNotice(null)
-    try {
-      const saved = await request(`/curriculums/${encodeURIComponent(programId)}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ draft, electivePoolRefs: mappings, sourceFile }),
-      })
-      await refresh()
-      setPreview(saved)
-      setDraft(null)
-      setMappings({})
-      setSourceFile('')
-      setNotice({ type: 'success', text: `${selectedProgram?.tr || programId} müfredatı yayınlandı.` })
-    } catch (error) {
-      setNotice({ type: 'error', text: error.message })
-    } finally {
-      setBusy('')
-    }
-  }
-
-  const openPreview = async id => {
-    setBusy(`preview:${id}`)
-    try { setPreview(await request(`/curriculums/${encodeURIComponent(id)}`)) }
-    catch (error) { setNotice({ type: 'error', text: error.message }) }
-    finally { setBusy('') }
-  }
-
-  const saveSiteSettings = async event => {
-    event.preventDefault()
-    setBusy('settings')
-    setNotice(null)
-    try {
-      const saved = await request('/site-settings', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(settingsDraft),
-      })
-      setSiteSettings(saved)
-      setSettingsDraft(saved)
-      setNotice({ type: 'success', text: 'Site ayarları yayınlandı. Ana site yeni ayarları bir sonraki açılışta kullanacak.' })
-    } catch (error) {
-      setNotice({ type: 'error', text: error.message })
-    } finally {
-      setBusy('')
-    }
-  }
-
-  const missingCount = draft?.electiveRequirements.filter(item => !mappings[item.key]).length || 0
+  } else if (section === 'admin') {
+    if (!user.isSuperadmin) content = <NoAccess />
+    else content = { users: <Users me={user} />, settings: <GlobalSettings />, audit: <Audit universities={universities} />, traffic: <Traffic /> }[slug] || <NoAccess />
+  } else if (section === 'account') content = <Account user={user} />
+  else content = <NoAccess />
 
   return (
     <div className="panel-shell">
       <aside className="side-nav">
-        <a className="panel-brand" href="/"><span>U</span><strong>UniPlanner</strong><small>Panel</small></a>
-        <nav>
-          <button className="nav-active" onClick={() => document.getElementById('curriculum-management')?.scrollIntoView({ behavior: 'smooth' })}><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></svg>Müfredatlar</button>
-          <button onClick={() => document.getElementById('site-settings')?.scrollIntoView({ behavior: 'smooth' })}><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6" /><line x1="4" y1="12" x2="20" y2="12" /><line x1="4" y1="18" x2="20" y2="18" /><circle cx="9" cy="6" r="2" fill="currentColor" /><circle cx="15" cy="12" r="2" fill="currentColor" /><circle cx="8" cy="18" r="2" fill="currentColor" /></svg>Site ayarları</button>
-          <button onClick={() => document.getElementById('analytics')?.scrollIntoView({ behavior: 'smooth' })}><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="6" y1="20" x2="6" y2="12" /><line x1="12" y1="20" x2="12" y2="5" /><line x1="18" y1="20" x2="18" y2="14" /></svg>Analitik</button>
-          <button onClick={() => document.getElementById('survey-results')?.scrollIntoView({ behavior: 'smooth' })}><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" /><rect x="9" y="3" width="6" height="4" rx="1" /><path d="m9 14 2 2 4-4" /></svg>Anket</button>
+        <a className="panel-brand" href="#/"><span>U</span><strong>UniPlanners</strong><small>Yönetim paneli</small></a>
+        <nav aria-label="Panel">
+          {navButton('/', 'Genel bakış', 'overview', !section || section === 'overview')}
+          {mine.map(university => (
+            <div className="nav-group" key={university.slug}>
+              <div className="nav-group-title"><span>{university.shortName}</span>{!user.isSuperadmin && <RoleBadge role={role(university.slug)} />}</div>
+              {UNIVERSITY_PAGES.filter(item => !item.only || item.only === university.slug).map(item =>
+                navButton(`/u/${university.slug}/${item.id}`, item.label, item.icon, section === 'u' && slug === university.slug && page === item.id))}
+            </div>
+          ))}
+          {user.isSuperadmin && (
+            <div className="nav-group">
+              <div className="nav-group-title"><span>Yönetim</span><RoleBadge role="superadmin" /></div>
+              {ADMIN_PAGES.map(item => navButton(`/admin/${item.id}`, item.label, item.icon, section === 'admin' && slug === item.id))}
+            </div>
+          )}
         </nav>
-        <div className="side-footer"><a href="https://uniplanners.org">Siteye git</a><button onClick={onLogout}>Çıkış yap</button></div>
+        <div className="side-footer">
+          <button className={section === 'account' ? 'side-account nav-active' : 'side-account'} onClick={() => go('/account')} title="Hesabım">
+            <Icon name="account" size={15} /><span><strong>{user.displayName || user.email.split('@')[0]}</strong><small>{user.email}</small></span>
+          </button>
+          <a href="https://uniplanners.org" target="_blank" rel="noopener noreferrer">Siteye git</a>
+          <button onClick={onSignOut}>Çıkış yap</button>
+        </div>
       </aside>
-
-      <main className="panel-main">
-        <header className="page-header">
-          <div><h1>Müfredatlar</h1><p className="muted">Ders planlarını ve ortak seçmeli havuzlarını yönetin.</p></div>
-          <div className="header-status"><span className="status-dot" />Sunucuya bağlı</div>
-        </header>
-
-        {notice && <div className={`alert alert-${notice.type}`}>{notice.text}<button onClick={() => setNotice(null)}>×</button></div>}
-
-        <section className="stats-grid">
-          <div className="stat-card"><span>Aktif müfredat</span><strong>{curricula.length}</strong><small>Şu anda sitede görünen</small></div>
-          <div className="stat-card"><span>Seçmeli havuzu</span><strong>{pools.length}</strong><small>Birden fazla planda kullanılabilir</small></div>
-          <div className="stat-card"><span>Toplam ders satırı</span><strong>{curricula.reduce((sum, item) => sum + item.courseCount, 0)}</strong><small>Aktif müfredatlarda</small></div>
-        </section>
-
-        <section className="content-card settings-card" id="site-settings">
-          <div className="section-heading">
-            <div><span className="step-number neutral"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6" /><line x1="4" y1="12" x2="20" y2="12" /><line x1="4" y1="18" x2="20" y2="18" /><circle cx="9" cy="6" r="2" fill="currentColor" /><circle cx="15" cy="12" r="2" fill="currentColor" /><circle cx="8" cy="18" r="2" fill="currentColor" /></svg></span><div><h2>Site ayarları</h2><p>Kullanıcıların gördüğü ana sitenin görünümünü ve küçük içeriklerini yönetin.</p></div></div>
-            <span className="format-chip">CANLI</span>
-          </div>
-          <form onSubmit={saveSiteSettings}>
-            <div className="settings-grid">
-              <label className="select-field"><span>Ana sitenin yazı tipi</span><select value={settingsDraft.mainFont} onChange={event => setSettingsDraft(current => ({ ...current, mainFont: event.target.value }))}>
-                <option value="grotesk">Schibsted Grotesk (önerilen)</option>
-                <option value="system">Sistem</option>
-                <option value="inter">Inter (panel yazı tipi)</option>
-                <option value="arial">Arial</option>
-                <option value="rounded">Yuvarlak</option>
-              </select><small>Planlayıcı, Müfredat ve Nasıl Kullanılır sayfalarına uygulanır; panelin fontunu değiştirmez.</small></label>
-              <label className="select-field"><span>Gösterilen dönem</span><input value={settingsDraft.catalogTerm} maxLength={60} onChange={event => setSettingsDraft(current => ({ ...current, catalogTerm: event.target.value }))} placeholder="2025-2026 Yaz" required /><small>Arama alanında ve paylaşılan programlarda görünür.</small></label>
-              <label className="select-field settings-wide"><span>Anket bağlantısı</span><input type="url" value={settingsDraft.surveyUrl} maxLength={500} onChange={event => setSettingsDraft(current => ({ ...current, surveyUrl: event.target.value }))} placeholder="https://..." /><small>Boş bırakırsanız Anket bağlantısı ana menüden gizlenir.</small></label>
-              <label className="select-field settings-wide"><span>Duyuru bağlantısı</span><input type="url" value={settingsDraft.announcementUrl} maxLength={500} onChange={event => setSettingsDraft(current => ({ ...current, announcementUrl: event.target.value }))} placeholder="https://..." /><small>Boş bırakırsanız üniversite kutusunun yanındaki duyuru bağlantısı gizlenir.</small></label>
-              <label className="select-field settings-wide">
-                <span>Katalog bildirimi</span>
-                <textarea
-                  value={settingsDraft.catalogNotice}
-                  maxLength={500}
-                  rows={2}
-                  onChange={event => setSettingsDraft(current => ({ ...current, catalogNotice: event.target.value }))}
-                  placeholder="Örn: Son güncellemeler: HUM 319, ARCH 212 ders saatleri değişti; PHYS 221 kaldırıldı, EE 204 eklendi."
-                />
-                <small>
-                  Üniversite kutusunun altında kapatılabilir bir bildirim olarak görünür. Metni her değiştirdiğinizde, daha önce kapatmış kullanıcılara bile yeniden gösterilir.
-                  {siteSettings.catalogNoticeUpdatedAt && (
-                    <> {' '}Son güncelleme: {new Date(siteSettings.catalogNoticeUpdatedAt).toLocaleString('tr-TR')}</>
-                  )}
-                </small>
-              </label>
-            </div>
-            <div className="settings-footer">
-              <div className="font-preview" style={{ fontFamily: FONT_PREVIEWS[settingsDraft.mainFont] }}><span>Yazı tipi önizlemesi</span><strong>UniPlanner ile programını planla</strong></div>
-              <div className="settings-actions">
-                <button type="button" className="secondary-button" disabled={JSON.stringify(siteSettings) === JSON.stringify(settingsDraft)} onClick={() => setSettingsDraft(siteSettings)}>Değişiklikleri geri al</button>
-                <button className="primary-button" disabled={busy === 'settings' || !settingsDraft.catalogTerm.trim()}>{busy === 'settings' ? 'Kaydediliyor…' : 'Ayarları yayınla'}</button>
-              </div>
-            </div>
-          </form>
-        </section>
-
-        <section className="content-card import-card" id="curriculum-management">
-          <div className="section-heading"><div><span className="step-number">1</span><div><h2>Müfredat yükle</h2><p>Bölümü seçin ve SIS ders planı Excel dosyasını yükleyin.</p></div></div><span className="format-chip">.XLS / .XLSX</span></div>
-          <div className="import-grid">
-            <label className="select-field"><span>Bölüm</span><select value={programId} onChange={event => { setProgramId(event.target.value); setDraft(null); setMappings({}) }}><option value="">Bölüm seçin</option>{groupedPrograms.map(group => <optgroup key={group.id} label={group.tr}>{group.programs.map(program => <option key={program.id} value={program.id}>{program.tr}</option>)}</optgroup>)}</select></label>
-            <FilePicker label={sourceFile || 'Ders planı Excel dosyasını seç'} hint="CODE, TITLE, CREDITS ve SEMESTER sütunları okunur" onFile={inspectCurriculum} busy={busy === 'curriculum'} disabled={!programId} />
-          </div>
-          {!programId && <p className="inline-hint">Önce yüklemenin hangi bölüme ait olduğunu seçin.</p>}
-        </section>
-
-        {draft && (
-          <section className="content-card requirements-card">
-            <div className="section-heading"><div><span className="step-number">2</span><div><h2>Seçmeli listelerini bağla</h2><p>Aynı tür daha önce yüklendiyse listeden seçin; değilse Excel dosyasını bir kez yükleyin.</p></div></div><span className={`mapping-status ${missingCount ? 'mapping-missing' : ''}`}>{missingCount ? `${missingCount} eksik` : 'Tümü hazır'}</span></div>
-            <div className="import-summary"><strong>{selectedProgram?.tr}</strong><span>{draft.courseCount} zorunlu ders</span><span>{draft.electiveRequirements.length} benzersiz seçmeli türü</span><span>{sourceFile}</span></div>
-            {draft.electiveRequirements.length === 0 ? <div className="empty-note">Bu dosyada boş CODE değerine sahip seçmeli satırı bulunmadı.</div> : (
-              <div className="requirement-list">
-                {draft.electiveRequirements.map(requirement => {
-                  const mapped = mappings[requirement.key]
-                  return <article className={`requirement-row ${mapped ? 'requirement-ready' : ''}`} key={requirement.key}>
-                    <div className="requirement-state">{mapped
-                      ? <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12" /></svg>
-                      : '!'}</div>
-                    <div className="requirement-copy"><strong>{requirement.label}</strong><span>{requirement.occurrences.map(item => `${item.year}. yıl ${termLabel(item.term)} · ${item.credits} Kredi`).join(' · ')}</span></div>
-                    <label className="pool-select"><span>Mevcut havuz</span><select value={mapped || ''} onChange={event => setMappings(current => ({ ...current, [requirement.key]: event.target.value }))}><option value="">Havuz seçin</option>{pools.map(pool => <option key={pool.key} value={pool.key}>{pool.label} ({pool.courseCount})</option>)}</select></label>
-                    <FilePicker compact label={mapped ? 'Dosyayı yenile' : 'Excel yükle'} hint="Seçmeli ders listesi" onFile={file => uploadElective(requirement, file)} busy={busy === `elective:${requirement.key}`} />
-                  </article>
-                })}
-              </div>
-            )}
-            <div className="save-bar"><div><strong>Yayınlamaya hazır mı?</strong><span>Kaydedildiğinde ana sitedeki müfredat verisi hemen değişir.</span></div><button className="primary-button" onClick={saveCurriculum} disabled={busy === 'save' || missingCount > 0}>{busy === 'save' ? 'Kaydediliyor…' : 'Müfredatı kaydet'}</button></div>
-          </section>
-        )}
-
-        <section className="content-card">
-          <div className="section-heading"><div><span className="step-number neutral">3</span><div><h2>Aktif müfredatlar</h2><p>Ana sitede gösterilen müfredatları kontrol edin.</p></div></div></div>
-          <div className="curriculum-list">
-            {curricula.map(item => <button className="curriculum-row" key={item.id} onClick={() => openPreview(item.id)}>
-              <span className="curriculum-avatar">{item.id.toUpperCase()}</span><span className="curriculum-info"><strong>{item.title_tr}</strong><small>{item.programCodes.join(' / ')} · {item.sourceFile || 'Eski veri'}</small></span><span className="curriculum-metric"><strong>{item.courseCount}</strong><small>ders</small></span><span className="curriculum-metric"><strong>{item.electiveRequirementCount}</strong><small>seçmeli türü</small></span><span className="row-action">{busy === `preview:${item.id}` ? '…' : 'Görüntüle →'}</span>
-            </button>)}
-          </div>
-        </section>
-
-        <CurriculumPreview curriculum={preview} onClose={() => setPreview(null)} />
-
-        <Analytics />
-        <SurveyResults />
-      </main>
+      <main className="panel-main">{content}</main>
     </div>
   )
 }
 
+// Replaces the current history entry, so a used setup token does not stay in
+// the address bar or the back button. Unlike history.replaceState this fires
+// hashchange, which the router listens to.
+const leaveTo = path => window.location.replace(`${window.location.pathname}${window.location.search}#${path}`)
+
 export default function App() {
-  const [auth, setAuth] = useState('checking')
-  useEffect(() => { request('/session').then(() => setAuth('yes')).catch(() => setAuth('no')) }, [])
-  const logout = async () => { await request('/logout', { method: 'POST' }).catch(() => {}); setAuth('no') }
-  if (auth === 'checking') return <div className="loading-screen"><span className="brand-mark">U</span><p>Panel hazırlanıyor…</p></div>
-  if (auth === 'no') return <Login onLogin={() => setAuth('yes')} />
-  return <Dashboard onLogout={logout} />
+  const [session, setSession] = useState({ state: 'checking' })
+  const route = useHashRoute()
+
+  useEffect(() => {
+    request('/me').then(data => setSession({ state: 'in', ...data })).catch(() => setSession({ state: 'out' }))
+    const signedOut = () => setSession({ state: 'out', message: 'Oturumunuz sona erdi. Lütfen tekrar giriş yapın.' })
+    window.addEventListener('panel:signed-out', signedOut)
+    return () => window.removeEventListener('panel:signed-out', signedOut)
+  }, [])
+
+  const signedIn = data => {
+    setSession({ state: 'in', user: data.user, universities: data.universities })
+    leaveTo('/')
+  }
+  const signOut = async () => {
+    await request('/logout', { method: 'POST' }).catch(() => {})
+    setSession({ state: 'out' })
+    go('/')
+  }
+
+  if (session.state === 'checking') return <div className="loading-screen"><span className="brand-mark">U</span><p>Panel hazırlanıyor…</p></div>
+  if (route[0] === 'setup' && route[1] && session.state !== 'in') {
+    return <Setup token={route[1]} onSignedIn={signedIn} onCancel={() => leaveTo('/')} />
+  }
+  if (session.state !== 'in') return <Login onSignedIn={signedIn} initialMessage={session.message} />
+  return <Shell session={session} route={route} onSignOut={signOut} />
 }

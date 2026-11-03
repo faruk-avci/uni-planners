@@ -190,11 +190,9 @@ async function run() {
         UNIQUE (course_code, section_no)
       )
     `);
-    await client.query('TRUNCATE TABLE catalog_sections RESTART IDENTITY');
-    await client.query(`
-      CREATE UNIQUE INDEX IF NOT EXISTS catalog_sections_course_section_uidx
-      ON catalog_sections (course_code, section_no)
-    `);
+    // The catalog tables hold every university's courses; this import only
+    // replaces Özyeğin's rows (university = 'ozyegin', the column default).
+    await client.query("DELETE FROM catalog_sections WHERE university = 'ozyegin'");
 
     // Insert Courses
     console.log('Inserting courses...');
@@ -204,7 +202,7 @@ async function run() {
           course_code, subject, course_no, title, faculty, credits, 
           description, corequisites, prerequisites, required_programs, elective_programs
         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-        ON CONFLICT (course_code) DO UPDATE SET
+        ON CONFLICT (university, course_code) DO UPDATE SET
           subject = EXCLUDED.subject,
           course_no = EXCLUDED.course_no,
           title = EXCLUDED.title,
@@ -224,7 +222,7 @@ async function run() {
 
     const importedCodes = Object.keys(courses);
     await client.query(
-      'DELETE FROM catalog_courses WHERE NOT (course_code = ANY($1::text[]))',
+      "DELETE FROM catalog_courses WHERE university = 'ozyegin' AND NOT (course_code = ANY($1::text[]))",
       [importedCodes]
     );
 

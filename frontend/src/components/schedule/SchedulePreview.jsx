@@ -1,11 +1,14 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { COURSE_COLORS } from '../../utils/courseColors'
 import './SchedulePreview.css'
+import { UNIVERSITY_INFO, creditUnit } from '../../data/university'
 
 // Full backend-supported range (matches scheduleEngine.js's MAX_BITS, 08:00-23:00).
 // Only sliced down to what's actually needed per schedule -- see visibleHours below.
-const ALL_HOURS = ['08:40', '09:40', '10:40', '11:40', '12:40', '13:40', '14:40', '15:40', '16:40', '17:40', '18:40', '19:40', '20:40', '21:40', '22:40', '23:40']
-const MIN_VISIBLE_HOURS = 12 // standard 08:40-19:40 day, shown even when a schedule is empty
+// One row per hour from 08:xx to 23:xx; the minute is the university's class
+// start (Özyeğin 08:40, Bilkent 08:30).
+const ALL_HOURS = Array.from({ length: 16 }, (_, i) => `${String(8 + i).padStart(2, '0')}:${String(UNIVERSITY_INFO.slotMinute).padStart(2, '0')}`)
+const MIN_VISIBLE_HOURS = 12 // standard 08:xx-19:xx day, shown even when a schedule is empty
 const DAYS = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma']
 const DAY_ABBR = { 'Pazartesi': 'Pzt', 'Salı': 'Sal', 'Çarşamba': 'Çar', 'Perşembe': 'Per', 'Cuma': 'Cum' }
 
@@ -124,7 +127,7 @@ function SchedulePreview({ language, schedules = [], current = 0, onPrev, onNext
       <span className="schedule-counter">
         {language === 'tr' ? 'Program' : 'Schedule'}{' '}
         <strong>{hasData ? current + 1 : 0}</strong> / {schedules.length}
-        {schedule ? ` · ${schedule.totalCredits} ${language === 'tr' ? 'Kredi' : 'ECTS'}` : ''}
+        {schedule ? ` · ${schedule.totalCredits} ${creditUnit(language)}` : ''}
       </span>
       <button className="btn btn-ghost btn-sm" onClick={onNext} disabled={!hasData || current >= schedules.length - 1}>
         <span className="schedule-nav-label">{language === 'tr' ? 'Sonraki' : 'Next'}</span>

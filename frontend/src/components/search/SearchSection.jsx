@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { courseService } from '../../services/courseService'
 import { curriculumIdForProgramCode, equivalentProgramCodes } from '../../data/programs.js'
 import subjectNamesData from '../../../../names.json'
+import { creditUnit, isBilkent } from '../../data/university'
 import './SearchSection.css'
 
 const normalizeCode = code => String(code || '').replace(/\s+/g, '').toUpperCase()
@@ -126,7 +127,7 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
 
   const t = {
     title: language === 'tr' ? 'Ders Ara' : 'Search Courses',
-    placeholder: language === 'tr' ? 'Ders kodu yazın... (örn. EE 201)' : 'Type a course code... (e.g. EE 201)',
+    placeholder: language === 'tr' ? `Ders kodu yazın... (örn. ${isBilkent ? 'CS 101' : 'EE 201'})` : `Type a course code... (e.g. ${isBilkent ? 'CS 101' : 'EE 201'})`,
     search: language === 'tr' ? 'Ara' : 'Search',
     term: catalogTerm || '2026-2027 Güz',
     addAll: language === 'tr' ? 'Tümünü Ekle' : 'Add All',
@@ -399,7 +400,7 @@ function SearchSection({ language, onAddCourse, catalogTerm, basket = [], onRemo
                   <div className="course-info">
                     <div className="course-code-row">
                       <span className="course-code">{course.code}</span>
-                      <span className="course-credits">{course.credits} ECTS</span>
+                      <span className="course-credits">{course.credits} {isBilkent ? creditUnit(language) : 'ECTS'}</span>
                       {planInfo.type === 'required' && (
                         <span className="badge badge-required">
                           {language === 'tr' ? 'Zorunlu' : 'Required'}

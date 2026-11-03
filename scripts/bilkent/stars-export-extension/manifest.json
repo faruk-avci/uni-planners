@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "UniPlanners - Bilkent STARS Export",
+  "description": "Saves the Bilkent STARS curriculum, elective-pool or course-offerings page you are viewing as JSON. Reads only the open page and sends no requests.",
+  "version": "1.1.1",
+  "permissions": ["downloads", "storage"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://stars.bilkent.edu.tr/webserv/curriculum/*", "https://stars.bilkent.edu.tr/homepage/print/plainOfferings.php*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

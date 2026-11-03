@@ -56,12 +56,13 @@ async function run() {
     await client.connect()
     console.log(`Connected to PostgreSQL (${getDbConfig().database}).`)
 
-    const { rows: existing } = await client.query('SELECT course_code FROM catalog_courses WHERE course_code = $1', [from])
+    // Renames an Özyeğin course; other universities' rows are never touched.
+    const { rows: existing } = await client.query("SELECT course_code FROM catalog_courses WHERE university = 'ozyegin' AND course_code = $1", [from])
     if (existing.length === 0) {
       console.error(`No course found with code ${from} in catalog_courses.`)
       process.exit(1)
     }
-    const { rows: collision } = await client.query('SELECT course_code FROM catalog_courses WHERE course_code = $1', [to])
+    const { rows: collision } = await client.query("SELECT course_code FROM catalog_courses WHERE university = 'ozyegin' AND course_code = $1", [to])
     if (collision.length > 0) {
       console.error(`${to} already exists in catalog_courses -- refusing to overwrite. This needs a manual merge, not a rename.`)
       process.exit(1)
@@ -76,22 +77,22 @@ async function run() {
       )
       SELECT $1, $2, $3, title, faculty, credits,
         description, corequisites, prerequisites, required_programs, elective_programs
-      FROM catalog_courses WHERE course_code = $4
+      FROM catalog_courses WHERE university = 'ozyegin' AND course_code = $4
     `, [to, subject, course_no, from])
 
     const { rowCount: sectionsMoved } = await client.query(
-      'UPDATE catalog_sections SET course_code = $1 WHERE course_code = $2', [to, from]
+      "UPDATE catalog_sections SET course_code = $1 WHERE university = 'ozyegin' AND course_code = $2", [to, from]
     )
     const { rowCount: assessmentsMoved } = await client.query(
-      'UPDATE course_assessments SET course_code = $1 WHERE course_code = $2', [to, from]
+      "UPDATE course_assessments SET course_code = $1 WHERE university = 'ozyegin' AND course_code = $2", [to, from]
     )
     const { rowCount: basketsMoved } = await client.query(
-      'UPDATE basket_items SET course_code = $1 WHERE course_code = $2', [to, from]
+      "UPDATE basket_items SET course_code = $1 WHERE university = 'ozyegin' AND course_code = $2", [to, from]
     )
     const { rowCount: eventsMoved } = await client.query(
-      'UPDATE course_add_events SET course_code = $1 WHERE course_code = $2', [to, from]
+      "UPDATE course_add_events SET course_code = $1 WHERE university = 'ozyegin' AND course_code = $2", [to, from]
     )
-    await client.query('DELETE FROM catalog_courses WHERE course_code = $1', [from])
+    await client.query("DELETE FROM catalog_courses WHERE university = 'ozyegin' AND course_code = $1", [from])
 
     await client.query('COMMIT')
     console.log(`Renamed ${from} -> ${to}.`)
@@ -103,7 +104,7 @@ async function run() {
     const spaced = from.replace(/^([A-Z]+)(\d+.*)$/, '$1 $2')
     const { rows: dangling } = await client.query(
       `SELECT course_code, prerequisites, corequisites FROM catalog_courses
-       WHERE prerequisites ILIKE $1 OR prerequisites ILIKE $2 OR corequisites ILIKE $1 OR corequisites ILIKE $2`,
+       WHERE university = 'ozyegin' AND (prerequisites ILIKE $1 OR prerequisites ILIKE $2 OR corequisites ILIKE $1 OR corequisites ILIKE $2)`,
       [`%${from}%`, `%${spaced}%`]
     )
     if (dangling.length > 0) {
