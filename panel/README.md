@@ -39,11 +39,12 @@ A superadmin adds people under **Kullanıcılar ve yetkiler** and picks a role f
 
 - **Sessions:** HttpOnly, `SameSite=Strict` cookie scoped to `/api/admin`. Only a hash of the token is stored. A session ends after 2 hours idle and at most 12 hours after sign-in. Disabling or resetting an account ends its sessions at once.
 - **CSRF:** state-changing requests need the `X-Panel-Request` header and a same-host `Origin`.
-- **Brute force:** 5 wrong passwords or codes lock an account for 15 minutes. Sign-in endpoints are rate-limited by IP in the API and in nginx. Unknown e-mails and wrong passwords get the same answer and take the same time.
+- **Brute force:** 5 wrong passwords or codes lock an account for 15 minutes, and each sign-in attempt allows 5 codes. Unknown e-mails and wrong passwords get the same answer and take the same time.
+- **No IP addresses:** visitor and admin IPs are not used or stored anywhere. The API drops the headers that carry them, and nginx keeps no access log. Protection works per account, not per IP.
 - **Two-factor secrets:** encrypted at rest (AES-256-GCM) with a key derived from `ADMIN_SECRET` in `/etc/uniplanner/backend.env`. `ADMIN_SECRET` is no longer a login key, but it must stay set and unchanged: changing it invalidates every two-factor setup, and everyone would then need a reset.
 - **Codes:** a two-factor code works only once.
 - **No public access:** the public site's nginx answers 404 for `/api/admin`; the API is only reachable through the panel host.
-- **Audit log:** every sign-in, failed attempt and change is recorded with who, when and from which IP. Superadmins see all of it; each university's activity page shows its own entries.
+- **Audit log:** every sign-in, failed attempt and change is recorded with who did it and when. Superadmins see all of it; each university's activity page shows its own entries.
 
 ## What lives where
 

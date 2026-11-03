@@ -1,6 +1,3 @@
-limit_req_zone $binary_remote_addr zone=uniplanner_api:10m rate=30r/s;
-limit_req_zone $binary_remote_addr zone=uniplanner_heavy:10m rate=12r/m;
-
 server {
     listen 80;
     listen [::]:80;
@@ -16,9 +13,10 @@ server {
     add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://clientapis.grainql.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'" always;
 
     # Schedule generation is CPU-heavy: /api/schedule/generate (Özyeğin,
-    # older builds) and /api/u/<university>/schedule/generate.
+    # older builds) and /api/u/<university>/schedule/generate. There are no
+    # per-visitor limits (visitor IPs are not used); the API's bounded worker
+    # queue protects the server.
     location ~ ^/api/(u/[a-z0-9-]+/)?schedule/generate$ {
-        limit_req zone=uniplanner_heavy burst=4 nodelay;
         include proxy_params;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_pass http://127.0.0.1:3001;
@@ -31,7 +29,6 @@ server {
     # it through here means both browsers and Cloudflare's edge can actually
     # cache it, instead of the blanket no-store below wiping it out.
     location ~ ^/api/(u/[a-z0-9-]+/)?(curriculums|courses/) {
-        limit_req zone=uniplanner_api burst=60 nodelay;
         include proxy_params;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_pass http://127.0.0.1:3001;
@@ -44,7 +41,6 @@ server {
     location ^~ /api/admin { return 404; }
 
     location /api/ {
-        limit_req zone=uniplanner_api burst=60 nodelay;
         include proxy_params;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_pass http://127.0.0.1:3001;

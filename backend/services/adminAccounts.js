@@ -170,12 +170,12 @@ export async function recordLogin(id) {
 }
 
 // ─── Sessions ───────────────────────────────────────────────────────
-export async function createSession(userId, { ip, userAgent }) {
+export async function createSession(userId, { userAgent }) {
   const token = newToken()
   await pool.query(
-    `INSERT INTO admin_sessions (token_hash, user_id, expires_at, ip_address, user_agent)
-     VALUES ($1, $2, now() + make_interval(secs => $3), $4, $5)`,
-    [hashToken(token), userId, SESSION_MAX_MS / 1000, String(ip || '').slice(0, 64), String(userAgent || '').slice(0, 300)]
+    `INSERT INTO admin_sessions (token_hash, user_id, expires_at, user_agent)
+     VALUES ($1, $2, now() + make_interval(secs => $3), $4)`,
+    [hashToken(token), userId, SESSION_MAX_MS / 1000, String(userAgent || '').slice(0, 300)]
   )
   return token
 }
@@ -223,9 +223,9 @@ export async function pruneSessions() {
 export async function audit(req, action, { university = null, details = null, user = req.adminUser } = {}) {
   try {
     await pool.query(
-      `INSERT INTO admin_audit_log (user_id, email, action, university, details, ip_address)
-       VALUES ($1, $2, $3, $4, $5, $6)`,
-      [user?.id || null, user?.email || null, action, university, details ? JSON.stringify(details) : null, String(req.ip || '').slice(0, 64)]
+      `INSERT INTO admin_audit_log (user_id, email, action, university, details)
+       VALUES ($1, $2, $3, $4, $5)`,
+      [user?.id || null, user?.email || null, action, university, details ? JSON.stringify(details) : null]
     )
   } catch (error) {
     console.error('admin audit log write failed:', error.message)
@@ -234,7 +234,7 @@ export async function audit(req, action, { university = null, details = null, us
 
 export async function listAudit({ university = null, limit = 200 } = {}) {
   const { rows } = await pool.query(
-    `SELECT id, created_at, user_id, email, action, university, details, ip_address
+    `SELECT id, created_at, user_id, email, action, university, details
        FROM admin_audit_log
       WHERE ($1::text IS NULL OR university = $1)
       ORDER BY created_at DESC

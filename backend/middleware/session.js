@@ -18,20 +18,11 @@ function parseCookies(header) {
   return out;
 }
 
-// A first-time visitor's browser fires several API calls in parallel on page
-// load, all before any of them can come back with a Set-Cookie -- without
-// this, each one independently sees "no valid session" and creates its own
-// row, leaving a real visitor with several orphaned session rows instead of
-// one. Coalesce concurrent creations from the same client (by IP + user
-// agent, the only correlator available before a cookie exists) within a
-// short window into a single insert, so they all get the same session id.
-const pendingSessionCreates = new Map();
-const PENDING_CREATE_TTL_MS = 5000;
-
-function creationKeyFor(req) {
-  return `${req.ip || req.socket?.remoteAddress || ''}|${req.headers['user-agent'] || ''}`;
-}
-
+// A first-time visitor's parallel page-load requests may each create a
+// session row before the first Set-Cookie arrives; the browser keeps the last
+// one and the others stay empty. They used to be merged by IP + user agent,
+// but IPs are not used at all, and user agent alone would merge strangers on
+// the same phone model, so a few empty rows are the price.
 async function insertSession(req) {
   const { rows } = await pool.query(
     'INSERT INTO sessions (user_agent) VALUES ($1) RETURNING id',
@@ -40,28 +31,8 @@ async function insertSession(req) {
   return rows[0].id;
 }
 
-function pruneExpiredCreates(now) {
-  for (const [key, entry] of pendingSessionCreates) {
-    if (entry.expiresAt <= now) pendingSessionCreates.delete(key);
-  }
-}
-
 async function getOrCreateSession(req) {
-  const key = creationKeyFor(req);
-  const now = Date.now();
-  const pending = pendingSessionCreates.get(key);
-  if (pending && pending.expiresAt > now) return pending.promise;
-
-  pruneExpiredCreates(now);
-  const promise = insertSession(req);
-  // Deliberately kept until it expires rather than cleared once the insert
-  // settles: the insert itself finishes in a few ms, but a browser can fire
-  // several more uncookied requests over the following hundreds of ms before
-  // it's actually received and started using the Set-Cookie from the first
-  // one's response -- those later requests still need to land on this same
-  // session, not just ones that happen to overlap the insert itself.
-  pendingSessionCreates.set(key, { promise, expiresAt: now + PENDING_CREATE_TTL_MS });
-  return promise;
+  return insertSession(req);
 }
 
 // last_seen only feeds one coarse admin metric ("active in the last 24h"),

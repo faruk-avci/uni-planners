@@ -536,8 +536,7 @@ uni.get('/insights/course-add-sources', async (req, res) => {
   }
 })
 
-// Request logs and the raw event stream include IP addresses and user agents:
-// superadmin only.
+// Request logs and the raw event stream (user agents, paths): superadmin only.
 router.get('/traffic/requests', requireSuperadmin, async (req, res) => {
   const requestedLimit = Number.parseInt(req.query.limit, 10)
   const limit = Number.isFinite(requestedLimit) ? Math.min(Math.max(requestedLimit, 1), 500) : 100
@@ -555,7 +554,7 @@ router.get('/traffic/requests', requireSuperadmin, async (req, res) => {
     const { rows } = await pool.query(
       `SELECT id, request_id, session_id, event_action, method, request_path,
               status_code, duration_ms, request_size, response_size,
-              ip_address, user_agent, referrer, metadata, created_at
+              user_agent, referrer, metadata, created_at
          FROM server_request_logs
         ${conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''}
         ORDER BY created_at DESC

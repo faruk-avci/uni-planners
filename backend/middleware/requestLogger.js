@@ -149,7 +149,7 @@ export function requestLogger(req, res, next) {
       duration_ms: Number((performance.now() - startedAt).toFixed(3)),
       request_size: Number.parseInt(req.get('content-length'), 10) || null,
       response_size: Number.parseInt(res.getHeader('content-length'), 10) || null,
-      ip_address: clean(req.ip, 100) || null,
+      ip_address: null, // never stored
       user_agent: clean(req.get('user-agent'), 500) || null,
       referrer: clean(req.get('referer'), 500) || null,
       metadata,

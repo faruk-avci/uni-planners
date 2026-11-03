@@ -199,6 +199,9 @@ async function ensureSchema() {
 
   await migrateToMultiUniversity();
 
+  // Visitor IPs are not kept (see server.js); erase any written before.
+  await pool.query('UPDATE server_request_logs SET ip_address = NULL WHERE ip_address IS NOT NULL');
+
   // Panel accounts. A superadmin manages everything; everyone else only sees
   // the universities listed for them in admin_university_access.
   await pool.query(`
@@ -254,6 +257,8 @@ async function ensureSchema() {
     )`);
   await pool.query(`CREATE INDEX IF NOT EXISTS admin_audit_log_created_idx ON admin_audit_log (created_at DESC)`);
   await pool.query(`CREATE INDEX IF NOT EXISTS admin_audit_log_university_idx ON admin_audit_log (university, created_at DESC)`);
+  await pool.query('UPDATE admin_audit_log SET ip_address = NULL WHERE ip_address IS NOT NULL');
+  await pool.query('UPDATE admin_sessions SET ip_address = NULL WHERE ip_address IS NOT NULL');
 }
 
 // ─── One database, many universities ───────────────────────────────

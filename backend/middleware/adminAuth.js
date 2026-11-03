@@ -49,24 +49,6 @@ export function csrfGuard(req, res, next) {
   return next()
 }
 
-// Small in-memory limiter for the unauthenticated endpoints (login, setup).
-// nginx limits these too; this also covers direct access to the API port.
-const attempts = new Map()
-export function rateLimit({ max, windowMs }) {
-  return (req, res, next) => {
-    const now = Date.now()
-    const key = `${req.path}|${req.ip}`
-    const entry = attempts.get(key)
-    if (!entry || entry.resetAt <= now) attempts.set(key, { count: 1, resetAt: now + windowMs })
-    else if (++entry.count > max) {
-      res.set('Retry-After', String(Math.ceil((entry.resetAt - now) / 1000)))
-      return res.status(429).json({ error: 'Çok fazla deneme. Biraz sonra tekrar deneyin.' })
-    }
-    if (attempts.size > 10_000) for (const [k, v] of attempts) if (v.resetAt <= now) attempts.delete(k)
-    return next()
-  }
-}
-
 export async function requireAdmin(req, res, next) {
   try {
     const token = readCookie(req)

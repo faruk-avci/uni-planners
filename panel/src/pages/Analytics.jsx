@@ -153,7 +153,7 @@ export function Traffic() {
   const summary = useLoad(() => request('/traffic/summary'), [])
   return (
     <>
-      <PageHeader title="Site trafiği" subtitle="Tüm site için ham etkinlikler. IP ve tarayıcı bilgisi içerdiği için yalnızca süper yöneticiler görür." />
+      <PageHeader title="Site trafiği" subtitle="Tüm site için ham etkinlikler. Tarayıcı bilgisi içerdiği için yalnızca süper yöneticiler görür." />
       {summary.data && (
         <section className="stats-grid">
           <div className="stat-card"><span>Son 24 saatte aktif oturum</span><strong>{summary.data.activeSessions24h}</strong><small>Anonim ziyaretçi oturumu</small></div>

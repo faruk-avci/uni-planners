@@ -28,10 +28,17 @@ import surveyRoutes from './routes/surveyRoutes.js';
 const app = express();
 const PORT = parseInt(process.env.PORT, 10) || 3001;
 
-if (process.env.TRUST_PROXY) {
-  const parsedTrustProxy = Number.parseInt(process.env.TRUST_PROXY, 10);
-  app.set('trust proxy', Number.isFinite(parsedTrustProxy) ? parsedTrustProxy : process.env.TRUST_PROXY === 'true');
-}
+// No visitor IP is used or stored anywhere. Cloudflare and nginx pass it in
+// these headers; drop them before any route sees the request, so req.ip is
+// only ever nginx's own address.
+const CLIENT_IP_HEADERS = [
+  'x-forwarded-for', 'x-real-ip', 'forwarded', 'cf-connecting-ip', 'cf-connecting-ipv6',
+  'true-client-ip', 'x-client-ip', 'x-cluster-client-ip', 'fastly-client-ip',
+];
+app.use((req, _res, next) => {
+  for (const header of CLIENT_IP_HEADERS) delete req.headers[header];
+  next();
+});
 
 // CORS: '*' (default) allows any origin; otherwise a comma-separated allowlist.
 // `credentials: true` lets the session cookie ride along on cross-origin calls.

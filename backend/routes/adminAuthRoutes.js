@@ -15,10 +15,12 @@ import {
   encryptionConfigured, hashPassword, newTotpSecret, openSecret, otpauthUrl, passwordProblem, sealSecret,
   verifyPassword, verifyTotp,
 } from '../services/adminSecurity.js'
-import { clearSessionCookie, readCookie, rateLimit, requireAdmin, setSessionCookie } from '../middleware/adminAuth.js'
+import { clearSessionCookie, readCookie, requireAdmin, setSessionCookie } from '../middleware/adminAuth.js'
 
+// Guessing is stopped per account (locked for 15 minutes after 5 wrong
+// passwords or codes) and per sign-in attempt (5 codes per ticket), plus the
+// mandatory second factor. Nothing here looks at IP addresses.
 const router = express.Router()
-const limited = rateLimit({ max: 20, windowMs: 15 * 60 * 1000 })
 const GENERIC_LOGIN_ERROR = 'E-posta veya parola hatalı.'
 
 // Between the password step and the code step. In memory on purpose: a
@@ -49,7 +51,7 @@ export const publicUser = user => ({
 
 async function startSession(req, res, userId) {
   await recordLogin(userId)
-  const token = await createSession(userId, { ip: req.ip, userAgent: req.get('user-agent') })
+  const token = await createSession(userId, { userAgent: req.get('user-agent') })
   setSessionCookie(res, token)
   const user = await getUser(userId)
   await audit(req, 'login', { user })
@@ -67,7 +69,7 @@ router.get('/auth/status', async (_req, res, next) => {
   } catch (error) { next(error) }
 })
 
-router.post('/login', limited, async (req, res, next) => {
+router.post('/login', async (req, res, next) => {
   try {
     if (!encryptionConfigured()) return res.status(503).json({ error: 'Panel sunucuda yapılandırılmamış (ADMIN_SECRET).' })
     const user = await findUserForLogin(req.body?.email)
@@ -84,7 +86,7 @@ router.post('/login', limited, async (req, res, next) => {
   } catch (error) { next(error) }
 })
 
-router.post('/login/totp', limited, async (req, res, next) => {
+router.post('/login/totp', async (req, res, next) => {
   try {
     const entry = takeTicket(req.body?.ticket, 'totp')
     if (!entry) return res.status(401).json({ error: 'Giriş adımının süresi doldu. Baştan deneyin.', restart: true })
@@ -107,7 +109,7 @@ router.post('/login/totp', limited, async (req, res, next) => {
   } catch (error) { next(error) }
 })
 
-router.post('/login/enroll', limited, async (req, res, next) => {
+router.post('/login/enroll', async (req, res, next) => {
   try {
     const entry = takeTicket(req.body?.ticket, 'enroll')
     if (!entry) return res.status(401).json({ error: 'Kurulum adımının süresi doldu. Baştan deneyin.', restart: true })
@@ -125,7 +127,7 @@ router.post('/login/enroll', limited, async (req, res, next) => {
 
 // The token travels in the body, never the URL, so it stays out of access
 // and request logs.
-router.post('/setup/info', limited, async (req, res, next) => {
+router.post('/setup/info', async (req, res, next) => {
   try {
     const user = await findUserBySetupToken(req.body?.token)
     if (!user) return res.status(404).json({ error: 'Kurulum bağlantısı geçersiz veya süresi dolmuş.' })
@@ -133,7 +135,7 @@ router.post('/setup/info', limited, async (req, res, next) => {
   } catch (error) { next(error) }
 })
 
-router.post('/setup', limited, async (req, res, next) => {
+router.post('/setup', async (req, res, next) => {
   try {
     if (!encryptionConfigured()) return res.status(503).json({ error: 'Panel sunucuda yapılandırılmamış (ADMIN_SECRET).' })
     const user = await findUserBySetupToken(req.body?.token)

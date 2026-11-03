@@ -53,7 +53,7 @@ export default function Audit({ university = null, universities = [] }) {
     <>
       <PageHeader
         title={university ? 'Etkinlik kaydı' : 'Denetim kaydı'}
-        subtitle={university ? `${university.name} için panelde yapılan değişiklikler.` : 'Paneldeki tüm girişler ve değişiklikler: kim, ne zaman, nereden.'}
+        subtitle={university ? `${university.name} için panelde yapılan değişiklikler.` : 'Paneldeki tüm girişler ve değişiklikler: kim, ne zaman, ne yaptı.'}
       >
         {!university && (
           <select className="compact-select" value={filter} onChange={event => setFilter(event.target.value)} aria-label="Üniversite">
@@ -68,7 +68,7 @@ export default function Audit({ university = null, universities = [] }) {
         {data?.entries.length === 0 ? <p className="empty-note">Henüz kayıt yok.</p> : (
           <div className="table-scroll">
             <table className="data-table">
-              <thead><tr><th>Zaman</th><th>Kişi</th><th>İşlem</th>{!university && <th>Üniversite</th>}<th>Ayrıntı</th>{!university && <th>IP</th>}</tr></thead>
+              <thead><tr><th>Zaman</th><th>Kişi</th><th>İşlem</th>{!university && <th>Üniversite</th>}<th>Ayrıntı</th></tr></thead>
               <tbody>
                 {data?.entries.map(entry => (
                   <tr key={entry.id} className={entry.action === 'login_failed' ? 'row-warn' : ''}>
@@ -77,7 +77,6 @@ export default function Audit({ university = null, universities = [] }) {
                     <td>{ACTIONS[entry.action] || entry.action}</td>
                     {!university && <td>{entry.university || '—'}</td>}
                     <td className="details-cell">{describe(entry)}</td>
-                    {!university && <td className="mono">{entry.ip_address || '—'}</td>}
                   </tr>
                 ))}
               </tbody>

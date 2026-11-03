@@ -14,6 +14,8 @@ cat > "$PROXY_HASH_TARGET" <<'EOF'
 proxy_headers_hash_max_size 1024;
 proxy_headers_hash_bucket_size 128;
 EOF
+# Visitor IPs are not logged: no access logs.
+echo 'access_log off;' > /etc/nginx/conf.d/uniplanner-no-access-log.conf
 ln -sfn "$TARGET" "/etc/nginx/sites-enabled/${DOMAIN}"
 ln -sfn "$PANEL_TARGET" "/etc/nginx/sites-enabled/panel.${DOMAIN}"
 rm -f /etc/nginx/sites-enabled/default
